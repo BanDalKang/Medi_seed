@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         vpMain.adapter = viewPagerAdapter
         vpMain.offscreenPageLimit = viewPagerAdapter.itemCount
         vpMain.currentItem = 1 // 초기 페이지를 홈 프래그먼트로 설정
+        vpMain.isUserInputEnabled = false // Swipe unabled
 
         TabLayoutMediator(tlMain, vpMain) { tab, position ->
             tab.setText(viewPagerAdapter.getTitle(position))
