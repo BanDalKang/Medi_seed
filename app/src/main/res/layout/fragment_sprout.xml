@@ -16,44 +16,62 @@
         app:srcCompat="@drawable/ic_tree_small" />
 
     <TextView
-        android:id="@+id/treeQuantityTextView"
+        android:id="@+id/treeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="3그루"
+        android:layout_marginTop="1dp"
+        android:text="0"
         android:textColor="@color/green_400"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/treeImageView"
-        app:layout_constraintHorizontal_bias="0.586"
+        app:layout_constraintEnd_toStartOf="@+id/TextView7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="@+id/treeImageView"
         app:layout_constraintTop_toBottomOf="@+id/treeImageView" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/TextView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginStart="3dp"
+        android:text="그루"
+        android:textColor="@color/green_400"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/treeTextView"
+        app:layout_constraintEnd_toEndOf="@+id/treeImageView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/treeTextView"
+        app:layout_constraintTop_toTopOf="@+id/treeTextView" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="새싹이"
         android:textColor="@color/black_light"
         android:textSize="20sp"
+
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/nameImageButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sproutImageView" />
 
     <android.widget.ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/nameImageButton"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginStart="10dp"
         android:background="@drawable/ic_pencil"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintBottom_toBottomOf="@+id/nameTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintStart_toEndOf="@+id/nameTextView"
+        app:layout_constraintTop_toTopOf="@+id/nameTextView" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -62,7 +80,7 @@
         android:layout_height="15dp"
         android:layout_marginBottom="15dp"
         android:max="100"
-        android:progress="40"
+        android:progress="0"
         android:progressDrawable="@drawable/progress_bar_exp"
         app:layout_constraintBottom_toTopOf="@+id/sproutPillButton"
         app:layout_constraintEnd_toEndOf="@+id/sproutShareButton"
@@ -73,7 +91,7 @@
         android:layout_width="160dp"
         android:layout_height="80dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/layout_bg"
+        android:background="@drawable/btn_effect"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="12dp"
@@ -116,13 +134,14 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:id="@+id/sproutShareButton"
         android:layout_width="160dp"
         android:layout_height="80dp"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/layout_bg"
+        android:background="@drawable/btn_effect"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="12dp"
@@ -130,6 +149,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/sproutPillButton">
+
 
         <LinearLayout
             android:layout_width="70dp"
@@ -165,11 +185,12 @@
 
     </LinearLayout>
 
+
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="119dp"
-        android:layout_height="220dp"
-        android:layout_marginBottom="80dp"
+        android:id="@+id/sproutImageView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="120dp"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -189,13 +210,12 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="레벨3"
+        android:text="레벨"
         android:textColor="@color/green_400"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -203,15 +223,29 @@
         app:layout_constraintStart_toStartOf="@+id/progressBar" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/levelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:text="1"
+        android:textColor="@color/green_400"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/progressBarPercentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="30%"
+        android:text="0"
         android:textColor="@color/green_200"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="@+id/progressBar" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
