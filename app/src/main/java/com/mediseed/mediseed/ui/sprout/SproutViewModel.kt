@@ -11,7 +11,6 @@ import java.util.Date
 import java.util.Locale
 
 class SproutViewModel(application: Application) : AndroidViewModel(application) {
-
     companion object {
         const val LAST_PILL_CLICK_TIME_KEY = "last_pill_click_time"
         const val LAST_SHARE_CLICK_DATE_KEY = "last_share_click_date"
@@ -26,34 +25,24 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         const val PROGRESS_KEY = "progress"
         const val SPROUT_NAME_KEY = "sprout_name"
     }
-
     private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-
     private val _level = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(LEVEL_KEY, 1) }
     val level: LiveData<Int> get() = _level
-
     private val _tree = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(TREE_KEY, 0) }
     val tree: LiveData<Int> get() = _tree
-
     private val _pillRest = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(PILL_REST_KEY, 1) }
     val pillRest: LiveData<Int> get() = _pillRest
-
     private val _shareRest = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(SHARE_REST_KEY, 3) }
     val shareRest: LiveData<Int> get() = _shareRest
-
     private val _progress = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(PROGRESS_KEY, 0) }
     val progress: LiveData<Int> get() = _progress
-
     private val _sproutName = MutableLiveData<String>().apply { value = sharedPreferences.getString(SPROUT_NAME_KEY, "새싹이") }
     val sproutName: LiveData<String> get() = _sproutName
-
     private val _lastPillClickTime = MutableLiveData<Long>().apply { value = sharedPreferences.getLong(LAST_PILL_CLICK_TIME_KEY, 0) }
     val lastPillClickTime: LiveData<Long> get() = _lastPillClickTime
-
     private val _lastShareClickDate = MutableLiveData<String>().apply { value = sharedPreferences.getString(LAST_SHARE_CLICK_DATE_KEY, "") }
     val lastShareClickDate: LiveData<String> get() = _lastShareClickDate
-
     private val _shareClickCount = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0) }
     val shareClickCount: LiveData<Int> get() = _shareClickCount
 
@@ -76,7 +65,6 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
             shareClickCount = 0
             _lastShareClickDate.value = currentDate
         }
-
         if (shareClickCount < MAX_SHARE_CLICKS_PER_DAY) {
             updateProgress(10)
             _shareClickCount.value = shareClickCount + 1
@@ -121,8 +109,6 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
             apply()
         }
     }
-
-
     val showPillButtonClickLimitToast = MutableLiveData<Boolean>()
     val showShareButtonClickLimitToast = MutableLiveData<Boolean>()
 }

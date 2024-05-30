@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
-        android:text="그루"
+        android:text="@string/sprout_tree_text"
         android:textColor="@color/green_400"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -50,10 +49,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="새싹이"
         android:textColor="@color/black_light"
+        android:text=""
         android:textSize="20sp"
-
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/nameImageButton"
         app:layout_constraintHorizontal_bias="0.5"
@@ -90,7 +88,7 @@
         android:id="@+id/sproutPillButton"
         android:layout_width="160dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/btn_effect"
         android:gravity="center"
         android:orientation="horizontal"
@@ -111,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="약 주기"
+                android:text="@string/sprout_pill_button"
                 android:textColor="@color/black_light"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -120,7 +118,7 @@
                 android:id="@+id/pillRestText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1개 남음"
+                android:text=""
                 android:textColor="@color/black_light"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -131,16 +129,14 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_pill" />
-
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/sproutShareButton"
         android:layout_width="160dp"
         android:layout_height="80dp"
         android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/btn_effect"
         android:gravity="center"
         android:orientation="horizontal"
@@ -149,7 +145,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/sproutPillButton">
-
 
         <LinearLayout
             android:layout_width="70dp"
@@ -161,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="공유하기"
+                android:text="@string/sprout_share_button"
                 android:textColor="@color/black_light"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -170,7 +165,7 @@
                 android:id="@+id/shareRestText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3개 남음"
+                android:text=""
                 android:textColor="@color/black_light"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -182,9 +177,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_share" />
-
     </LinearLayout>
-
 
     <ImageView
         android:id="@+id/sproutImageView"
@@ -194,14 +187,14 @@
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/tree1" />
+        app:srcCompat="@drawable/img_tree1" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:text="약 주기는 수거함 근처에서만 가능합니다."
+        android:layout_marginBottom="100dp"
+        android:text="@string/sprout_bottom_text"
         android:textColor="@color/grey_dark"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -209,13 +202,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="레벨"
+        android:text="@string/sprout_level_text"
         android:textColor="@color/green_400"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -246,6 +238,5 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="@+id/progressBar" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
