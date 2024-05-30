@@ -1,50 +1,37 @@
 package com.mediseed.mediseed.ui.sprout
 
+import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class SproutFragment : Fragment() {
 
     private var _binding: FragmentSproutBinding? = null
     private val binding get() = _binding!!
     private lateinit var sproutViewModel: SproutViewModel
-
-    private var level = 1
-    private var tree = 0
-    private var pillRest = 1
-    private var shareRest = 3
-    private var progress = 0
-    private var sproutName = "새싹이"
-
-
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationOfInterest: Location // 특정 목록의 위치
 
     companion object {
 
-        private const val LAST_PILL_CLICK_TIME_KEY = "last_pill_click_time"
-        private const val LAST_SHARE_CLICK_DATE_KEY = "last_share_click_date"
-        private const val SHARE_CLICK_COUNT_KEY = "share_click_count"
-        private const val ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000
-        private const val MAX_SHARE_CLICKS_PER_DAY = 3
-        private const val PREFS_NAME = "SproutPreferences"
-        private const val LEVEL_KEY = "level"
-        private const val TREE_KEY = "tree"
-        private const val PILL_REST_KEY = "pill_rest"
-        private const val SHARE_REST_KEY = "share_rest"
-        private const val PROGRESS_KEY = "progress"
-        private const val SPROUT_NAME_KEY = "sprout_name"
+        private const val REQUEST_LOCATION_PERMISSION = 1001
         fun newInstance() = SproutFragment()
     }
 
@@ -59,9 +46,16 @@ class SproutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadPreferences()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        locationOfInterest = Location("").apply {
+            latitude = 37.555945 // 서울역 위도
+            longitude = 126.9723167 // 서울역 경도
+        }
+
+        sproutViewModel = ViewModelProvider(this).get(SproutViewModel::class.java)
+
+        setupObservers()
         setupListeners()
-        setupProgressBar()
     }
 
     override fun onDestroyView() {
@@ -72,21 +66,13 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-//                handlePillButtonClick()
-                updateProgress(20)
-                pillRest -= 1
-                pillRestText.text = "$pillRest 남음"
-                savePreferences()
+                checkLocationPermissionAndClick()
             }
 
             sproutShareButton.setOnClickListener {
-//                handleShareButtonClick()
+                sproutViewModel.handleShareButtonClick()
                 shareApp()
-                updateProgress(10)
-                shareRest -= 1
-                shareRestText.text = "$shareRest 남음"
-                savePreferences()
-
+//                sproutViewModel.updateProgress(10) //테스트 코드
             }
 
             nameImageButton.setOnClickListener {
@@ -95,39 +81,47 @@ class SproutFragment : Fragment() {
         }
     }
 
-    private fun setupProgressBar() {
-        with(binding) {
-            progressBar.progress = progress
-            progressBarPercentTextView.text = "$progress%"
-            levelTextView.text = "$level"
-            treeTextView.text = "$tree"
-            pillRestText.text = "$pillRest 남음"
-            shareRestText.text = "$shareRest 남음"
-            nameTextView.text = sproutName
-        }
-        updateSproutImage()
-    }
-
-    private fun updateProgress(increment: Int) {
-        with(binding) {
-            progress += increment
-
-            if (progress >= 100) {
-                level += 1
-                progress = 0
-                if (level > 5) {
-                    tree += 1
-                    level = 1
-                    treeTextView.text = "$tree"
-                }
-                levelTextView.text = "$level"
-                updateSproutImage()
+    private fun setupObservers() {
+        with(sproutViewModel) {
+            level.observe(viewLifecycleOwner) { level ->
+                binding.levelTextView.text = "$level"
+                updateSproutImage(level)
             }
 
-            progressBar.progress = progress
-            progressBarPercentTextView.text = "$progress%"
+            tree.observe(viewLifecycleOwner) { tree ->
+                binding.treeTextView.text = "$tree"
+            }
 
-            savePreferences()
+            pillRest.observe(viewLifecycleOwner) { pillRest ->
+                binding.pillRestText.text = "$pillRest 남음"
+            }
+
+            shareRest.observe(viewLifecycleOwner) { shareRest ->
+                binding.shareRestText.text = "$shareRest 남음"
+            }
+
+            progress.observe(viewLifecycleOwner) { progress ->
+                binding.progressBar.progress = progress
+                binding.progressBarPercentTextView.text = "$progress%"
+            }
+
+            sproutName.observe(viewLifecycleOwner) { sproutName ->
+                binding.nameTextView.text = sproutName
+            }
+
+            showPillButtonClickLimitToast.observe(viewLifecycleOwner) { show ->
+                if (show == true) {
+                    Toast.makeText(requireContext(), "하루에 한 번만 가능합니다.", Toast.LENGTH_SHORT).show()
+                    showPillButtonClickLimitToast.value = false
+                }
+            }
+
+            showShareButtonClickLimitToast.observe(viewLifecycleOwner) { show ->
+                if (show == true) {
+                    Toast.makeText(requireContext(), "하루에 세 번만 가능합니다.", Toast.LENGTH_SHORT).show()
+                    showShareButtonClickLimitToast.value = false
+                }
+            }
         }
     }
 
@@ -142,9 +136,7 @@ class SproutFragment : Fragment() {
         builder.setPositiveButton("확인") { dialog, _ ->
             val newName = input.text.toString()
             if (newName.isNotBlank()) {
-                binding.nameTextView.text = newName
-                sproutName = newName
-                savePreferences()
+                sproutViewModel.updateSproutName(newName)
             }
             dialog.dismiss()
         }
@@ -156,14 +148,14 @@ class SproutFragment : Fragment() {
         builder.show()
     }
 
-    private fun updateSproutImage() {
+    private fun updateSproutImage(level: Int) {
         val imageResource = when (level) {
             1 -> R.drawable.tree1
             2 -> R.drawable.tree2
             3 -> R.drawable.tree3
             4 -> R.drawable.tree4
             5 -> R.drawable.tree5
-            else -> R.drawable.tree1 // Default image
+            else -> R.drawable.tree1
         }
         binding.sproutImageView.setImageResource(imageResource)
     }
@@ -172,77 +164,81 @@ class SproutFragment : Fragment() {
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "새싹이통") // 공유할 내용의 제목
-            putExtra(Intent.EXTRA_TEXT, "우리동네 폐의약품 수거함 '새싹이통'에서 확인하세요!") // 공유할 내용
+            putExtra(Intent.EXTRA_SUBJECT, "새싹이통")
+            putExtra(Intent.EXTRA_TEXT, "우리동네 폐의약품 수거함 '새싹이통'에서 확인하세요!")
         }
         startActivity(Intent.createChooser(shareIntent, "앱 공유하기"))
     }
 
-    private fun handlePillButtonClick() {
-        val sharedPreferences = requireActivity().getSharedPreferences("SproutPreferences", Context.MODE_PRIVATE)
-        val lastPillClickTime = sharedPreferences.getLong(LAST_PILL_CLICK_TIME_KEY, 0)
-        val currentTime = System.currentTimeMillis()
+    private fun checkLocationPermissionAndClick() {
+        // 위치 권한 확인
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            getLocationAndCheckDistance()
 
-        if (currentTime - lastPillClickTime >= ONE_DAY_IN_MILLIS) {
-            updateProgress(20)
-            sharedPreferences.edit().putLong(LAST_PILL_CLICK_TIME_KEY, currentTime).apply()
-            pillRest -= 1
-            binding.pillRestText.text = "$pillRest 남음"
-            savePreferences()
         } else {
-            Toast.makeText(requireContext(), "하루에 한 번만 가능합니다.", Toast.LENGTH_SHORT).show()
+            // 위치 권한이 없는 경우 요청
+            requestLocationPermission()
         }
     }
 
-    private fun handleShareButtonClick() {
-        val sharedPreferences = requireActivity().getSharedPreferences("SproutPreferences", Context.MODE_PRIVATE)
-        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
-        val lastShareClickDate = sharedPreferences.getString(LAST_SHARE_CLICK_DATE_KEY, "")
-        var shareClickCount = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0)
+    private fun getLocationAndCheckDistance() {
+        // 거리 확인
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
 
-        if (currentDate != lastShareClickDate) {
-            // 날짜가 변경된 경우 클릭 카운트 리셋
-            shareClickCount = 0
-            sharedPreferences.edit()
-                .putString(LAST_SHARE_CLICK_DATE_KEY, currentDate)
-                .putInt(SHARE_CLICK_COUNT_KEY, shareClickCount)
-                .apply()
-        }
+                if (location != null) {
+                    // 현재 위치와 특정 목록의 위치 사이의 거리 계산
+                    val distanceInMeters = location.distanceTo(locationOfInterest)
 
-        if (shareClickCount < MAX_SHARE_CLICKS_PER_DAY) {
-            shareApp()
-            updateProgress(10)
-            shareClickCount++
-            sharedPreferences.edit().putInt(SHARE_CLICK_COUNT_KEY, shareClickCount).apply()
-            shareRest -= 1
-            binding.shareRestText.text = "$shareRest 남음"
-            savePreferences()
-        } else {
-            Toast.makeText(requireContext(), "하루에 세 번만 가능합니다.", Toast.LENGTH_SHORT).show()
+                    if (distanceInMeters <= 100) {
+                    sproutViewModel.handlePillButtonClick() // 정상 코드
+//                        sproutViewModel.updateProgress(20) // 테스트 코드
+                    } else {
+                        // 거리가 100m 이상인 경우 안내 메시지 표시
+                        Toast.makeText(
+                            requireContext(),
+                            "수거함이 너무 멀리 있습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    Log.d(
+                        "SproutFragment",
+                        "Current location: (${location.latitude}, ${location.longitude})"
+                    )
+                    Log.d(
+                        "SproutFragment",
+                        "Location of interest: (${locationOfInterest.latitude}, ${locationOfInterest.longitude})"
+                    )
+                    Log.d(
+                        "SproutFragment",
+                        "Distance to location of interest: $distanceInMeters meters"
+                    )
+                } else {
+                    // 현재 위치를 가져오는 데 실패한 경우
+                    Toast.makeText(
+                        requireContext(),
+                        "현재 위치를 가져오지 못했습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 
-    private fun loadPreferences() {
-        val sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        level = sharedPreferences.getInt(LEVEL_KEY, 1)
-        tree = sharedPreferences.getInt(TREE_KEY, 0)
-        pillRest = sharedPreferences.getInt(PILL_REST_KEY, 1)
-        shareRest = sharedPreferences.getInt(SHARE_REST_KEY, 3)
-        progress = sharedPreferences.getInt(PROGRESS_KEY, 0)
-        sproutName = sharedPreferences.getString(SPROUT_NAME_KEY, "새싹이") ?: ""
-    }
-
-    private fun savePreferences() {
-        val sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putInt(LEVEL_KEY, level)
-            putInt(TREE_KEY, tree)
-            putInt(PILL_REST_KEY, pillRest)
-            putInt(SHARE_REST_KEY, shareRest)
-            putInt(PROGRESS_KEY, progress)
-            putString(SPROUT_NAME_KEY, sproutName)
-            apply()
-        }
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_LOCATION_PERMISSION
+        )
     }
 
 }
