@@ -2,15 +2,21 @@ package com.mediseed.mediseed.ui.sprout
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -41,6 +47,8 @@ class SproutFragment : Fragment() {
     ): View? {
         _binding = FragmentSproutBinding.inflate(inflater, container, false)
         return binding.root
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -126,14 +134,18 @@ class SproutFragment : Fragment() {
     }
 
     private fun showNameEditDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("이름 변경")
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_layout, null)
+        val input = dialogView.findViewById<EditText>(R.id.dialogInput)
+        val confirmButton = dialogView.findViewById<Button>(R.id.dialogConfirmButton)
+        val cancelButton = dialogView.findViewById<Button>(R.id.dialogCancelButton)
 
-        val input = EditText(requireContext())
         input.setText(binding.nameTextView.text)
-        builder.setView(input)
 
-        builder.setPositiveButton("확인") { dialog, _ ->
+        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialogStyle)
+            .setView(dialogView)
+            .create()
+
+        confirmButton.setOnClickListener {
             val newName = input.text.toString()
             if (newName.isNotBlank()) {
                 sproutViewModel.updateSproutName(newName)
@@ -141,11 +153,13 @@ class SproutFragment : Fragment() {
             dialog.dismiss()
         }
 
-        builder.setNegativeButton("취소") { dialog, _ ->
+        cancelButton.setOnClickListener {
             dialog.cancel()
         }
 
-        builder.show()
+        dialog.show()
+        input.requestFocus()
+
     }
 
     private fun updateSproutImage(level: Int) {
