@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.sprout
+package com.mediseed.mediseed.ui.presentation.sprout
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,11 +1,10 @@
-package com.mediseed.mediseed.ui.home
+package com.mediseed.mediseed.ui.presentation.home
 
 import android.os.Bundle
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +61,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         if (!hasPermission()) {
             ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS, LOCATION_PERMISSION_REQUEST_CODE)
-            initMapView()
         } else {
             initMapView()
         }
@@ -88,7 +86,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         /**비동기로 NaverMap 객체를 얻어옴. NaverMap 객체가 준비되면 NaverMap 파라미터로하여 onMapReady(NaverMap) 콜백함수 호출 */
         naverMapFragment.getMapAsync(this)
-        fusedLocationSource = FusedLocationSource(requireActivity(),LOCATION_PERMISSION_REQUEST_CODE)
+        fusedLocationSource = FusedLocationSource(requireActivity(),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
     }

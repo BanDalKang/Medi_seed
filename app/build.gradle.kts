@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-parcelize")
 }
 
 val properties = Properties().apply {
@@ -22,6 +23,9 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "NAVER_MAP_CLIENT_ID", properties["NAVER_MAP_CLIENT_ID"] as String)
+        buildConfigField("String","PUBLIC_DATA_PHARMACY_ENCODING",properties["PUBLIC_DATA_PHARMACY_ENCODING"] as String)
+        buildConfigField("String","PUBLIC_DATA_PHARMACY_DECODING",properties["PUBLIC_DATA_PHARMACY_DECODING"] as String)
+
     }
 
     buildTypes {
@@ -61,6 +65,12 @@ dependencies {
     implementation("com.naver.maps:map-sdk:3.18.0")
     // Google Location Service
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    // Retrofit2
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
