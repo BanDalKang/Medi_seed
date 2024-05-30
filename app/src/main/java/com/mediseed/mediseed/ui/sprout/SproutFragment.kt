@@ -26,6 +26,8 @@ class SproutFragment : Fragment() {
     private var tree = 0
     private var pillRest = 1
     private var shareRest = 3
+    private var progress = 0
+    private var sproutName = "새싹이"
 
 
 
@@ -36,6 +38,13 @@ class SproutFragment : Fragment() {
         private const val SHARE_CLICK_COUNT_KEY = "share_click_count"
         private const val ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000
         private const val MAX_SHARE_CLICKS_PER_DAY = 3
+        private const val PREFS_NAME = "SproutPreferences"
+        private const val LEVEL_KEY = "level"
+        private const val TREE_KEY = "tree"
+        private const val PILL_REST_KEY = "pill_rest"
+        private const val SHARE_REST_KEY = "share_rest"
+        private const val PROGRESS_KEY = "progress"
+        private const val SPROUT_NAME_KEY = "sprout_name"
         fun newInstance() = SproutFragment()
     }
 
@@ -50,6 +59,7 @@ class SproutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadPreferences()
         setupListeners()
         setupProgressBar()
     }
@@ -66,6 +76,7 @@ class SproutFragment : Fragment() {
                 updateProgress(20)
                 pillRest -= 1
                 pillRestText.text = "$pillRest 남음"
+                savePreferences()
             }
 
             sproutShareButton.setOnClickListener {
@@ -74,6 +85,7 @@ class SproutFragment : Fragment() {
                 updateProgress(10)
                 shareRest -= 1
                 shareRestText.text = "$shareRest 남음"
+                savePreferences()
 
             }
 
@@ -85,19 +97,20 @@ class SproutFragment : Fragment() {
 
     private fun setupProgressBar() {
         with(binding) {
-            progressBar.progress = 0
-            progressBarPercentTextView.text = "0%"
+            progressBar.progress = progress
+            progressBarPercentTextView.text = "$progress%"
             levelTextView.text = "$level"
             treeTextView.text = "$tree"
             pillRestText.text = "$pillRest 남음"
             shareRestText.text = "$shareRest 남음"
+            nameTextView.text = sproutName
         }
         updateSproutImage()
     }
 
     private fun updateProgress(increment: Int) {
         with(binding) {
-            var progress = progressBar.progress + increment
+            progress += increment
 
             if (progress >= 100) {
                 level += 1
@@ -113,6 +126,8 @@ class SproutFragment : Fragment() {
 
             progressBar.progress = progress
             progressBarPercentTextView.text = "$progress%"
+
+            savePreferences()
         }
     }
 
@@ -128,6 +143,8 @@ class SproutFragment : Fragment() {
             val newName = input.text.toString()
             if (newName.isNotBlank()) {
                 binding.nameTextView.text = newName
+                sproutName = newName
+                savePreferences()
             }
             dialog.dismiss()
         }
@@ -171,6 +188,7 @@ class SproutFragment : Fragment() {
             sharedPreferences.edit().putLong(LAST_PILL_CLICK_TIME_KEY, currentTime).apply()
             pillRest -= 1
             binding.pillRestText.text = "$pillRest 남음"
+            savePreferences()
         } else {
             Toast.makeText(requireContext(), "하루에 한 번만 가능합니다.", Toast.LENGTH_SHORT).show()
         }
@@ -198,8 +216,32 @@ class SproutFragment : Fragment() {
             sharedPreferences.edit().putInt(SHARE_CLICK_COUNT_KEY, shareClickCount).apply()
             shareRest -= 1
             binding.shareRestText.text = "$shareRest 남음"
+            savePreferences()
         } else {
             Toast.makeText(requireContext(), "하루에 세 번만 가능합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadPreferences() {
+        val sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        level = sharedPreferences.getInt(LEVEL_KEY, 1)
+        tree = sharedPreferences.getInt(TREE_KEY, 0)
+        pillRest = sharedPreferences.getInt(PILL_REST_KEY, 1)
+        shareRest = sharedPreferences.getInt(SHARE_REST_KEY, 3)
+        progress = sharedPreferences.getInt(PROGRESS_KEY, 0)
+        sproutName = sharedPreferences.getString(SPROUT_NAME_KEY, "새싹이") ?: ""
+    }
+
+    private fun savePreferences() {
+        val sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putInt(LEVEL_KEY, level)
+            putInt(TREE_KEY, tree)
+            putInt(PILL_REST_KEY, pillRest)
+            putInt(SHARE_REST_KEY, shareRest)
+            putInt(PROGRESS_KEY, progress)
+            putString(SPROUT_NAME_KEY, sproutName)
+            apply()
         }
     }
 
