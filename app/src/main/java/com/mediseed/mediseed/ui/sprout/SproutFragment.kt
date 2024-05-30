@@ -24,6 +24,8 @@ class SproutFragment : Fragment() {
 
     private var level = 1
     private var tree = 0
+    private var pillRest = 1
+    private var shareRest = 3
 
 
 
@@ -62,12 +64,16 @@ class SproutFragment : Fragment() {
             sproutPillButton.setOnClickListener {
 //                handlePillButtonClick()
                 updateProgress(20)
+                pillRest -= 1
+                pillRestText.text = "$pillRest 남음"
             }
 
             sproutShareButton.setOnClickListener {
 //                handleShareButtonClick()
                 shareApp()
                 updateProgress(10)
+                shareRest -= 1
+                shareRestText.text = "$shareRest 남음"
 
             }
 
@@ -83,6 +89,8 @@ class SproutFragment : Fragment() {
             progressBarPercentTextView.text = "0%"
             levelTextView.text = "$level"
             treeTextView.text = "$tree"
+            pillRestText.text = "$pillRest 남음"
+            shareRestText.text = "$shareRest 남음"
         }
         updateSproutImage()
     }
@@ -161,6 +169,8 @@ class SproutFragment : Fragment() {
         if (currentTime - lastPillClickTime >= ONE_DAY_IN_MILLIS) {
             updateProgress(20)
             sharedPreferences.edit().putLong(LAST_PILL_CLICK_TIME_KEY, currentTime).apply()
+            pillRest -= 1
+            binding.pillRestText.text = "$pillRest 남음"
         } else {
             Toast.makeText(requireContext(), "하루에 한 번만 가능합니다.", Toast.LENGTH_SHORT).show()
         }
@@ -186,6 +196,8 @@ class SproutFragment : Fragment() {
             updateProgress(10)
             shareClickCount++
             sharedPreferences.edit().putInt(SHARE_CLICK_COUNT_KEY, shareClickCount).apply()
+            shareRest -= 1
+            binding.shareRestText.text = "$shareRest 남음"
         } else {
             Toast.makeText(requireContext(), "하루에 세 번만 가능합니다.", Toast.LENGTH_SHORT).show()
         }
