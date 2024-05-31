@@ -5,4 +5,8 @@
     <string name="main_tab_sprout_title">새싹이</string>
     <string name="main_tab_home_title">홈</string>
     <string name="main_tab_mypage_title">마이페이지</string>
+
+    <!--HomeFragment-->
+    <string name="location_permission_granted">위치권한이 허용되었습니다.</string>
+    <string name="location_permission_required">권한을 허용해야 앱을 이용힐 수 있습니다.</string>
 </resources>

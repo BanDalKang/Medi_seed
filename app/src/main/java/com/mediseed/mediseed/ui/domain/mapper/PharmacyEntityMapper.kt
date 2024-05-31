@@ -18,21 +18,21 @@ fun PharmacyResponce.toEntity(): PharmacyEntity {
 
 fun DataResponce.toEntity(): DataEntity {
     return DataEntity(
-        EstablisherName=EstablisherName ,
-        longitude=longitude,
-        DataDate=DataDate,
-        StreetNameAddress=StreetNameAddress,
-        BeopJeondDongName=BeopJeondDongName,
-        BeopJeondDongCode=BeopJeondDongCode,
-        note=note,
-        CollectionLocationClassificationName=CollectionLocationClassificationName,
-        CollectionLocationName=CollectionLocationName,
-        turn=turn,
-        Latitude=Latitude,
-        PhoneNumber=PhoneNumber,
-        lotNumberAddress=lotNumberAddress,
-        haengJeongDongName=haengJeongDongName,
-        haengJeongDongCode=haengJeongDongCode
+        EstablisherName = EstablisherName,
+        longitude = longitude,
+        DataDate = DataDate,
+        StreetNameAddress = StreetNameAddress,
+        BeopJeondDongName = BeopJeondDongName,
+        BeopJeondDongCode = BeopJeondDongCode,
+        note = note,
+        CollectionLocationClassificationName = CollectionLocationClassificationName,
+        CollectionLocationName = CollectionLocationName,
+        turn = turn,
+        Latitude = Latitude,
+        PhoneNumber = PhoneNumber,
+        lotNumberAddress = lotNumberAddress,
+        haengJeongDongName = haengJeongDongName,
+        haengJeongDongCode = haengJeongDongCode
     )
 
 }

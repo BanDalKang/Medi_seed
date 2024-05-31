@@ -13,13 +13,6 @@
         android:layout_height="match_parent"
         />
 
-    <com.naver.maps.map.widget.CompassView
-        android:id="@+id/naver_map_compass"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
 
 
 

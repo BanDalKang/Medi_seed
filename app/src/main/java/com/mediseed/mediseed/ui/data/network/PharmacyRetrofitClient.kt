@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object PharmacyRetrofitClient {
 
-    private const val PHARMACY_API_BASE_URL = "https://api.odcloud.kr/api"
+    private const val PHARMACY_API_BASE_URL = "https://api.odcloud.kr/api/"
 
     private val okHttpClient by lazy {
         OkHttpClient.Builder()

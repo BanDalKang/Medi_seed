@@ -6,16 +6,15 @@ sealed interface PharmacyUiState {
         val message: String
     ) : PharmacyUiState
 
-    data object Loading : PharmacyUiState
 
     data object ResultEmpty : Notice("결과 없음")
 
     sealed interface ResultList: PharmacyUiState {
-        val pharmacyItems: List<PharmacyItem>
+        val pharmacyLocation: List<PharmacyItem>
 }
 
     data class PharmacyAddList(
-        override val pharmacyItems: List<PharmacyItem> = emptyList()
+        override val pharmacyLocation: List<PharmacyItem> = emptyList()
     ) : ResultList
 
 }
