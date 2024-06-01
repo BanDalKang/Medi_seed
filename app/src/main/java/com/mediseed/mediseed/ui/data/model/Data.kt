@@ -17,7 +17,7 @@ data class DataResponce(
     @SerializedName("법정동명")
     val BeopJeondDongName: String?,
     @SerializedName("법정동코드")
-    val BeopJeondDongCode: Int?,
+    val BeopJeondDongCode: Long?,
     @SerializedName("비고")
     val note: String?,
     @SerializedName("수거장소구분명")
@@ -33,5 +33,5 @@ data class DataResponce(
     @SerializedName("행정동명")
     val haengJeongDongName: String?,
     @SerializedName("행정동코드")
-    val haengJeongDongCode: Int?
+    val haengJeongDongCode: Long?
 )

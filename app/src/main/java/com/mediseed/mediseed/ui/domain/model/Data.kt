@@ -8,7 +8,7 @@ data class DataEntity(
     val DataDate: String?,
     val StreetNameAddress: String?,
     val BeopJeondDongName: String?,
-    val BeopJeondDongCode: Int?,
+    val BeopJeondDongCode: Long?,
     val note: String?,
     val CollectionLocationClassificationName: String?,
     val CollectionLocationName: String?,
@@ -17,5 +17,5 @@ data class DataEntity(
     val PhoneNumber: String?,
     val lotNumberAddress: String?,
     val haengJeongDongName: String?,
-    val haengJeongDongCode: Int?
+    val haengJeongDongCode: Long?
 )
