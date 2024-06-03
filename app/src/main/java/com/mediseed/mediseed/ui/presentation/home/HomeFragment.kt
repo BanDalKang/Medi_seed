@@ -24,6 +24,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentHomeBinding
+import com.mediseed.mediseed.ui.presentation.bottomSheet.BottomSheetFragment
 import com.mediseed.mediseed.ui.presentation.home.model.HomeViewModel
 import com.mediseed.mediseed.ui.presentation.home.model.HomeViewModelFactory
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
@@ -34,6 +35,7 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.clustering.MarkerInfo
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
@@ -72,8 +74,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fusedLocationSource =
-            FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
+        fusedLocationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -200,9 +201,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             iconWidth = 50
             iconHeight = 50
         }
-        // 마커표시
+        // 마커표시 및 클릭이벤트
         registerMarker(pharmacyInfo)
-        // 마커 클릭시 카메라 이동
+
     }
 
     //LastLocation은 구글 api가 더 빠름
@@ -220,48 +221,60 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun registerMarker(pharmacyInfo: MutableList<PharmacyItem.PharmacyInfo>) {
-        pharmacyInfo.forEach {
-            val markerLatitude = pharmacyInfo.map { it.latitude?.toDouble() }
-            val markerLongitude = pharmacyInfo.map { it.longitude?.toDouble() }
-            val markerName = pharmacyInfo.map { it.CollectionLocationName }
-            val markerClssificationName = pharmacyInfo.map { it.CollectionLocationClassificationName }
-            val markerPhoneNumber = pharmacyInfo.map { it.PhoneNumber }
 
-            markerLatitude.zip(markerLongitude).zip(markerName).forEach { (latlng, name) ->
-                val (lat, lng) = latlng
-                Marker().apply {
-                    position = LatLng(lat!!, lng!!)
-                    captionText = name.toString()
-                    captionColor = Color.MAGENTA
-                    icon = OverlayImage.fromResource(R.drawable.ic_sprout)
-                    map = naverMap
-//                    setOnClickListener {
-//                        val detailFragment = DetailFragment.newInstance()
-//                        childFragmentManager?.beginTransaction()
-//                            .add(R.id)
-//
-//                    }
+        pharmacyInfo.forEach { info ->
+            val markerLatitude = info.latitude?.toDouble()
+            val markerLongitude = info.longitude?.toDouble()
+            val markerName = info.CollectionLocationName
+            val markerClassificationName = info.CollectionLocationClassificationName
+            val markerPhoneNumber = info.PhoneNumber
+            val markerAddress = info.lotNumberAddress
+            val markerUpdate = info.DataDate
 
+            Marker().apply {
+                position = LatLng(markerLatitude!!, markerLongitude!!)
+                captionText = markerName.toString()
+                captionColor = Color.MAGENTA
+               // icon = OverlayImage.fromResource(R.drawable.ic_sprout)
+                map = naverMap
 
+                setOnClickListener {
+                    val markerInfo = PharmacyItem.PharmacyInfo(
+                        latitude = null,
+                        longitude = null,
+                        CollectionLocationName = markerName,
+                        CollectionLocationClassificationName = markerClassificationName,
+                        PhoneNumber = markerPhoneNumber,
+                        lotNumberAddress = markerAddress,
+                        DataDate = markerUpdate
+                    )
+                    CameraUpdate.scrollTo(position)
+                    addFragment(markerInfo)
                 }
             }
         }
     }
 
+private fun addFragment(markerInfo: PharmacyItem.PharmacyInfo): Boolean{
+    val bottomSheetFragment = BottomSheetFragment.newInstance(markerInfo)
+    bottomSheetFragment.show(childFragmentManager,bottomSheetFragment.tag)
+     return true
+}
 
 
+override fun onResume() {
+    super.onResume()
+    moveToCurrentLocation()
+    naverMap.locationTrackingMode = LocationTrackingMode.Follow
+}
 
-    override fun onResume() {
-        super.onResume()
-        moveToCurrentLocation()
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-    }
-    override fun onPause() {
-        super.onPause()
-        naverMap.locationTrackingMode = LocationTrackingMode.None
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+override fun onPause() {
+    super.onPause()
+    naverMap.locationTrackingMode = LocationTrackingMode.None
+}
+
+override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
+}
 }

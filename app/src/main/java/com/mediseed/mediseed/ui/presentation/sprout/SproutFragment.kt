@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mediseed.mediseed.databinding.FragmentHomeBinding
-import com.mediseed.mediseed.ui.bottomSheet.BottomSheetFragment
 
 class SproutFragment : Fragment() {
 

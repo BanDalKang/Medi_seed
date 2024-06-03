@@ -1,11 +1,9 @@
 package com.mediseed.mediseed.ui.presentation.home.model
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mediseed.mediseed.ui.domain.model.PharmacyEntity
 import com.mediseed.mediseed.ui.domain.usecase.PharmacyUseCase
-import com.naver.maps.map.CameraUpdate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,7 +43,6 @@ class HomeViewModel(
                 it.longitude,
                 it.CollectionLocationName,
                 it.CollectionLocationClassificationName,
-                it.StreetNameAddress,
                 it.PhoneNumber,
                 it.DataDate,
                 it.lotNumberAddress
