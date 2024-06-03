@@ -258,6 +258,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             StreetNameAddress = markerAddress,
                             DataDate = markerUpdate
                         )
+                        val currentLocation = CameraUpdate.scrollTo(LatLng(markerLatitude, markerLongitude))
+                        naverMap.moveCamera(currentLocation)
                         addFragment(markerInfo)
                     }
                 }
