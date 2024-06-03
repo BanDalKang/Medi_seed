@@ -42,21 +42,22 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             binding.tvDate.text = it.getString("date", "")
         }
 
-        // heart count를 관찰
         viewModel.heartCount.observe(viewLifecycleOwner) { count ->
             binding.tvHeartNumber.text = count.toString()
         }
 
-        // heart count를 가져옴
-        viewModel.fetchHeartCount(turn)
+        viewModel.medicineCount.observe(viewLifecycleOwner) { count ->
+            binding.tvMedicineNumber.text = count.toString()
+        }
 
-        // 하트 아이콘 클릭 리스너 설정
+        viewModel.fetchHeartCount(turn)
+        viewModel.fetchMedicineCount(turn)
+
         binding.ivHeart.setOnClickListener {
             val isHeartFilled = toggleHeartIcon()
             viewModel.updateHeartCount(turn, isHeartFilled) { success ->
                 if (!success) {
-                    // 실패했을 경우, 하트 아이콘 변경을 되돌림
-                    toggleHeartIcon() // 변경 되돌림
+                    toggleHeartIcon()
                 }
             }
         }

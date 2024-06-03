@@ -12,14 +12,17 @@ class BottomSheetViewModel : ViewModel() {
     private val _heartCount = MutableLiveData<Int>()
     val heartCount: LiveData<Int> get() = _heartCount
 
+    private val _medicineCount = MutableLiveData<Int>()
+    val medicineCount: LiveData<Int> get() = _medicineCount
+
     private var heartCountListener: ValueEventListener? = null
+    private var medicineCountListener: ValueEventListener? = null
     private var currentTurn: Int? = null
 
     fun fetchHeartCount(turn: Int) {
-        val ref = database.getReference("location/$turn/heart")
+        val ref = database.getReference("location/$turn/heartCount")
         currentTurn = turn
 
-        // 이전 리스너가 있으면 제거하여 메모리 누수 방지
         heartCountListener?.let { ref.removeEventListener(it) }
 
         heartCountListener = object : ValueEventListener {
@@ -35,8 +38,27 @@ class BottomSheetViewModel : ViewModel() {
         ref.addValueEventListener(heartCountListener as ValueEventListener)
     }
 
+    fun fetchMedicineCount(turn: Int) {
+        val ref = database.getReference("location/$turn/medicineCount")
+        currentTurn = turn
+
+        medicineCountListener?.let { ref.removeEventListener(it) }
+
+        medicineCountListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val count = dataSnapshot.getValue(Int::class.java) ?: 0
+                _medicineCount.value = count
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 에러 처리
+            }
+        }
+        ref.addValueEventListener(medicineCountListener as ValueEventListener)
+    }
+
     fun updateHeartCount(turn: Int, increment: Boolean, callback: (Boolean) -> Unit) {
-        val ref = database.getReference("location/$turn/heart")
+        val ref = database.getReference("location/$turn/heartCount")
 
         ref.runTransaction(object : Transaction.Handler {
             override fun doTransaction(mutableData: MutableData): Transaction.Result {
@@ -55,7 +77,6 @@ class BottomSheetViewModel : ViewModel() {
             ) {
                 callback(committed)
                 if (committed) {
-                    // 이 부분은 선택사항이며, 리스너가 값을 업데이트할 것이기 때문에
                     _heartCount.value = dataSnapshot?.getValue(Int::class.java)
                 }
             }
@@ -64,10 +85,14 @@ class BottomSheetViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        // ViewModel이 클리어될 때 리스너를 제거하여 메모리 누수 방지
         heartCountListener?.let { listener ->
             currentTurn?.let { turn ->
-                database.getReference("location/$turn/heart").removeEventListener(listener)
+                database.getReference("location/$turn/heartCount").removeEventListener(listener)
+            }
+        }
+        medicineCountListener?.let { listener ->
+            currentTurn?.let { turn ->
+                database.getReference("location/$turn/medicineCount").removeEventListener(listener)
             }
         }
     }
