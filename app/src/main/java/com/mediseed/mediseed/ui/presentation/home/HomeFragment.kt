@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,6 +61,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var locationOverlay: LocationOverlay
 
+    private val markerList = mutableListOf<Marker>()
 
     companion object {
         fun newInstance() = HomeFragment()
@@ -221,36 +223,42 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun registerMarker(pharmacyInfo: MutableList<PharmacyItem.PharmacyInfo>) {
+        clearMarkers()
 
         pharmacyInfo.forEach { info ->
-            val markerLatitude = info.latitude?.toDouble()
-            val markerLongitude = info.longitude?.toDouble()
-            val markerName = info.CollectionLocationName
-            val markerClassificationName = info.CollectionLocationClassificationName
-            val markerPhoneNumber = info.PhoneNumber
-            val markerAddress = info.StreetNameAddress
-            val markerUpdate = info.DataDate
+            val markerLatitude = info.latitude?.toDoubleOrNull()
+            val markerLongitude = info.longitude?.toDoubleOrNull()
 
-            Marker().apply {
-                position = LatLng(markerLatitude!!, markerLongitude!!)
-                captionText = markerName.toString()
-                captionColor = Color.MAGENTA
-               // icon = OverlayImage.fromResource(R.drawable.ic_sprout)
-                map = naverMap
+            if (markerLatitude != null && markerLongitude != null) {
+                val markerName = info.CollectionLocationName
+                val markerClassificationName = info.CollectionLocationClassificationName
+                val markerPhoneNumber = info.PhoneNumber
+                val markerAddress = info.StreetNameAddress
+                val markerUpdate = info.DataDate
 
-                setOnClickListener {
-                    val markerInfo = PharmacyItem.PharmacyInfo(
-                        latitude = null,
-                        longitude = null,
-                        CollectionLocationName = markerName,
-                        CollectionLocationClassificationName = markerClassificationName,
-                        PhoneNumber = markerPhoneNumber,
-                        StreetNameAddress = markerAddress,
-                        DataDate = markerUpdate
-                    )
-                    CameraUpdate.scrollTo(LatLng(markerLatitude!!, markerLongitude!!))
-                    addFragment(markerInfo)
+                Marker().apply {
+                    position = LatLng(markerLatitude, markerLongitude)
+                    captionText = markerName.toString()
+                    captionColor = Color.MAGENTA
+                    map = naverMap
+                    markerList.add(this)
+                    Log.d("marker", this.toString())
+
+                    setOnClickListener {
+                        val markerInfo = PharmacyItem.PharmacyInfo(
+                            latitude = null,
+                            longitude = null,
+                            CollectionLocationName = markerName,
+                            CollectionLocationClassificationName = markerClassificationName,
+                            PhoneNumber = markerPhoneNumber,
+                            StreetNameAddress = markerAddress,
+                            DataDate = markerUpdate
+                        )
+                        addFragment(markerInfo)
+                    }
                 }
+            } else {
+                Log.e("markerError", "Invalid latitude or longitude for marker: $info" )
             }
         }
     }
@@ -261,6 +269,10 @@ private fun addFragment(markerInfo: PharmacyItem.PharmacyInfo): Boolean{
      return true
 }
 
+private fun clearMarkers() {
+    markerList.forEach{it.map = null} // 모든 마커 지도에서 제거
+    markerList.clear() // 리스트 비움
+}
 
 override fun onResume() {
     super.onResume()
