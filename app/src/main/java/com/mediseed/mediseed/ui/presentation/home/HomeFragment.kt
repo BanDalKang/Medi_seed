@@ -94,9 +94,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.uiState.flowWithLifecycle(lifecycle).collectLatest { uiState ->
                 when (uiState) {
-                    is PharmacyUiState.PharmacyAddList -> pharmacyInfo =
-                        uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
-
+                    is PharmacyUiState.PharmacyAddList -> {
+                        pharmacyInfo = uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
+                        Log.d("marker", "Pharmacy info updated, registering markers.")
+                        if (this@HomeFragment::naverMap.isInitialized) {
+                        registerMarker(pharmacyInfo)
+                    }
+                    }
                     else -> {}
                 }
             }
