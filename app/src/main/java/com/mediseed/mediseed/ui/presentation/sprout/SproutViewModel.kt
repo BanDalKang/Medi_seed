@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.sprout
+package com.mediseed.mediseed.ui.presentation.sprout
 
 import android.animation.Animator
 import android.app.Application

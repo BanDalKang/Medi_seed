@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.storage
+package com.mediseed.mediseed.ui.presentation.storage
 
 import android.os.Bundle
 import android.view.LayoutInflater

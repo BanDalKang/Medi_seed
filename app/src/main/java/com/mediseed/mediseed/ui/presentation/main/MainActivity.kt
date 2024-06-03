@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.main
+package com.mediseed.mediseed.ui.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -26,8 +26,9 @@ class MainActivity : AppCompatActivity() {
     private fun initView() = with(binding) {
         // TabLayout x ViewPager2
         vpMain.adapter = viewPagerAdapter
-        vpMain.offscreenPageLimit = viewPagerAdapter.itemCount
+        vpMain.offscreenPageLimit = 1
         vpMain.currentItem = 1 // 초기 페이지를 홈 프래그먼트로 설정
+        vpMain.isUserInputEnabled = false // Swipe unabled
 
         TabLayoutMediator(tlMain, vpMain) { tab, position ->
             tab.setText(viewPagerAdapter.getTitle(position))
