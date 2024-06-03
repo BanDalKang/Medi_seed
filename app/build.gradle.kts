@@ -4,11 +4,15 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+<<<<<<< HEAD
     id("kotlin-parcelize")
 }
 
 val properties = Properties().apply {
     load(FileInputStream(rootProject.file("local.properties")))
+=======
+    id("com.google.gms.google-services")
+>>>>>>> 9952f92c9b1893f11ace9291aa939d7732ff841e
 }
 
 android {
@@ -61,6 +65,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+<<<<<<< HEAD
     // Naver Map Sdk
     implementation("com.naver.maps:map-sdk:3.18.0")
     // Google Location Service
@@ -71,6 +76,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+=======
+    // firebase
+    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation(libs.firebase.database.ktx)
+>>>>>>> 9952f92c9b1893f11ace9291aa939d7732ff841e
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
