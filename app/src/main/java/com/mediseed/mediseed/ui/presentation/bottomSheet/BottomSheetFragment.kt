@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.bottomSheet
+package com.mediseed.mediseed.ui.presentation.bottomSheet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,11 +8,15 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
+import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.share.IntentKey
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentBottomSheetBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
     private var turn: Int = 0
 
@@ -23,6 +27,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
+        arguments?.getParcelable<PharmacyItem.PharmacyInfo>(IntentKey.PHARMACY)?.let { pharmacyInfo ->
+                this.pharmacyInfo = pharmacyInfo
+            }
+
         return binding.root
     }
 
@@ -35,11 +43,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         arguments?.let {
             turn = it.getInt("turn", 0)
-            binding.tvFacilityType.text = it.getString("type","")
-            binding.tvFacilityName.text = it.getString("name", "")
-            binding.tvAddress.text = it.getString("address", "")
-            binding.tvPhone.text = it.getString("phone", "")
-            binding.tvDate.text = it.getString("date", "")
+            binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
+            binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
+            binding.tvAddress.text = pharmacyInfo.StreetNameAddress
+            binding.tvPhone.text = pharmacyInfo.PhoneNumber
+            binding.tvDate.text = pharmacyInfo.DataDate
         }
 
         viewModel.heartCount.observe(viewLifecycleOwner) { count ->
@@ -79,4 +87,17 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+        fun newInstance(pharmacyInfo: PharmacyItem.PharmacyInfo): BottomSheetFragment {
+            val bundle = Bundle().apply {
+                putParcelable(IntentKey.PHARMACY, pharmacyInfo)
+            }
+            return BottomSheetFragment().apply {
+                arguments = bundle
+            }
+
+        }
+    }
+
 }

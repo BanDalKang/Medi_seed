@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.sprout
+package com.mediseed.mediseed.ui.presentation.storage
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mediseed.mediseed.R
 
-class SproutFragment : Fragment() {
+class StorageFragment : Fragment() {
 
     companion object {
-        fun newInstance() = SproutFragment()
+        fun newInstance() = StorageFragment()
     }
 
     override fun onCreateView(
@@ -18,6 +18,6 @@ class SproutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sprout, container, false)
+        return inflater.inflate(R.layout.fragment_storage, container, false)
     }
 }
