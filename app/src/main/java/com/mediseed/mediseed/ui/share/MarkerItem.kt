@@ -12,7 +12,7 @@ interface MarkerItem: Parcelable {
 
     val DataDate: String?
 
-    val lotNumberAddress: String?
+    val StreetNameAddress: String?
 
 
 }

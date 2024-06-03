@@ -14,7 +14,7 @@ interface PharmacyItem {
         override val CollectionLocationClassificationName: String?,
         override val PhoneNumber: String?,
         override val DataDate: String?,
-        override val lotNumberAddress: String?,
+        override val StreetNameAddress: String?,
     ) : PharmacyItem, MarkerItem
 
 }

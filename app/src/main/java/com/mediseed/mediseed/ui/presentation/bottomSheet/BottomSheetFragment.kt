@@ -45,7 +45,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             turn = it.getInt("turn", 0)
             binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
             binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
-            binding.tvAddress.text = pharmacyInfo.lotNumberAddress
+            binding.tvAddress.text = pharmacyInfo.StreetNameAddress
             binding.tvPhone.text = pharmacyInfo.PhoneNumber
             binding.tvDate.text = pharmacyInfo.DataDate
         }

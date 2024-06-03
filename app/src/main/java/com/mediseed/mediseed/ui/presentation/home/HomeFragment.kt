@@ -228,7 +228,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val markerName = info.CollectionLocationName
             val markerClassificationName = info.CollectionLocationClassificationName
             val markerPhoneNumber = info.PhoneNumber
-            val markerAddress = info.lotNumberAddress
+            val markerAddress = info.StreetNameAddress
             val markerUpdate = info.DataDate
 
             Marker().apply {
@@ -245,10 +245,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         CollectionLocationName = markerName,
                         CollectionLocationClassificationName = markerClassificationName,
                         PhoneNumber = markerPhoneNumber,
-                        lotNumberAddress = markerAddress,
+                        StreetNameAddress = markerAddress,
                         DataDate = markerUpdate
                     )
-                    CameraUpdate.scrollTo(position)
+                    CameraUpdate.scrollTo(LatLng(markerLatitude!!, markerLongitude!!))
                     addFragment(markerInfo)
                 }
             }
