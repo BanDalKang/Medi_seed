@@ -1,8 +1,10 @@
 package com.mediseed.mediseed.ui.sprout
 
+import android.animation.Animator
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -111,4 +113,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
     val showPillButtonClickLimitToast = MutableLiveData<Boolean>()
     val showShareButtonClickLimitToast = MutableLiveData<Boolean>()
+
+
+
 }

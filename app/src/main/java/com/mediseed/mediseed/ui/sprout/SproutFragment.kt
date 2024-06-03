@@ -1,6 +1,7 @@
 package com.mediseed.mediseed.ui.sprout
 
 import android.Manifest
+import android.animation.Animator
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -64,7 +65,8 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-                checkLocationPermissionAndClick()
+//                checkLocationPermissionAndClick()
+                sproutViewModel.updateProgress(20) //테스트 코드
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()
@@ -82,6 +84,7 @@ class SproutFragment : Fragment() {
             level.observe(viewLifecycleOwner) { level ->
                 binding.levelTextView.text = "$level"
                 updateSproutImage(level)
+                playLevelUpAnimation()
             }
             tree.observe(viewLifecycleOwner) { tree ->
                 binding.treeTextView.text = "$tree"
@@ -227,4 +230,23 @@ class SproutFragment : Fragment() {
             REQUEST_LOCATION_PERMISSION
         )
     }
+
+    private fun playLevelUpAnimation() {
+        binding.levelUpAnimationView.apply {
+            visibility = View.VISIBLE
+            setMinAndMaxFrame(0, 70)
+            playAnimation()
+            addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    visibility = View.GONE
+                }
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+            })
+        }
+    }
+
+
+
 }
