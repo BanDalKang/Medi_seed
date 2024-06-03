@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.main
+package com.mediseed.mediseed.ui.presentation.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
