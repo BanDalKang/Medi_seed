@@ -8,8 +8,6 @@ interface MarkerItem: Parcelable {
 
     val CollectionLocationClassificationName: String?
 
-    val StreetNameAddress: String?
-
     val PhoneNumber: String?
 
     val DataDate: String?

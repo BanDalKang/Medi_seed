@@ -40,7 +40,7 @@ class HomeViewModel(
 
     private fun createPharmacyLocation(entity: PharmacyEntity): List<PharmacyItem> {
         return entity.data.map {
-            PharmacyItem.PharmacyLocation(
+            PharmacyItem.PharmacyInfo(
                 it.Latitude,
                 it.longitude,
                 it.CollectionLocationName,

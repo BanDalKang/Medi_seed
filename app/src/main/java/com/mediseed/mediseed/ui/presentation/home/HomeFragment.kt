@@ -3,21 +3,18 @@ package com.mediseed.mediseed.ui.presentation.home
 import android.os.Bundle
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
-import androidx.appcompat.widget.WithHint
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -51,7 +48,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
 
-    private var pharmacyLocation = mutableListOf<PharmacyItem.PharmacyLocation>()
+    private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()
 
     private lateinit var naverMap: NaverMap
 
@@ -60,6 +57,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var locationOverlay: LocationOverlay
+
 
     companion object {
         fun newInstance() = HomeFragment()
@@ -74,7 +72,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fusedLocationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
+        fusedLocationSource =
+            FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -92,8 +91,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         viewLifecycleOwner.lifecycleScope.launch {
             homeViewModel.uiState.flowWithLifecycle(lifecycle).collectLatest { uiState ->
                 when (uiState) {
-                    is PharmacyUiState.PharmacyAddList -> pharmacyLocation =
-                        uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyLocation>
+                    is PharmacyUiState.PharmacyAddList -> pharmacyInfo =
+                        uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
+
                     else -> {}
                 }
             }
@@ -146,14 +146,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private fun showSettingsDialog() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        val uri = Uri.fromParts("package",requireContext().packageName, null) /// package:com.mediseed.mediseed
+        val uri = Uri.fromParts(
+            "package",
+            requireContext().packageName,
+            null
+        ) /// package:com.mediseed.mediseed
         intent.data = uri
-        intent.putExtra(ActivityResultContracts.RequestMultiplePermissions.EXTRA_PERMISSIONS, PERMISSIONS)
+        intent.putExtra(
+            ActivityResultContracts.RequestMultiplePermissions.EXTRA_PERMISSIONS,
+            PERMISSIONS
+        )
         settingLauncher.launch(intent)
     }
 
     private val settingLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
+        ActivityResultContracts.StartActivityForResult()
     ) {
         registerMap()
     }
@@ -174,9 +181,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         locationOverlay = naverMap.locationOverlay
-        var latitude = pharmacyLocation.map { it.latitude!!.toDouble() }
-        var longitude = pharmacyLocation.map { it.longitude!!.toDouble() }
-
 
         // 현재 위치 관련 정보
         naverMap.apply {
@@ -192,12 +196,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // 사용자 위치 아이콘 커스텀
         locationOverlay.apply {
             isVisible = true
-            icon = OverlayImage.fromResource(R.drawable.ic_sprout)
+            icon = OverlayImage.fromResource(R.drawable.marker_pill)
             iconWidth = 50
             iconHeight = 50
         }
         // 마커표시
-        registerMarker(latitude, longitude)
+        registerMarker(pharmacyInfo)
         // 마커 클릭시 카메라 이동
     }
 
@@ -215,15 +219,37 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
     }
 
-    private fun registerMarker(latitude: List<Double>, longitude: List<Double>) {
-        latitude.zip(longitude).forEach { (latitude, longitude) ->
-            Marker().apply {
-                position = LatLng(latitude, longitude)
-                map = naverMap
-                Log.d("marker",position.toString())
+    private fun registerMarker(pharmacyInfo: MutableList<PharmacyItem.PharmacyInfo>) {
+        pharmacyInfo.forEach {
+            val markerLatitude = pharmacyInfo.map { it.latitude?.toDouble() }
+            val markerLongitude = pharmacyInfo.map { it.longitude?.toDouble() }
+            val markerName = pharmacyInfo.map { it.CollectionLocationName }
+            val markerClssificationName = pharmacyInfo.map { it.CollectionLocationClassificationName }
+            val markerPhoneNumber = pharmacyInfo.map { it.PhoneNumber }
+
+            markerLatitude.zip(markerLongitude).zip(markerName).forEach { (latlng, name) ->
+                val (lat, lng) = latlng
+                Marker().apply {
+                    position = LatLng(lat!!, lng!!)
+                    captionText = name.toString()
+                    captionColor = Color.MAGENTA
+                    icon = OverlayImage.fromResource(R.drawable.ic_sprout)
+                    map = naverMap
+//                    setOnClickListener {
+//                        val detailFragment = DetailFragment.newInstance()
+//                        childFragmentManager?.beginTransaction()
+//                            .add(R.id)
+//
+//                    }
+
+
+                }
             }
         }
     }
+
+
+
 
     override fun onResume() {
         super.onResume()
