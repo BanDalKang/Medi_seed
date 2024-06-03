@@ -67,9 +67,9 @@ class SproutFragment : Fragment() {
                 checkLocationPermissionAndClick()
             }
             sproutShareButton.setOnClickListener {
-                sproutViewModel.handleShareButtonClick()
-                shareApp()
-//                sproutViewModel.updateProgress(10) //테스트 코드
+//                sproutViewModel.handleShareButtonClick()
+//                shareApp()
+                sproutViewModel.updateProgress(10) //테스트 코드
             }
             nameImageButton.setOnClickListener {
                 showNameEditDialog()
