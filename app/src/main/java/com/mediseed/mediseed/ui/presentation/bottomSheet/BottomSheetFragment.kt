@@ -18,8 +18,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
-    private var turn: Int = 0
-
     private val viewModel: BottomSheetViewModel by viewModels()
 
     override fun onCreateView(
@@ -28,8 +26,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     ): View {
         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
         arguments?.getParcelable<PharmacyItem.PharmacyInfo>(IntentKey.PHARMACY)?.let { pharmacyInfo ->
-                this.pharmacyInfo = pharmacyInfo
-            }
+            this.pharmacyInfo = pharmacyInfo
+        }
 
         return binding.root
     }
@@ -41,14 +39,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            turn = it.getInt("turn", 0)
-            binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
-            binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
-            binding.tvAddress.text = pharmacyInfo.StreetNameAddress
-            binding.tvPhone.text = pharmacyInfo.PhoneNumber
-            binding.tvDate.text = pharmacyInfo.DataDate
-        }
+        binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
+        binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
+        binding.tvAddress.text = pharmacyInfo.StreetNameAddress
+        binding.tvPhone.text = pharmacyInfo.PhoneNumber
+        binding.tvDate.text = pharmacyInfo.DataDate
 
         viewModel.heartCount.observe(viewLifecycleOwner) { count ->
             binding.tvHeartNumber.text = count.toString()
@@ -58,14 +53,16 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             binding.tvMedicineNumber.text = count.toString()
         }
 
-        viewModel.fetchHeartCount(turn)
-        viewModel.fetchMedicineCount(turn)
+        pharmacyInfo.StreetNameAddress?.let { viewModel.fetchHeartCount(it) }
+        pharmacyInfo.StreetNameAddress?.let { viewModel.fetchMedicineCount(it) }
 
         binding.ivHeart.setOnClickListener {
             val isHeartFilled = toggleHeartIcon()
-            viewModel.updateHeartCount(turn, isHeartFilled) { success ->
-                if (!success) {
-                    toggleHeartIcon()
+            pharmacyInfo.StreetNameAddress?.let { it1 ->
+                viewModel.updateHeartCount(it1, isHeartFilled) { success ->
+                    if (!success) {
+                        toggleHeartIcon()
+                    }
                 }
             }
         }
@@ -96,8 +93,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             return BottomSheetFragment().apply {
                 arguments = bundle
             }
-
         }
     }
-
 }

@@ -17,11 +17,11 @@ class BottomSheetViewModel : ViewModel() {
 
     private var heartCountListener: ValueEventListener? = null
     private var medicineCountListener: ValueEventListener? = null
-    private var currentTurn: Int? = null
+    private var currentAddress: String? = null
 
-    fun fetchHeartCount(turn: Int) {
-        val ref = database.getReference("location/$turn/heartCount")
-        currentTurn = turn
+    fun fetchHeartCount(address: String) {
+        val ref = database.getReference("location/$address/heartCount")
+        currentAddress = address
 
         heartCountListener?.let { ref.removeEventListener(it) }
 
@@ -38,9 +38,9 @@ class BottomSheetViewModel : ViewModel() {
         ref.addValueEventListener(heartCountListener as ValueEventListener)
     }
 
-    fun fetchMedicineCount(turn: Int) {
-        val ref = database.getReference("location/$turn/medicineCount")
-        currentTurn = turn
+    fun fetchMedicineCount(address: String) {
+        val ref = database.getReference("location/$address/medicineCount")
+        currentAddress = address
 
         medicineCountListener?.let { ref.removeEventListener(it) }
 
@@ -57,8 +57,8 @@ class BottomSheetViewModel : ViewModel() {
         ref.addValueEventListener(medicineCountListener as ValueEventListener)
     }
 
-    fun updateHeartCount(turn: Int, increment: Boolean, callback: (Boolean) -> Unit) {
-        val ref = database.getReference("location/$turn/heartCount")
+    fun updateHeartCount(address: String, increment: Boolean, callback: (Boolean) -> Unit) {
+        val ref = database.getReference("location/$address/heartCount")
 
         ref.runTransaction(object : Transaction.Handler {
             override fun doTransaction(mutableData: MutableData): Transaction.Result {
@@ -86,13 +86,13 @@ class BottomSheetViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         heartCountListener?.let { listener ->
-            currentTurn?.let { turn ->
-                database.getReference("location/$turn/heartCount").removeEventListener(listener)
+            currentAddress?.let { address ->
+                database.getReference("location/$address/heartCount").removeEventListener(listener)
             }
         }
         medicineCountListener?.let { listener ->
-            currentTurn?.let { turn ->
-                database.getReference("location/$turn/medicineCount").removeEventListener(listener)
+            currentAddress?.let { address ->
+                database.getReference("location/$address/medicineCount").removeEventListener(listener)
             }
         }
     }
