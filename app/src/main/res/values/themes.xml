@@ -72,9 +72,10 @@
     </style>
 
     <style name="TextAppearance.AppCompat.Body.S" parent="TextAppearance.AppCompat">
-        <item name="fontFamily">@font/pretendard_light</item>
+        <item name="fontFamily">@font/pretendard_medium</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
 
     <style name="TextAppearance.AppCompat.Body.XS" parent="TextAppearance.AppCompat">
@@ -90,21 +91,19 @@
     </style>
 
     <style name="TextAppearance.AppCompat.Action.M" parent="TextAppearance.AppCompat">
-        <item name="fontFamily">@font/pretendard_medium</item>
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
     <style name="TextAppearance.AppCompat.Action.S" parent="TextAppearance.AppCompat">
-        <item name="fontFamily">@font/pretendard_medium</item>
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:textSize">10sp</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="TextAppearance.AppCompat.Caption.M" parent="TextAppearance.AppCompat">
         <item name="fontFamily">@font/pretendard_medium</item>
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>
