@@ -141,12 +141,11 @@
                 android:id="@+id/progressBarPercentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="230dp"
+                android:layout_marginLeft="225dp"
                 android:text="0"
-                android:textColor="@color/green_200"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:fontFamily="@font/pretendard_bold" />
+                android:textColor="@color/grey_dark"
+                android:textSize="16sp"
+                app:fontFamily="@font/pretendard_regular" />
         </LinearLayout>
 
         <LinearLayout

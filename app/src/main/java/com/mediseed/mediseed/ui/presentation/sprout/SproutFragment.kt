@@ -65,8 +65,8 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-//                checkLocationPermissionAndClick()
-                sproutViewModel.updateProgress(20) //테스트 코드
+                checkLocationPermissionAndClick()
+//                sproutViewModel.updateProgress(20) //테스트 코드
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()

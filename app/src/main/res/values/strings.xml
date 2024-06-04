@@ -16,6 +16,7 @@
     <string name="sprout_share_title">앱 공유하기</string>
     <string name="sprout_distance_toast">수거함이 너무 멀리 있습니다.</string>
     <string name="sprout_location_toast">현재 위치를 가져오지 못했습니다.</string>
+    <string name="sprout_pill_location_toast">수거함 위치를 가져오지 못했습니다.</string>
 
     <!--HomeFragment-->
     <string name="location_permission_granted">위치권한이 허용되었습니다.</string>

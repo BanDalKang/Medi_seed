@@ -14,7 +14,7 @@ class HomeViewModel(
     private val pharmacyUseCase: PharmacyUseCase
 ) : ViewModel() {
 
-   private val _uiState: MutableStateFlow<PharmacyUiState> = MutableStateFlow(PharmacyUiState.ResultEmpty)
+    private val _uiState: MutableStateFlow<PharmacyUiState> = MutableStateFlow(PharmacyUiState.ResultEmpty)
 
     val uiState: StateFlow<PharmacyUiState> get() = _uiState.asStateFlow()
 
