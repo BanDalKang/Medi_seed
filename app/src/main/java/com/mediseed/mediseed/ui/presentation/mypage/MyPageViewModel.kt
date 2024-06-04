@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.mypage
+package com.mediseed.mediseed.ui.presentation.mypage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

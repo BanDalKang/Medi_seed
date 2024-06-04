@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.mypage
+package com.mediseed.mediseed.ui.presentation.mypage
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

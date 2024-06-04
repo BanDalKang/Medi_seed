@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.main
+package com.mediseed.mediseed.ui.presentation.main
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
