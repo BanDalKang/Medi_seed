@@ -5,6 +5,19 @@
     <string name="main_tab_sprout_title">새싹이</string>
     <string name="main_tab_home_title">홈</string>
     <string name="main_tab_mypage_title">마이페이지</string>
+    <string name="sprout_pill_button">약 주기</string>
+    <string name="sprout_share_button">공유하기</string>
+    <string name="sprout_bottom_text">약 주기는 수거함 근처에서만 가능합니다.</string>
+    <string name="sprout_level_text">레벨</string>
+    <string name="sprout_tree_text">그루</string>
+    <string name="sprout_pill_button_toast">하루에 한 번만 가능합니다.</string>
+    <string name="sprout_share_button_toast">하루에 세 번만 가능합니다.</string>
+    <string name="sprout_share_message">우리동네 폐의약품 수거함 새싹이통에서 확인하세요!</string>
+    <string name="sprout_share_title">앱 공유하기</string>
+    <string name="sprout_distance_toast">수거함이 너무 멀리 있습니다.</string>
+    <string name="sprout_location_toast">현재 위치를 가져오지 못했습니다.</string>
+    <string name="sprout_pill_location_toast">수거함 위치를 가져오지 못했습니다.</string>
+
     <!--HomeFragment-->
     <string name="location_permission_granted">위치권한이 허용되었습니다.</string>
     <string name="location_permission_required">권한을 허용해야 앱을 이용할 수 있습니다.</string>

@@ -19,6 +19,28 @@
 
 
 
+<!--    <com.naver.maps.map.widget.CompassView-->
+<!--        android:id="@+id/navermap_compass"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        />-->
+
+<!--    <com.naver.maps.map.widget.LocationButtonView-->
+<!--        android:id="@+id/navermap_location_button"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+
+<!--        />-->
+
+
+
+
+
+
 <!--    <androidx.appcompat.widget.SearchView-->
 <!--        android:id="@+id/search_view"-->
 <!--        android:layout_width="match_parent"-->
