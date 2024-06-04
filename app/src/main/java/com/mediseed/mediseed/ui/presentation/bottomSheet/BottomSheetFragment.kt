@@ -1,10 +1,11 @@
 package com.mediseed.mediseed.ui.presentation.bottomSheet
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
@@ -18,9 +19,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
-    private var turn: Int = 0
-
-    private val viewModel: BottomSheetViewModel by viewModels()
+    private lateinit var viewModel: BottomSheetViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +27,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     ): View {
         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
         arguments?.getParcelable<PharmacyItem.PharmacyInfo>(IntentKey.PHARMACY)?.let { pharmacyInfo ->
-                this.pharmacyInfo = pharmacyInfo
-            }
+            this.pharmacyInfo = pharmacyInfo
+        }
+
+        // ViewModel 초기화
+        val pref = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val factory = BottomSheetViewModelFactory(pref)
+        viewModel = ViewModelProvider(this, factory).get(BottomSheetViewModel::class.java)
 
         return binding.root
     }
@@ -41,32 +45,47 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            turn = it.getInt("turn", 0)
-            binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
-            binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
-            binding.tvAddress.text = pharmacyInfo.StreetNameAddress
-            binding.tvPhone.text = pharmacyInfo.PhoneNumber
-            binding.tvDate.text = pharmacyInfo.DataDate
-        }
+        binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
+        binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
+        binding.tvAddress.text = pharmacyInfo.StreetNameAddress
+        binding.tvPhone.text = pharmacyInfo.PhoneNumber
+        binding.tvDate.text = pharmacyInfo.DataDate
 
-        // heart count를 관찰
         viewModel.heartCount.observe(viewLifecycleOwner) { count ->
             binding.tvHeartNumber.text = count.toString()
         }
 
-        // heart count를 가져옴
-        viewModel.fetchHeartCount(turn)
+        viewModel.medicineCount.observe(viewLifecycleOwner) { count ->
+            binding.tvMedicineNumber.text = count.toString()
+        }
 
-        // 하트 아이콘 클릭 리스너 설정
+        pharmacyInfo.StreetNameAddress?.let { viewModel.fetchHeartCount(it) }
+        pharmacyInfo.StreetNameAddress?.let { viewModel.fetchMedicineCount(it) }
+
         binding.ivHeart.setOnClickListener {
             val isHeartFilled = toggleHeartIcon()
-            viewModel.updateHeartCount(turn, isHeartFilled) { success ->
-                if (!success) {
-                    // 실패했을 경우, 하트 아이콘 변경을 되돌림
-                    toggleHeartIcon() // 변경 되돌림
+            pharmacyInfo.StreetNameAddress?.let { address ->
+                viewModel.updateHeartCount(address, isHeartFilled) { success ->
+                    if (success) {
+                        if (isHeartFilled) {
+                            viewModel.savePharmacyInfoToPrefs(pharmacyInfo)
+                        } else {
+                            viewModel.removePharmacyInfoFromPrefs(pharmacyInfo)
+                        }
+                    } else {
+                        toggleHeartIcon()
+                    }
                 }
             }
+        }
+
+        // 이미 좋아요가 눌린 상태인지 확인하고 하트 아이콘을 설정합니다.
+        if (viewModel.isPharmacyInfoLiked(pharmacyInfo)) {
+            binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
+            binding.ivHeart.tag = "filled"
+        } else {
+            binding.ivHeart.setImageResource(R.drawable.ic_heart_empty)
+            binding.ivHeart.tag = "empty"
         }
     }
 
@@ -95,8 +114,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             return BottomSheetFragment().apply {
                 arguments = bundle
             }
-
         }
     }
-
 }

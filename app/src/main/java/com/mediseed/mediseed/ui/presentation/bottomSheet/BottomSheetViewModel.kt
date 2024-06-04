@@ -1,25 +1,33 @@
 package com.mediseed.mediseed.ui.presentation.bottomSheet
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.mediseed.mediseed.ui.Const
+import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 
-class BottomSheetViewModel : ViewModel() {
+class BottomSheetViewModel(private val pref: SharedPreferences) : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance()
 
     private val _heartCount = MutableLiveData<Int>()
     val heartCount: LiveData<Int> get() = _heartCount
 
+    private val _medicineCount = MutableLiveData<Int>()
+    val medicineCount: LiveData<Int> get() = _medicineCount
+
     private var heartCountListener: ValueEventListener? = null
-    private var currentTurn: Int? = null
+    private var medicineCountListener: ValueEventListener? = null
+    private var currentAddress: String? = null
 
-    fun fetchHeartCount(turn: Int) {
-        val ref = database.getReference("location/$turn/heart")
-        currentTurn = turn
+    fun fetchHeartCount(address: String) {
+        val ref = database.getReference("location/$address/heartCount")
+        currentAddress = address
 
-        // 이전 리스너가 있으면 제거하여 메모리 누수 방지
         heartCountListener?.let { ref.removeEventListener(it) }
 
         heartCountListener = object : ValueEventListener {
@@ -35,8 +43,27 @@ class BottomSheetViewModel : ViewModel() {
         ref.addValueEventListener(heartCountListener as ValueEventListener)
     }
 
-    fun updateHeartCount(turn: Int, increment: Boolean, callback: (Boolean) -> Unit) {
-        val ref = database.getReference("location/$turn/heart")
+    fun fetchMedicineCount(address: String) {
+        val ref = database.getReference("location/$address/medicineCount")
+        currentAddress = address
+
+        medicineCountListener?.let { ref.removeEventListener(it) }
+
+        medicineCountListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val count = dataSnapshot.getValue(Int::class.java) ?: 0
+                _medicineCount.value = count
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 에러 처리
+            }
+        }
+        ref.addValueEventListener(medicineCountListener as ValueEventListener)
+    }
+
+    fun updateHeartCount(address: String, increment: Boolean, callback: (Boolean) -> Unit) {
+        val ref = database.getReference("location/$address/heartCount")
 
         ref.runTransaction(object : Transaction.Handler {
             override fun doTransaction(mutableData: MutableData): Transaction.Result {
@@ -55,19 +82,57 @@ class BottomSheetViewModel : ViewModel() {
             ) {
                 callback(committed)
                 if (committed) {
-                    // 이 부분은 선택사항이며, 리스너가 값을 업데이트할 것이기 때문에
                     _heartCount.value = dataSnapshot?.getValue(Int::class.java)
                 }
             }
         })
     }
 
+    private fun getPrefsItems(): List<PharmacyItem.PharmacyInfo> {
+        val jsonString = pref.getString(Const.LIKED_ITEMS, "")
+        return if (jsonString.isNullOrEmpty()) {
+            emptyList()
+        } else {
+            Gson().fromJson(jsonString, object : TypeToken<List<PharmacyItem.PharmacyInfo>>() {}.type)
+        }
+    }
+
+    private fun savePrefsItems(items: List<PharmacyItem.PharmacyInfo>) {
+        val jsonString = Gson().toJson(items)
+        pref.edit().putString(Const.LIKED_ITEMS, jsonString).apply()
+    }
+
+    fun savePharmacyInfoToPrefs(pharmacyInfo: PharmacyItem.PharmacyInfo) {
+        val likedItems = getPrefsItems().toMutableList()
+        val findItem = likedItems.find { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
+
+        if (findItem == null) {
+            likedItems.add(pharmacyInfo)
+            savePrefsItems(likedItems)
+        }
+    }
+
+    fun removePharmacyInfoFromPrefs(pharmacyInfo: PharmacyItem.PharmacyInfo) {
+        val likedItems = getPrefsItems().toMutableList()
+        likedItems.removeAll { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
+        savePrefsItems(likedItems)
+    }
+
+    fun isPharmacyInfoLiked(pharmacyInfo: PharmacyItem.PharmacyInfo): Boolean {
+        val likedItems = getPrefsItems()
+        return likedItems.any { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
+    }
+
     override fun onCleared() {
         super.onCleared()
-        // ViewModel이 클리어될 때 리스너를 제거하여 메모리 누수 방지
         heartCountListener?.let { listener ->
-            currentTurn?.let { turn ->
-                database.getReference("location/$turn/heart").removeEventListener(listener)
+            currentAddress?.let { address ->
+                database.getReference("location/$address/heartCount").removeEventListener(listener)
+            }
+        }
+        medicineCountListener?.let { listener ->
+            currentAddress?.let { address ->
+                database.getReference("location/$address/medicineCount").removeEventListener(listener)
             }
         }
     }
