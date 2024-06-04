@@ -18,6 +18,8 @@ class HomeViewModel(
 
     val uiState: StateFlow<PharmacyUiState> get() = _uiState.asStateFlow()
 
+
+
     /**사용자의 현재 위치를 실시간으로 받고, 반경 300m 안에 있는 약국의 위치를 마커로 표시합니다.*/
     fun getLocation() = viewModelScope.launch {
         pharmacyUseCase().onSuccess { pharmacyEntity ->
@@ -34,8 +36,6 @@ class HomeViewModel(
         }
     }
 
-
-
     private fun createPharmacyLocation(entity: PharmacyEntity): List<PharmacyItem> {
         return entity.data.map {
             PharmacyItem.PharmacyInfo(
@@ -50,6 +50,4 @@ class HomeViewModel(
         }
 
     }
-
-
 }

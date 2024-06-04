@@ -22,6 +22,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
+import com.mediseed.mediseed.ui.presentation.home.HomeFragment
+import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
+
 
 class SproutFragment : Fragment() {
 
@@ -246,7 +249,4 @@ class SproutFragment : Fragment() {
             })
         }
     }
-
-
-
 }
