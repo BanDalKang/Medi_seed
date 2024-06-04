@@ -1,11 +1,16 @@
 package com.mediseed.mediseed.ui.presentation.bottomSheet
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.mediseed.mediseed.ui.Const
+import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 
-class BottomSheetViewModel : ViewModel() {
+class BottomSheetViewModel(private val pref: SharedPreferences) : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance()
 
@@ -81,6 +86,41 @@ class BottomSheetViewModel : ViewModel() {
                 }
             }
         })
+    }
+
+    private fun getPrefsItems(): List<PharmacyItem.PharmacyInfo> {
+        val jsonString = pref.getString(Const.LIKED_ITEMS, "")
+        return if (jsonString.isNullOrEmpty()) {
+            emptyList()
+        } else {
+            Gson().fromJson(jsonString, object : TypeToken<List<PharmacyItem.PharmacyInfo>>() {}.type)
+        }
+    }
+
+    private fun savePrefsItems(items: List<PharmacyItem.PharmacyInfo>) {
+        val jsonString = Gson().toJson(items)
+        pref.edit().putString(Const.LIKED_ITEMS, jsonString).apply()
+    }
+
+    fun savePharmacyInfoToPrefs(pharmacyInfo: PharmacyItem.PharmacyInfo) {
+        val likedItems = getPrefsItems().toMutableList()
+        val findItem = likedItems.find { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
+
+        if (findItem == null) {
+            likedItems.add(pharmacyInfo)
+            savePrefsItems(likedItems)
+        }
+    }
+
+    fun removePharmacyInfoFromPrefs(pharmacyInfo: PharmacyItem.PharmacyInfo) {
+        val likedItems = getPrefsItems().toMutableList()
+        likedItems.removeAll { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
+        savePrefsItems(likedItems)
+    }
+
+    fun isPharmacyInfoLiked(pharmacyInfo: PharmacyItem.PharmacyInfo): Boolean {
+        val likedItems = getPrefsItems()
+        return likedItems.any { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
     }
 
     override fun onCleared() {

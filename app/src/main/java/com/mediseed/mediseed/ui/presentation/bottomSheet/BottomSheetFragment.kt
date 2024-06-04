@@ -1,10 +1,11 @@
 package com.mediseed.mediseed.ui.presentation.bottomSheet
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
@@ -18,7 +19,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
-    private val viewModel: BottomSheetViewModel by viewModels()
+    private lateinit var viewModel: BottomSheetViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +29,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         arguments?.getParcelable<PharmacyItem.PharmacyInfo>(IntentKey.PHARMACY)?.let { pharmacyInfo ->
             this.pharmacyInfo = pharmacyInfo
         }
+
+        // ViewModel 초기화
+        val pref = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val factory = BottomSheetViewModelFactory(pref)
+        viewModel = ViewModelProvider(this, factory).get(BottomSheetViewModel::class.java)
 
         return binding.root
     }
@@ -58,13 +64,28 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.ivHeart.setOnClickListener {
             val isHeartFilled = toggleHeartIcon()
-            pharmacyInfo.StreetNameAddress?.let { it1 ->
-                viewModel.updateHeartCount(it1, isHeartFilled) { success ->
-                    if (!success) {
+            pharmacyInfo.StreetNameAddress?.let { address ->
+                viewModel.updateHeartCount(address, isHeartFilled) { success ->
+                    if (success) {
+                        if (isHeartFilled) {
+                            viewModel.savePharmacyInfoToPrefs(pharmacyInfo)
+                        } else {
+                            viewModel.removePharmacyInfoFromPrefs(pharmacyInfo)
+                        }
+                    } else {
                         toggleHeartIcon()
                     }
                 }
             }
+        }
+
+        // 이미 좋아요가 눌린 상태인지 확인하고 하트 아이콘을 설정합니다.
+        if (viewModel.isPharmacyInfoLiked(pharmacyInfo)) {
+            binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
+            binding.ivHeart.tag = "filled"
+        } else {
+            binding.ivHeart.setImageResource(R.drawable.ic_heart_empty)
+            binding.ivHeart.tag = "empty"
         }
     }
 
