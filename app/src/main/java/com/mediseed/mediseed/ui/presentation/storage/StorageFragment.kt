@@ -6,8 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mediseed.mediseed.R
+import com.mediseed.mediseed.ui.presentation.main.MainActivity
 
 class StorageFragment : Fragment() {
+
+    private val mainActivity by lazy {
+        activity as? MainActivity
+    }
 
     companion object {
         fun newInstance() = StorageFragment()
@@ -20,4 +25,10 @@ class StorageFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_storage, container, false)
     }
+
+    override fun onResume() {
+        super.onResume()
+        mainActivity?.hideBar()
+    }
 }
+

@@ -30,13 +30,13 @@ import com.mediseed.mediseed.ui.presentation.home.model.HomeViewModel
 import com.mediseed.mediseed.ui.presentation.home.model.HomeViewModelFactory
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyUiState
+import com.mediseed.mediseed.ui.presentation.main.MainActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.clustering.MarkerInfo
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
@@ -63,6 +63,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private val markerList = mutableListOf<Marker>()
 
+    private val mainActivity by lazy {
+       activity as? MainActivity
+    }
     companion object {
         fun newInstance() = HomeFragment()
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -76,7 +79,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fusedLocationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
+        fusedLocationSource =
+            FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -95,12 +99,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             homeViewModel.uiState.flowWithLifecycle(lifecycle).collectLatest { uiState ->
                 when (uiState) {
                     is PharmacyUiState.PharmacyAddList -> {
-                        pharmacyInfo = uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
-                        Log.d("marker", "Pharmacy info updated, registering markers.")
+                        pharmacyInfo =
+                            uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
+                        /**데이터가 최신화될 때마다, 마커를 업데이트합니다.*/
                         if (this@HomeFragment::naverMap.isInitialized) {
-                        registerMarker(pharmacyInfo)
+                            registerMarker(pharmacyInfo)
+                        }
                     }
-                    }
+
                     else -> {}
                 }
             }
@@ -195,10 +201,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             locationSource = fusedLocationSource
             // 현재 위치로 카메라 이동
             moveToCurrentLocation()
-            // 현재 위치 버튼 기능
-            uiSettings.isLocationButtonEnabled = true
+            // 현재 위치, 나침반 버튼 기능
+            uiSettings.apply {
+                isLocationButtonEnabled = true
+                isCompassEnabled = true
+            }
             // 실시간 위치 추적하며 카메라 움직임
-            naverMap.locationTrackingMode = LocationTrackingMode.Follow
+            locationTrackingMode = LocationTrackingMode.Follow
+
+
+
+
+
         }
         // 사용자 위치 아이콘 커스텀
         locationOverlay.apply {
@@ -207,9 +221,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             iconWidth = 50
             iconHeight = 50
         }
-        // 마커표시 및 클릭이벤트
+        // 마커 생성
         registerMarker(pharmacyInfo)
-
     }
 
     //LastLocation은 구글 api가 더 빠름
@@ -258,41 +271,44 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             StreetNameAddress = markerAddress,
                             DataDate = markerUpdate
                         )
-                        val currentLocation = CameraUpdate.scrollTo(LatLng(markerLatitude, markerLongitude))
+                        val currentLocation =
+                            CameraUpdate.scrollTo(LatLng(markerLatitude, markerLongitude))
                         naverMap.moveCamera(currentLocation)
-                        addFragment(markerInfo)
+                        showBottomSheet(markerInfo)
                     }
                 }
             } else {
-                Log.e("markerError", "Invalid latitude or longitude for marker: $info" )
+                Log.e("markerError", "Invalid latitude or longitude for marker: $info")
             }
         }
     }
 
-private fun addFragment(markerInfo: PharmacyItem.PharmacyInfo): Boolean{
-    val bottomSheetFragment = BottomSheetFragment.newInstance(markerInfo)
-    bottomSheetFragment.show(childFragmentManager,bottomSheetFragment.tag)
-     return true
-}
+    private fun showBottomSheet(markerInfo: PharmacyItem.PharmacyInfo): Boolean {
+        val bottomSheetFragment = BottomSheetFragment.newInstance(markerInfo)
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+        return true
+    }
 
-private fun clearMarkers() {
-    markerList.forEach{it.map = null} // 모든 마커 지도에서 제거
-    markerList.clear() // 리스트 비움
-}
+    private fun clearMarkers() {
+        markerList.forEach { it.map = null } // 모든 마커 지도에서 제거
+        markerList.clear() // 리스트 비움
+    }
 
-override fun onResume() {
-    super.onResume()
-    moveToCurrentLocation()
-    naverMap.locationTrackingMode = LocationTrackingMode.Follow
-}
 
-override fun onPause() {
-    super.onPause()
-    naverMap.locationTrackingMode = LocationTrackingMode.None
-}
+    override fun onResume() {
+        super.onResume()
+        mainActivity?.showBar()
+        moveToCurrentLocation()
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
 
-override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
-}
+    override fun onPause() {
+        super.onPause()
+        naverMap.locationTrackingMode = LocationTrackingMode.None
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
