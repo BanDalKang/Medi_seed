@@ -22,7 +22,11 @@ class MainViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment = fragments[position].fragment
 
+
     fun getTitle(position: Int): Int = fragments[position].title
 
     fun getTabIcon(position: Int): Int = fragments[position].icon
+
+    fun getHomeFragment(): HomeFragment? = fragments.getOrNull(1)?.fragment as? HomeFragment
+
 }

@@ -1,5 +1,6 @@
 package com.mediseed.mediseed.ui.presentation.main
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,14 +8,22 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mediseed.mediseed.ui.presentation.home.HomeFragment
+import com.mediseed.mediseed.ui.presentation.home.SuggestionAdapter
+import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
@@ -25,12 +34,32 @@ class MainActivity : AppCompatActivity() {
         MainViewPagerAdapter(this)
     }
 
+    private val homeFragment = viewPagerAdapter.getHomeFragment()
+
+    val suggestionRecyclerView : RecyclerView by lazy {binding.suggestionRecyclerview}
+
+    val suggestionAdapter: SuggestionAdapter by lazy {
+        SuggestionAdapter(
+            onItemClick = { item -> suggestionOnClick(item) }
+        )
+    }
+
+    private fun suggestionOnClick(item: PharmacyItem.PharmacyInfo) {
+        var latitude = item.latitude?.toDoubleOrNull()
+        var longitude = item.longitude?.toDoubleOrNull()
+        if (latitude != null && longitude != null) {
+            homeFragment?.moveCamera(latitude, longitude)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initView()
+        registerRecyclerView()
 
     }
+
 
     private fun initView() = with(binding) {
         // TabLayout x ViewPager2
@@ -64,49 +93,65 @@ class MainActivity : AppCompatActivity() {
 
         // 텍스트 검증
         searchBarEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                text: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearText.visibility = View.VISIBLE
+            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.clearText.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
                 clearText()
+                val query = text.toString()
+                homeFragment?.updateSuggestions(query)
             }
 
-            override fun afterTextChanged(s: Editable?) {
+            override fun afterTextChanged(text: Editable?) {
             }
         })
 
 
-        // 검색 버튼 처리
-        searchBarEditText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+        // 검색 버튼 처리(키보드, 소프트키보드)
+        searchBarEditText.setOnEditorActionListener { text, actionId, keyEvent ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (keyEvent != null && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER)
             ) {
-                // 검색 기능 활성화
-                val query =
-                    performSearch(textView.text.toString())
+                hideKeyboard()
+                var query = text.text.toString()
+
+                homeFragment?.performSearch(query)
                 return@setOnEditorActionListener true
             }
             false
         }
     }
 
-    private fun performSearch(query: String) {
-        // 여기서는 간단히 query를 로그에 출력하는 예시를 보여줍니다.
-        Log.d("SearchQuery", query)
-        // 실제 검색 기능을 활성화하고 결과를 처리하는 코드를 여기에 추가할 수 있습니다.
+    private fun registerRecyclerView() {
+        suggestionRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = suggestionAdapter
+        }
+
     }
 
-    private fun clearText() { binding.apply {
-        clearText.setOnClickListener {
-            searchBarEditText.text.clear()
-            clearText.visibility = View.GONE
+
+    private fun clearText() {
+        binding.apply {
+            clearText.setOnClickListener {
+                searchBarEditText.text.clear()
+            }
         }
     }
+
+    private fun hideKeyboard() {
+        val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        manager.hideSoftInputFromWindow(
+            currentFocus?.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
     }
-
-
-
 
     fun hideBar() {
         binding.apply {
