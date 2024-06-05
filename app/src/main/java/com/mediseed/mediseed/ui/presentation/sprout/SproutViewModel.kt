@@ -49,7 +49,6 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun handlePillButtonClick() {
-        lastPillClickDateCheck()
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
         _pillRest.value = _pillRest.value ?: 1
         if (_pillRest.value == 1) {
@@ -63,7 +62,6 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun handleShareButtonClick() {
-        lastShareClickDateCheck()
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
         val shareClickCount = _shareClickCount.value ?: 0
         _shareRest.value = _shareRest.value ?: 3
@@ -121,7 +119,6 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
             savePreferences()
         }
     }
-
 
     private fun savePreferences() {
         with(sharedPreferences.edit()) {
