@@ -62,7 +62,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    // animation
     implementation("com.airbnb.android:lottie:3.7.0")
+    implementation("com.daimajia.androidanimations:library:2.4@aar")
     // Naver Map Sdk
     implementation("com.naver.maps:map-sdk:3.18.0")
     // Google Location Service

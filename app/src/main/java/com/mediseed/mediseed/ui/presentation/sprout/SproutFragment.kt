@@ -11,8 +11,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,8 +25,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
-import com.mediseed.mediseed.ui.presentation.home.HomeFragment
-import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 
 
 class SproutFragment : Fragment() {
@@ -33,6 +34,9 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationOfInterest: Location // 특정 목록의 위치
+    private lateinit var levelUpAnimation: Animation
+    private lateinit var levelUpText: TextView
+
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 1001
@@ -58,6 +62,9 @@ class SproutFragment : Fragment() {
         sproutViewModel = ViewModelProvider(this).get(SproutViewModel::class.java)
         setupObservers()
         setupListeners()
+
+        levelUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.level_up_animation_text)
+        levelUpText = binding.levelUpTextView
     }
 
     override fun onDestroyView() {
@@ -88,6 +95,8 @@ class SproutFragment : Fragment() {
                 binding.levelTextView.text = "$level"
                 updateSproutImage(level)
                 playLevelUpAnimation()
+                textLevelUpAnimation()
+
             }
             tree.observe(viewLifecycleOwner) { tree ->
                 binding.treeTextView.text = "$tree"
@@ -248,5 +257,18 @@ class SproutFragment : Fragment() {
                 override fun onAnimationRepeat(animation: Animator) {}
             })
         }
+    }
+
+    private fun textLevelUpAnimation() {
+        levelUpAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+                levelUpText.visibility = View.VISIBLE
+            }
+            override fun onAnimationEnd(animation: Animation) {
+                levelUpText.visibility = View.INVISIBLE
+            }
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+        levelUpText.startAnimation(levelUpAnimation)
     }
 }

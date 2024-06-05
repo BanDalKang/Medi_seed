@@ -12,8 +12,10 @@ import java.util.Locale
 
 class SproutViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
+        const val LAST_PILL_CLICK_DATE_KEY = "last_pill_click_date"
         const val LAST_PILL_CLICK_TIME_KEY = "last_pill_click_time"
         const val LAST_SHARE_CLICK_DATE_KEY = "last_share_click_date"
+        const val LAST_SHARE_CLICK_TIME_KEY = "last_share_click_time"
         const val SHARE_CLICK_COUNT_KEY = "share_click_count"
         const val ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000
         const val MAX_SHARE_CLICKS_PER_DAY = 3
@@ -44,9 +46,18 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     private val _lastShareClickDate = MutableLiveData<String>().apply { value = sharedPreferences.getString(LAST_SHARE_CLICK_DATE_KEY, "") }
     val lastShareClickDate: LiveData<String> get() = _lastShareClickDate
     private val _shareClickCount = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0) }
+    private val _lastPillClickDate = MutableLiveData<String>().apply { value = sharedPreferences.getString(LAST_PILL_CLICK_DATE_KEY, "") }
+    val lastPillClickDate: LiveData<String> get() = _lastPillClickDate
+    private val _lastShareClickTime = MutableLiveData<Long>().apply { value = sharedPreferences.getLong(LAST_SHARE_CLICK_TIME_KEY, 0) }
+    val lastShareClickTime: LiveData<Long> get() = _lastShareClickTime
     val shareClickCount: LiveData<Int> get() = _shareClickCount
 
+    init {
+        lastShareClickDateCheck()
+    }
+
     fun handlePillButtonClick() {
+        lastPillClickDateCheck()
         val currentTime = System.currentTimeMillis()
         if (currentTime - (_lastPillClickTime.value ?: 0) >= ONE_DAY_IN_MILLIS) {
             updateProgress(20)
@@ -59,6 +70,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun handleShareButtonClick() {
+        lastShareClickDateCheck()
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
         var shareClickCount = _shareClickCount.value ?: 0
         if (currentDate != _lastShareClickDate.value) {
@@ -94,6 +106,31 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         _sproutName.value = newName
         savePreferences()
     }
+
+    private fun lastPillClickDateCheck() {
+        val lastPillClickDate = _lastPillClickDate.value ?: ""
+        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+
+        // 마지막 클릭 날짜와 현재 날짜가 다른 경우에만 초기화
+        if (currentDate != lastPillClickDate) {
+            _shareRest.value = 3
+            _lastShareClickDate.value = currentDate
+            savePreferences()
+        }
+    }
+
+    private fun lastShareClickDateCheck() {
+        val lastShareClickDate = _lastShareClickDate.value ?: ""
+        val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+
+        // 마지막 클릭 날짜와 현재 날짜가 다른 경우에만 초기화
+        if (currentDate != lastShareClickDate) {
+            _shareRest.value = 3
+            _lastShareClickDate.value = currentDate
+            savePreferences()
+        }
+    }
+
 
     private fun savePreferences() {
         with(sharedPreferences.edit()) {

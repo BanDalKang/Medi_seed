@@ -1,6 +1,5 @@
 package com.mediseed.mediseed.ui.presentation.home.model
 
-import android.os.Parcelable
 import com.mediseed.mediseed.ui.share.MarkerItem
 import kotlinx.parcelize.Parcelize
 
