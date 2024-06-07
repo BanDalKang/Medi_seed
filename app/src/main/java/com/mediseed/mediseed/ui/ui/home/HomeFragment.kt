@@ -337,7 +337,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 val distance = calculateDistance(userLatitude, userLongitude, markerLatitude, markerLongitude)
                 userAndMarkerDistance.add(distance)
                 pharmacyInfo[index] = pharmacyInfo[index].copy(distance = distance)
-                if (distance <= 10) setData(true) else setData(true)
+                if (userAndMarkerDistance.any{it <= 20}) setData(true) else setData(false)
             }
 
 

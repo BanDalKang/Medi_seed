@@ -15,6 +15,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     companion object {
         const val LAST_PILL_CLICK_DATE_KEY = "last_pill_click_date"
         const val LAST_SHARE_CLICK_DATE_KEY = "last_share_click_date"
+        const val PILL_CLICK_COUNT_KEY = "pill_click_count"
         const val SHARE_CLICK_COUNT_KEY = "share_click_count"
         const val PREFS_NAME = "SproutPreferences"
         const val LEVEL_KEY = "level"
@@ -42,12 +43,16 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     val lastShareClickDate: LiveData<String> get() = _lastShareClickDate
     private val _lastPillClickDate = MutableLiveData<String>().apply { value = sharedPreferences.getString(LAST_PILL_CLICK_DATE_KEY, "") }
     val lastPillClickDate: LiveData<String> get() = _lastPillClickDate
+    private val _pillClickCount = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(PILL_CLICK_COUNT_KEY, 0) }
+    val pillClickCount: LiveData<Int> get() = _pillClickCount
     private val _shareClickCount = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0) }
     val shareClickCount: LiveData<Int> get() = _shareClickCount
     private val _showTreeUpDialog = MutableLiveData<Event<Unit>>()
     val showTreeUpDialog: LiveData<Event<Unit>> get() = _showTreeUpDialog
     private val _showLevelUpAnimation = MutableLiveData<Event<Unit>>()
     val showLevelUpAnimation: LiveData<Event<Unit>> get() = _showLevelUpAnimation
+    private val _showProgressAnimation = MutableLiveData<Event<Unit>>()
+    val showProgressAnimation: LiveData<Event<Unit>> get() = _showProgressAnimation
 
     init {
         lastShareClickDateCheck()
@@ -55,11 +60,13 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
 
     fun handlePillButtonClick() {
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val pillClickCount = _pillClickCount.value ?: 0
         _pillRest.value = _pillRest.value ?: 1
         if (_pillRest.value == 1) {
             updateProgress(20)
             _lastPillClickDate.value = currentDate
             _pillRest.value = 0
+            _pillClickCount.value = pillClickCount + 1
             savePreferences()
         } else {
             showPillButtonClickLimitToast.value = true
@@ -83,6 +90,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
 
     fun updateProgress(increment: Int) {
         val newProgress = (_progress.value ?: 0) + increment
+        _showProgressAnimation.value = Event(Unit)
         if (newProgress >= 100) {
             _level.value = (_level.value ?: 1) + 1
             _showLevelUpAnimation.value = Event(Unit)
