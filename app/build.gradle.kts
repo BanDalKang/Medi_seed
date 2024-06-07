@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation("com.airbnb.android:lottie:3.7.0")
     // Naver Map Sdk
     implementation("com.naver.maps:map-sdk:3.18.0")
     // Google Location Service
@@ -79,4 +80,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //카드뷰
+    implementation("androidx.cardview:cardview:1.0.0")
+
+
 }

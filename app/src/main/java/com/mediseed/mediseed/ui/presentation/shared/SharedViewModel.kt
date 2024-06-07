@@ -1,18 +1,22 @@
-package com.mediseed.mediseed.ui.presentation.bottomSheet
+package com.mediseed.mediseed.ui.presentation.shared
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mediseed.mediseed.ui.Const
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 
-class BottomSheetViewModel(private val pref: SharedPreferences) : ViewModel() {
+class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance()
+
+    private val _likedItems = MutableLiveData<List<PharmacyItem.PharmacyInfo>>(listOf())
+    val likedItems: LiveData<List<PharmacyItem.PharmacyInfo>> get() = _likedItems
 
     private val _heartCount = MutableLiveData<Int>()
     val heartCount: LiveData<Int> get() = _heartCount
@@ -23,6 +27,44 @@ class BottomSheetViewModel(private val pref: SharedPreferences) : ViewModel() {
     private var heartCountListener: ValueEventListener? = null
     private var medicineCountListener: ValueEventListener? = null
     private var currentAddress: String? = null
+
+    init {
+        loadLikedItems()
+    }
+
+    private fun loadLikedItems() {
+        val jsonString = pref.getString(Const.LIKED_ITEMS, "")
+        val items: List<PharmacyItem.PharmacyInfo> = if (jsonString.isNullOrEmpty()) {
+            emptyList()
+        } else {
+            val type = object : TypeToken<List<PharmacyItem.PharmacyInfo>>() {}.type
+            Gson().fromJson(jsonString, type)
+        }
+        _likedItems.value = items
+    }
+
+    fun addLikedItem(item: PharmacyItem.PharmacyInfo) {
+        val currentItems = _likedItems.value?.toMutableList() ?: mutableListOf()
+        if (!currentItems.contains(item)) {
+            currentItems.add(item)
+            _likedItems.value = currentItems
+            saveLikedItems(currentItems)
+        }
+    }
+
+    fun removeLikedItem(item: PharmacyItem.PharmacyInfo) {
+        val currentItems = _likedItems.value?.toMutableList() ?: mutableListOf()
+        if (currentItems.contains(item)) {
+            currentItems.remove(item)
+            _likedItems.value = currentItems
+            saveLikedItems(currentItems)
+        }
+    }
+
+    private fun saveLikedItems(items: List<PharmacyItem.PharmacyInfo>) {
+        val jsonString = Gson().toJson(items)
+        pref.edit().putString(Const.LIKED_ITEMS, jsonString).apply()
+    }
 
     fun fetchHeartCount(address: String) {
         val ref = database.getReference("location/$address/heartCount")
@@ -88,38 +130,8 @@ class BottomSheetViewModel(private val pref: SharedPreferences) : ViewModel() {
         })
     }
 
-    private fun getPrefsItems(): List<PharmacyItem.PharmacyInfo> {
-        val jsonString = pref.getString(Const.LIKED_ITEMS, "")
-        return if (jsonString.isNullOrEmpty()) {
-            emptyList()
-        } else {
-            Gson().fromJson(jsonString, object : TypeToken<List<PharmacyItem.PharmacyInfo>>() {}.type)
-        }
-    }
-
-    private fun savePrefsItems(items: List<PharmacyItem.PharmacyInfo>) {
-        val jsonString = Gson().toJson(items)
-        pref.edit().putString(Const.LIKED_ITEMS, jsonString).apply()
-    }
-
-    fun savePharmacyInfoToPrefs(pharmacyInfo: PharmacyItem.PharmacyInfo) {
-        val likedItems = getPrefsItems().toMutableList()
-        val findItem = likedItems.find { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
-
-        if (findItem == null) {
-            likedItems.add(pharmacyInfo)
-            savePrefsItems(likedItems)
-        }
-    }
-
-    fun removePharmacyInfoFromPrefs(pharmacyInfo: PharmacyItem.PharmacyInfo) {
-        val likedItems = getPrefsItems().toMutableList()
-        likedItems.removeAll { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
-        savePrefsItems(likedItems)
-    }
-
     fun isPharmacyInfoLiked(pharmacyInfo: PharmacyItem.PharmacyInfo): Boolean {
-        val likedItems = getPrefsItems()
+        val likedItems = _likedItems.value ?: emptyList()
         return likedItems.any { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
     }
 
@@ -134,6 +146,12 @@ class BottomSheetViewModel(private val pref: SharedPreferences) : ViewModel() {
             currentAddress?.let { address ->
                 database.getReference("location/$address/medicineCount").removeEventListener(listener)
             }
+        }
+    }
+
+    class Factory(private val pref: SharedPreferences) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return modelClass.getConstructor(SharedPreferences::class.java).newInstance(pref)
         }
     }
 }

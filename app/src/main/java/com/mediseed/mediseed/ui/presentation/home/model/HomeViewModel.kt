@@ -14,9 +14,11 @@ class HomeViewModel(
     private val pharmacyUseCase: PharmacyUseCase
 ) : ViewModel() {
 
-   private val _uiState: MutableStateFlow<PharmacyUiState> = MutableStateFlow(PharmacyUiState.ResultEmpty)
+    private val _uiState: MutableStateFlow<PharmacyUiState> = MutableStateFlow(PharmacyUiState.ResultEmpty)
 
     val uiState: StateFlow<PharmacyUiState> get() = _uiState.asStateFlow()
+
+
 
     /**사용자의 현재 위치를 실시간으로 받고, 반경 300m 안에 있는 약국의 위치를 마커로 표시합니다.*/
     fun getLocation() = viewModelScope.launch {
@@ -34,8 +36,6 @@ class HomeViewModel(
         }
     }
 
-
-
     private fun createPharmacyLocation(entity: PharmacyEntity): List<PharmacyItem> {
         return entity.data.map {
             PharmacyItem.PharmacyInfo(
@@ -50,6 +50,4 @@ class HomeViewModel(
         }
 
     }
-
-
 }
