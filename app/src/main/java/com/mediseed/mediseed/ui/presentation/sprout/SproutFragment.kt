@@ -108,6 +108,7 @@ class SproutFragment : Fragment() {
             progress.observe(viewLifecycleOwner) { progress ->
                 binding.progressBar.progress = progress
                 binding.progressBarPercentTextView.text = "$progress%"
+                progressUpAnimation()
             }
             sproutName.observe(viewLifecycleOwner) { sproutName ->
                 binding.nameTextView.text = sproutName
@@ -308,5 +309,21 @@ class SproutFragment : Fragment() {
             override fun onAnimationRepeat(animation: Animation) {}
         })
         levelUpText.startAnimation(levelUpAnimation)
+    }
+
+    private fun progressUpAnimation() {
+        binding.progressUpAnimationView.apply {
+            visibility = View.VISIBLE
+            setMinAndMaxFrame(0, 70)
+            playAnimation()
+            addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    visibility = View.GONE
+                }
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+            })
+        }
     }
 }
