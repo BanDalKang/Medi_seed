@@ -1,12 +1,12 @@
-package com.mediseed.mediseed.ui.presentation.main
+package com.mediseed.mediseed.ui.ui.main
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.mediseed.mediseed.R
-import com.mediseed.mediseed.ui.presentation.storage.StorageFragment
-import com.mediseed.mediseed.ui.presentation.home.HomeFragment
-import com.mediseed.mediseed.ui.presentation.sprout.SproutFragment
+import com.mediseed.mediseed.ui.ui.storage.StorageFragment
+import com.mediseed.mediseed.ui.ui.home.HomeFragment
+import com.mediseed.mediseed.ui.ui.sprout.SproutFragment
 
 class MainViewPagerAdapter(
     fragmentActivity: FragmentActivity
@@ -22,7 +22,11 @@ class MainViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment = fragments[position].fragment
 
+
     fun getTitle(position: Int): Int = fragments[position].title
 
     fun getTabIcon(position: Int): Int = fragments[position].icon
+
+    fun getHomeFragment(): HomeFragment? = fragments.getOrNull(1)?.fragment as? HomeFragment
+
 }
