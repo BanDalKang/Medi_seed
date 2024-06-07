@@ -12,7 +12,7 @@
         android:background="@color/bg_light_gray"
         android:gravity="center"
         android:paddingTop="25dp"
-        android:paddingBottom="20dp"
+        android:paddingBottom="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,10 +23,12 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_collected"
-                android:layout_width="180dp"
+                android:layout_width="170dp"
                 android:layout_height="80dp"
                 app:cardBackgroundColor="@color/bg"
-                app:cardCornerRadius="10dp"
+                app:cardCornerRadius="7dp"
+                app:cardElevation="1dp"
+                app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toStartOf="@+id/cv_sharing"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -53,11 +55,11 @@
                         android:gravity="start|center"
                         android:text="@string/mypage_collected"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/iv_drug"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/tv_drug_count"
@@ -78,11 +80,13 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_sharing"
-                android:layout_width="180dp"
+                android:layout_width="170dp"
                 android:layout_height="80dp"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="5dp"
                 app:cardBackgroundColor="@color/bg"
-                app:cardCornerRadius="15dp"
+                app:cardCornerRadius="7dp"
+                app:cardElevation="1dp"
+                app:cardUseCompatPadding="true"
                 app:layout_constraintBottom_toBottomOf="@id/cv_collected"
                 app:layout_constraintStart_toEndOf="@id/cv_collected"
                 app:layout_constraintTop_toTopOf="parent">
@@ -109,7 +113,7 @@
                         android:gravity="start|center"
                         android:text="@string/mypage_sharing"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/iv_sharing"
@@ -133,12 +137,10 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_medicine_collection"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
