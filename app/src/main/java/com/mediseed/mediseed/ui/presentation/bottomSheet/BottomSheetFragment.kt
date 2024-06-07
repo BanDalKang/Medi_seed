@@ -43,65 +43,86 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
-        binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
-        //binding.tvDistance.text = pharmacyInfo.distance
-        binding.tvAddress.text = pharmacyInfo.StreetNameAddress
-        binding.tvDate.text = pharmacyInfo.DataDate
+        initView()
+    }
 
-        if (pharmacyInfo.PhoneNumber.isNullOrEmpty()) {
-            binding.llPhone.visibility = View.GONE
-        } else {
-            binding.tvPhone.text = pharmacyInfo.PhoneNumber
+    private fun initView() {
+        with(binding) {
+            tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
+            tvFacilityName.text = pharmacyInfo.CollectionLocationName
+            //tvDistance.text = pharmacyInfo.distance
+            tvAddress.text = pharmacyInfo.StreetNameAddress
+            tvDate.text = pharmacyInfo.DataDate
+
+            if (pharmacyInfo.PhoneNumber.isNullOrEmpty()) {
+                llPhone.visibility = View.GONE
+            } else {
+                tvPhone.text = pharmacyInfo.PhoneNumber
+            }
+
+            setupHeartIcon()
+            observeViewModel()
+
+            pharmacyInfo.StreetNameAddress?.let {
+                sharedViewModel.fetchHeartCount(it)
+                sharedViewModel.fetchMedicineCount(it)
+            }
         }
+    }
 
-        sharedViewModel.heartCount.observe(viewLifecycleOwner) { count ->
-            binding.tvHeartNumber.text = count.toString()
-        }
-
-        sharedViewModel.medicineCount.observe(viewLifecycleOwner) { count ->
-            binding.tvMedicineNumber.text = count.toString()
-        }
-
-        pharmacyInfo.StreetNameAddress?.let { sharedViewModel.fetchHeartCount(it) }
-        pharmacyInfo.StreetNameAddress?.let { sharedViewModel.fetchMedicineCount(it) }
-
-        binding.ivHeart.setOnClickListener {
-            val isHeartFilled = toggleHeartIcon()
-            pharmacyInfo.StreetNameAddress?.let { address ->
-                sharedViewModel.updateHeartCount(address, isHeartFilled) { success ->
-                    if (success) {
-                        if (isHeartFilled) {
-                            sharedViewModel.addLikedItem(pharmacyInfo)
+    private fun setupHeartIcon() {
+        with(binding) {
+            ivHeart.setOnClickListener {
+                val isHeartFilled = toggleHeartIcon()
+                pharmacyInfo.StreetNameAddress?.let { address ->
+                    sharedViewModel.updateHeartCount(address, isHeartFilled) { success ->
+                        if (success) {
+                            if (isHeartFilled) {
+                                sharedViewModel.addLikedItem(pharmacyInfo)
+                            } else {
+                                sharedViewModel.removeLikedItem(pharmacyInfo)
+                            }
                         } else {
-                            sharedViewModel.removeLikedItem(pharmacyInfo)
+                            toggleHeartIcon()
                         }
-                    } else {
-                        toggleHeartIcon()
                     }
                 }
             }
-        }
 
-        if (sharedViewModel.isPharmacyInfoLiked(pharmacyInfo)) {
-            binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
-            binding.ivHeart.tag = "filled"
-        } else {
-            binding.ivHeart.setImageResource(R.drawable.ic_heart_empty)
-            binding.ivHeart.tag = "empty"
+            if (sharedViewModel.isPharmacyInfoLiked(pharmacyInfo)) {
+                ivHeart.setImageResource(R.drawable.ic_heart_fill)
+                ivHeart.tag = "filled"
+            } else {
+                ivHeart.setImageResource(R.drawable.ic_heart_empty)
+                ivHeart.tag = "empty"
+            }
         }
     }
 
     private fun toggleHeartIcon(): Boolean {
-        val isHeartFilled = binding.ivHeart.tag == "filled"
-        if (isHeartFilled) {
-            binding.ivHeart.setImageResource(R.drawable.ic_heart_empty)
-            binding.ivHeart.tag = "empty"
-        } else {
-            binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
-            binding.ivHeart.tag = "filled"
+        with(binding) {
+            val isHeartFilled = ivHeart.tag == "filled"
+            if (isHeartFilled) {
+                ivHeart.setImageResource(R.drawable.ic_heart_empty)
+                ivHeart.tag = "empty"
+            } else {
+                ivHeart.setImageResource(R.drawable.ic_heart_fill)
+                ivHeart.tag = "filled"
+            }
+            return !isHeartFilled
         }
-        return !isHeartFilled
+    }
+
+    private fun observeViewModel() {
+        with(binding) {
+            sharedViewModel.heartCount.observe(viewLifecycleOwner) { count ->
+                tvHeartNumber.text = count.toString()
+            }
+
+            sharedViewModel.medicineCount.observe(viewLifecycleOwner) { count ->
+                tvMedicineNumber.text = count.toString()
+            }
+        }
     }
 
     override fun onDestroyView() {
