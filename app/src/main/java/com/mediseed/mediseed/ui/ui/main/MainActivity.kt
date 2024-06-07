@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         initView()
         registerRecyclerView()
         focusControl()
-
     }
 
     private fun initView() = with(binding) {
@@ -88,8 +87,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
-
         searchBarEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.tlMain.visibility = View.INVISIBLE
@@ -119,7 +116,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
         // 검색 버튼 처리(키보드, 소프트키보드)
         searchBarEditText.setOnEditorActionListener { text, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
@@ -134,7 +130,6 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
-
 
     // Hide TabLayout when Focusing EditText
     private fun focusControl() {
@@ -164,8 +159,6 @@ class MainActivity : AppCompatActivity() {
         }
         return super.dispatchTouchEvent(event)
     }
-
-
 
     private fun registerRecyclerView() {
         suggestionRecyclerView.apply {

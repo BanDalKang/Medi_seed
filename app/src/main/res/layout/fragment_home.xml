@@ -6,8 +6,6 @@
     android:id="@+id/home_fragment"
     >
 
-
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/naver_map_view"
         android:name="com.naver.maps.map.MapFragment"
