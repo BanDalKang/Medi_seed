@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.presentation.shared.SharedViewModel
 import com.mediseed.mediseed.ui.share.IntentKey
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
@@ -19,7 +20,9 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
-    private lateinit var viewModel: BottomSheetViewModel
+    private val sharedViewModel: SharedViewModel by activityViewModels {
+        SharedViewModel.Factory(requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,11 +32,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         arguments?.getParcelable<PharmacyItem.PharmacyInfo>(IntentKey.PHARMACY)?.let { pharmacyInfo ->
             this.pharmacyInfo = pharmacyInfo
         }
-
-        // ViewModel 초기화
-        val pref = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        val factory = BottomSheetViewModelFactory(pref)
-        viewModel = ViewModelProvider(this, factory).get(BottomSheetViewModel::class.java)
 
         return binding.root
     }
@@ -51,26 +49,26 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         binding.tvPhone.text = pharmacyInfo.PhoneNumber
         binding.tvDate.text = pharmacyInfo.DataDate
 
-        viewModel.heartCount.observe(viewLifecycleOwner) { count ->
+        sharedViewModel.heartCount.observe(viewLifecycleOwner) { count ->
             binding.tvHeartNumber.text = count.toString()
         }
 
-        viewModel.medicineCount.observe(viewLifecycleOwner) { count ->
+        sharedViewModel.medicineCount.observe(viewLifecycleOwner) { count ->
             binding.tvMedicineNumber.text = count.toString()
         }
 
-        pharmacyInfo.StreetNameAddress?.let { viewModel.fetchHeartCount(it) }
-        pharmacyInfo.StreetNameAddress?.let { viewModel.fetchMedicineCount(it) }
+        pharmacyInfo.StreetNameAddress?.let { sharedViewModel.fetchHeartCount(it) }
+        pharmacyInfo.StreetNameAddress?.let { sharedViewModel.fetchMedicineCount(it) }
 
         binding.ivHeart.setOnClickListener {
             val isHeartFilled = toggleHeartIcon()
             pharmacyInfo.StreetNameAddress?.let { address ->
-                viewModel.updateHeartCount(address, isHeartFilled) { success ->
+                sharedViewModel.updateHeartCount(address, isHeartFilled) { success ->
                     if (success) {
                         if (isHeartFilled) {
-                            viewModel.savePharmacyInfoToPrefs(pharmacyInfo)
+                            sharedViewModel.addLikedItem(pharmacyInfo)
                         } else {
-                            viewModel.removePharmacyInfoFromPrefs(pharmacyInfo)
+                            sharedViewModel.removeLikedItem(pharmacyInfo)
                         }
                     } else {
                         toggleHeartIcon()
@@ -79,8 +77,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
-        // 이미 좋아요가 눌린 상태인지 확인하고 하트 아이콘을 설정합니다.
-        if (viewModel.isPharmacyInfoLiked(pharmacyInfo)) {
+        if (sharedViewModel.isPharmacyInfoLiked(pharmacyInfo)) {
             binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
             binding.ivHeart.tag = "filled"
         } else {

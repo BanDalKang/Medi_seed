@@ -1,65 +1,50 @@
 package com.mediseed.mediseed.ui.presentation.mypage
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ItemFacilityBinding
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 
-class MyPageAdapter : RecyclerView.Adapter<MyPageAdapter.MyPageViewHolder>() {
-    interface ItemClick {
-        fun onClick(view: View, item: PharmacyItem.PharmacyInfo)
-    }
+class MyPageAdapter :
+    ListAdapter<PharmacyItem.PharmacyInfo, MyPageAdapter.PharmacyViewHolder>(DiffCallback) {
 
-    var itemClick: ItemClick? = null
-
-    //MyPageModel 로 리스트 생성
-    private val items: MutableList<PharmacyItem.PharmacyInfo> = mutableListOf()
-
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyPageViewHolder {
-        val view =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PharmacyViewHolder {
+        val binding =
             ItemFacilityBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MyPageViewHolder(view)
+        return PharmacyViewHolder(binding)
     }
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onBindViewHolder(holder: MyPageViewHolder, position: Int) {
-        ///holder.bind([position])
-
-        //리스트 아이템 클릭했을 때
-        /*holder.itemView.setOnClickListener {
-            itemClick?.onClick(it, items[position])
-            notifyDataSetChanged() //데이터
-        }*/
-
+    override fun onBindViewHolder(holder: PharmacyViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = items.size
-
-
-    //아이템 리스트 업데이트
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateItem(newItems: List<PharmacyItem.PharmacyInfo>) {
-        items.clear()
-        items.addAll(newItems.reversed())
-        notifyDataSetChanged()
-    }
-
-    //MyPage 뷰홀더
-    class MyPageViewHolder(private val binding: ItemFacilityBinding) :
+    class PharmacyViewHolder(private val binding: ItemFacilityBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PharmacyItem.PharmacyInfo) = with(binding) {
-            tvTitle.text = item.CollectionLocationName
-            tvAddress.text = item.StreetNameAddress
+        fun bind(item: PharmacyItem.PharmacyInfo) {
+            binding.tvTitle.text = item.CollectionLocationName
+            binding.tvKind.text = item.CollectionLocationClassificationName
+            binding.tvAddress.text = item.StreetNameAddress
         }
     }
 
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<PharmacyItem.PharmacyInfo>() {
+            override fun areItemsTheSame(
+                oldItem: PharmacyItem.PharmacyInfo,
+                newItem: PharmacyItem.PharmacyInfo
+            ): Boolean {
+                return oldItem.StreetNameAddress == newItem.StreetNameAddress
+            }
 
+            override fun areContentsTheSame(
+                oldItem: PharmacyItem.PharmacyInfo,
+                newItem: PharmacyItem.PharmacyInfo
+            ): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 }
