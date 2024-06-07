@@ -47,9 +47,15 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
         binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
+        //binding.tvDistance.text = pharmacyInfo.distance
         binding.tvAddress.text = pharmacyInfo.StreetNameAddress
-        binding.tvPhone.text = pharmacyInfo.PhoneNumber
         binding.tvDate.text = pharmacyInfo.DataDate
+
+        if (pharmacyInfo.PhoneNumber.isNullOrEmpty()) {
+            binding.llPhone.visibility = View.GONE
+        } else {
+            binding.tvPhone.text = pharmacyInfo.PhoneNumber
+        }
 
         viewModel.heartCount.observe(viewLifecycleOwner) { count ->
             binding.tvHeartNumber.text = count.toString()
@@ -79,7 +85,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
-        // 이미 좋아요가 눌린 상태인지 확인하고 하트 아이콘을 설정합니다.
+        // 이미 좋아요가 눌린 상태인지 확인하고 하트 아이콘을 설정
         if (viewModel.isPharmacyInfoLiked(pharmacyInfo)) {
             binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
             binding.ivHeart.tag = "filled"

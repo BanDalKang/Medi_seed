@@ -132,8 +132,8 @@
                 style="@style/TextAppearance.AppCompat.Action.L" />
         </LinearLayout>
 
-        <!-- Phone Row -->
         <LinearLayout
+            android:id="@+id/llPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -155,7 +155,6 @@
                 style="@style/TextAppearance.AppCompat.Action.L" />
         </LinearLayout>
 
-        <!-- Date Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -175,7 +174,6 @@
                 android:layout_marginStart="8dp"
                 android:text="데이터기준일자:"
                 style="@style/TextAppearance.AppCompat.Action.L" />
-
 
             <TextView
                 android:id="@+id/tvDate"
