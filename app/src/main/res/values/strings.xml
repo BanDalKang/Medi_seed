@@ -29,8 +29,8 @@
     <string name="mypage_sharing">지금까지\n공유한 횟수</string>
     <string name="item_title">새싹 약국</string>
     <string name="item_address">대전 나무로 초목로 4길 86</string>
-    <string name="mypage_medicine">4</string>
-    <string name="mypage_share_count">2</string>
+    <string name="mypage_medicine_count">0</string>
+    <string name="mypage_share_count">0</string>
 
 
 </resources>
