@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mediseed.mediseed.databinding.FragmentMypageBinding
 import com.mediseed.mediseed.ui.presentation.shared.SharedViewModel
+import com.mediseed.mediseed.ui.presentation.sprout.SproutViewModel
 
 class MyPageFragment : Fragment() {
     companion object {
@@ -27,6 +29,12 @@ class MyPageFragment : Fragment() {
             )
         )
     }
+    private val sproutViewModel: SproutViewModel by lazy {
+        ViewModelProvider(this).get(SproutViewModel::class.java)
+    }
+
+    //private lateinit var sproutViewModel: SproutViewModel
+
     private lateinit var adapter: MyPageAdapter
 
     override fun onCreateView(
@@ -34,6 +42,12 @@ class MyPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
+
+        //새싹 뷰모델 observe
+        sproutViewModel.shareClickCount.observe(viewLifecycleOwner) {
+            binding.tvDrugCount.text = it.toString()
+            binding.tvSharingCount.text = it.toString()
+        }
 
         setupRecyclerView()
 
