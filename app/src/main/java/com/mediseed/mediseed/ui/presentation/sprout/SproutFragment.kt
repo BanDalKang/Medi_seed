@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
@@ -75,8 +76,8 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-                checkLocationPermissionAndClick()
-//                sproutViewModel.updateProgress(20) //테스트 코드
+//                checkLocationPermissionAndClick()
+                sproutViewModel.updateProgress(20) //테스트 코드
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()
@@ -100,6 +101,7 @@ class SproutFragment : Fragment() {
             }
             tree.observe(viewLifecycleOwner) { tree ->
                 binding.treeTextView.text = "$tree"
+                showTreeUpDialog()
             }
             pillRest.observe(viewLifecycleOwner) { pillRest ->
                 binding.pillRestText.text = "$pillRest 남음"
@@ -151,6 +153,39 @@ class SproutFragment : Fragment() {
         }
         dialog.show()
         input.requestFocus()
+    }
+
+    private fun showTreeUpDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.tree_anmation_dialog, null)
+        val confirmButton = dialogView.findViewById<Button>(R.id.treeConfirmButton)
+        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialogStyle)
+            .setView(dialogView)
+            .create()
+
+        val lottieAnimationView: LottieAnimationView = dialogView.findViewById(R.id.treeUpAnimationView)
+        fun playTreeUpAnimation() {
+            lottieAnimationView.apply {
+                visibility = View.VISIBLE
+//                setMinAndMaxFrame(0, 70)
+                playAnimation()
+                addAnimatorListener(object : Animator.AnimatorListener {
+                    override fun onAnimationStart(animation: Animator) {}
+                    override fun onAnimationEnd(animation: Animator) {
+//                        visibility = View.GONE
+                    }
+                    override fun onAnimationCancel(animation: Animator) {}
+                    override fun onAnimationRepeat(animation: Animator) {}
+                })
+            }
+        }
+
+        confirmButton.setOnClickListener{
+            dialog.cancel()
+        }
+
+        dialog.show()
+        playTreeUpAnimation()
+
     }
 
     private fun updateSproutImage(level: Int) {
@@ -258,6 +293,9 @@ class SproutFragment : Fragment() {
             })
         }
     }
+
+
+
 
     private fun textLevelUpAnimation() {
         levelUpAnimation.setAnimationListener(object : Animation.AnimationListener {
