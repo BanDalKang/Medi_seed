@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.sprout
+package com.mediseed.mediseed.ui.ui.sprout
 
 import android.app.Application
 import android.app.usage.UsageEvents

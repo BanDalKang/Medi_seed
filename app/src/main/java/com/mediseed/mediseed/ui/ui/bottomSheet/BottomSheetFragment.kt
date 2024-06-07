@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.bottomSheet
+package com.mediseed.mediseed.ui.ui.bottomSheet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
-import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
-import com.mediseed.mediseed.ui.share.IntentKey
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.share.Const
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -27,7 +27,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
-        arguments?.getParcelable<PharmacyItem.PharmacyInfo>(IntentKey.PHARMACY)?.let { pharmacyInfo ->
+        arguments?.getParcelable<PharmacyItem.PharmacyInfo>(Const.PHARMACY)?.let { pharmacyInfo ->
                 this.pharmacyInfo = pharmacyInfo
             }
 
@@ -90,7 +90,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         fun newInstance(pharmacyInfo: PharmacyItem.PharmacyInfo): BottomSheetFragment {
             val bundle = Bundle().apply {
-                putParcelable(IntentKey.PHARMACY, pharmacyInfo)
+                putParcelable(Const.PHARMACY, pharmacyInfo)
             }
             return BottomSheetFragment().apply {
                 arguments = bundle

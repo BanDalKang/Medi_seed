@@ -20,6 +20,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.mediseed.mediseed.databinding.FragmentSproutBinding
+import com.mediseed.mediseed.ui.ui.main.MainActivity
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -27,6 +30,7 @@ import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
 
+import com.mediseed.mediseed.ui.share.SharedViewModel
 
 class SproutFragment : Fragment() {
 
@@ -38,11 +42,17 @@ class SproutFragment : Fragment() {
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
 
+    private val sharedViewMdoel: SharedViewModel by activityViewModels()
+
+    private val mainActivity by lazy {
+        activity as? MainActivity
+    }
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 1001
         fun newInstance() = SproutFragment()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,14 +62,10 @@ class SproutFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        locationOfInterest = Location("").apply {
-            latitude = 37.555945 // 서울역 위도
-            longitude = 126.9723167 // 서울역 경도
-        }
         sproutViewModel = ViewModelProvider(this).get(SproutViewModel::class.java)
         setupObservers()
         setupListeners()
@@ -78,6 +84,7 @@ class SproutFragment : Fragment() {
             sproutPillButton.setOnClickListener {
 //                checkLocationPermissionAndClick()
                 sproutViewModel.updateProgress(20) //테스트 코드
+                activateFeed()
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()
@@ -204,6 +211,22 @@ class SproutFragment : Fragment() {
         binding.sproutImageView.setImageResource(imageResource)
     }
 
+    private fun getData(): Boolean? {
+        return sharedViewMdoel.nearDistance.value
+    }
+    private fun activateFeed() {
+        if (getData() == true) {
+            sproutViewModel.handlePillButtonClick()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.sprout_distance_toast),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+
     private fun shareApp() {
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -274,28 +297,33 @@ class SproutFragment : Fragment() {
         }
     }
 
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_LOCATION_PERMISSION
-        )
-    }
 
-    private fun playLevelUpAnimation() {
-        binding.levelUpAnimationView.apply {
-            visibility = View.VISIBLE
-            setMinAndMaxFrame(0, 70)
-            playAnimation()
-            addAnimatorListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {}
-                override fun onAnimationEnd(animation: Animator) {
-                    visibility = View.GONE
-                }
-                override fun onAnimationCancel(animation: Animator) {}
-                override fun onAnimationRepeat(animation: Animator) {}
-            })
-        }
+
+private fun playLevelUpAnimation() {
+    binding.levelUpAnimationView.apply {
+        visibility = View.VISIBLE
+        setMinAndMaxFrame(0, 70)
+        playAnimation()
+        addAnimatorListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
+                visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+    }
+}
+
+override fun onResume() {
+    super.onResume()
+    mainActivity?.hideBar()
+}
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun textLevelUpAnimation() {
