@@ -1,8 +1,8 @@
 package com.mediseed.mediseed.ui.domain.usecase
 
-import com.mediseed.mediseed.ui.domain.mapper.toEntity
+import com.mediseed.mediseed.ui.mapper.toEntity
 import com.mediseed.mediseed.ui.domain.model.PharmacyEntity
-import com.mediseed.mediseed.ui.domain.repository.PharmacyRepository
+import com.mediseed.mediseed.ui.repository.PharmacyRepository
 
 class PharmacyUseCase (
     private val pharmacyRepository: PharmacyRepository

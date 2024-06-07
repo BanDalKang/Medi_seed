@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.domain.mapper
+package com.mediseed.mediseed.ui.mapper
 
 import com.mediseed.mediseed.ui.data.model.DataResponce
 import com.mediseed.mediseed.ui.data.model.PharmacyResponce

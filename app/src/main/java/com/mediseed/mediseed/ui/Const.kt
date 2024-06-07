@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.share
+package com.mediseed.mediseed.ui
 
     class Const {
         companion object {

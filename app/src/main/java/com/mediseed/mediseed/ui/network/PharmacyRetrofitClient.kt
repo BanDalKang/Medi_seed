@@ -1,10 +1,9 @@
-package com.mediseed.mediseed.ui.data.network
+package com.mediseed.mediseed.ui.network
 
 import com.mediseed.mediseed.ui.data.remote.PharmacyDataSource
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 object PharmacyRetrofitClient {

@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
 import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
-import com.mediseed.mediseed.ui.share.Const
+import com.mediseed.mediseed.ui.Const
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
