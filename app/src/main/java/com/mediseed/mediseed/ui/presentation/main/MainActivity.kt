@@ -34,23 +34,5 @@ class MainActivity : AppCompatActivity() {
             tab.setText(viewPagerAdapter.getTitle(position))
             tab.setIcon(viewPagerAdapter.getTabIcon(position))
         }.attach()
-
-        tlMain.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab?.let {
-                    it.icon?.setTint(getColor(R.color.green_300))
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                tab?.let {
-                    it.icon?.setTint(getColor(R.color.grey))
-                }
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // 재선택 시
-            }
-        })
     }
 }
