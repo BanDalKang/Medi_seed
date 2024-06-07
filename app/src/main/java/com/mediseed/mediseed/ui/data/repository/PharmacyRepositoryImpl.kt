@@ -1,5 +1,6 @@
 package com.mediseed.mediseed.ui.data.repository
 
+import android.util.Log
 import com.mediseed.mediseed.ui.data.model.PharmacyResponce
 import com.mediseed.mediseed.ui.data.remote.PharmacyDataSource
 import com.mediseed.mediseed.ui.domain.exception.NetworkException
@@ -27,7 +28,7 @@ class PharmacyRepositoryImpl(
             }
         } catch (e: SocketTimeoutException) {
             throw TimeoutException(e.message)
-        } catch (e: UnknownHostException) {
+         } catch (e: UnknownHostException) {
             throw NetworkException(e.message)
         } catch (e: Exception) {
             throw UnknownException(e.message)

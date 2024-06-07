@@ -1,0 +1,5 @@
+<!-- res/color/tab_icon_color_selector.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/green_300" android:state_selected="true" />
+    <item android:color="@color/grey" />
+</selector>
