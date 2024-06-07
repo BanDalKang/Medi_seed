@@ -123,7 +123,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         if ( this@HomeFragment::naverMap.isInitialized) {
                             // 현재위치로 카메라 이동
                             moveToCurrentLocation()
-                            registerMarker(pharmacyInfo)
                         }
                     }
                     else -> {}
