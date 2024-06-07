@@ -95,13 +95,9 @@ class SproutFragment : Fragment() {
             level.observe(viewLifecycleOwner) { level ->
                 binding.levelTextView.text = "$level"
                 updateSproutImage(level)
-                playLevelUpAnimation()
-                textLevelUpAnimation()
-
             }
             tree.observe(viewLifecycleOwner) { tree ->
                 binding.treeTextView.text = "$tree"
-                showTreeUpDialog()
             }
             pillRest.observe(viewLifecycleOwner) { pillRest ->
                 binding.pillRestText.text = "$pillRest 남음"
@@ -127,6 +123,13 @@ class SproutFragment : Fragment() {
                     Toast.makeText(requireContext(), getString(R.string.sprout_share_button_toast), Toast.LENGTH_SHORT).show()
                     showShareButtonClickLimitToast.value = false
                 }
+            }
+            showTreeUpDialog.observe(viewLifecycleOwner) {
+                showTreeUpDialog()
+            }
+            showLevelUpAnimation.observe(viewLifecycleOwner) {
+                playLevelUpAnimation()
+                textLevelUpAnimation()
             }
         }
     }
@@ -293,9 +296,6 @@ class SproutFragment : Fragment() {
             })
         }
     }
-
-
-
 
     private fun textLevelUpAnimation() {
         levelUpAnimation.setAnimationListener(object : Animation.AnimationListener {

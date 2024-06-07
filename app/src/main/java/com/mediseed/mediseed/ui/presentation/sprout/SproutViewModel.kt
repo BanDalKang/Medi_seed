@@ -1,6 +1,7 @@
 package com.mediseed.mediseed.ui.presentation.sprout
 
 import android.app.Application
+import android.app.usage.UsageEvents
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
@@ -43,6 +44,10 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     val lastPillClickDate: LiveData<String> get() = _lastPillClickDate
     private val _shareClickCount = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0) }
     val shareClickCount: LiveData<Int> get() = _shareClickCount
+    private val _showTreeUpDialog = MutableLiveData<Event<Unit>>()
+    val showTreeUpDialog: LiveData<Event<Unit>> get() = _showTreeUpDialog
+    private val _showLevelUpAnimation = MutableLiveData<Event<Unit>>()
+    val showLevelUpAnimation: LiveData<Event<Unit>> get() = _showLevelUpAnimation
 
     init {
         lastShareClickDateCheck()
@@ -80,9 +85,11 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         val newProgress = (_progress.value ?: 0) + increment
         if (newProgress >= 100) {
             _level.value = (_level.value ?: 1) + 1
+            _showLevelUpAnimation.value = Event(Unit)
             _progress.value = 0
             if (_level.value ?: 1 > 5) {
                 _tree.value = (_tree.value ?: 0) + 1
+                _showTreeUpDialog.value = Event(Unit)
                 _level.value = 1
             }
         } else {
@@ -136,4 +143,18 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
     val showPillButtonClickLimitToast = MutableLiveData<Boolean>()
     val showShareButtonClickLimitToast = MutableLiveData<Boolean>()
+}
+
+class Event<out T>(private val content: T) {
+    var hasBeenHandled = false
+        private set
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
+        }
+    }
+    fun peekContent(): T = content
 }
