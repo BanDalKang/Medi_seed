@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.home.model
+package com.mediseed.mediseed.ui.ui.home.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

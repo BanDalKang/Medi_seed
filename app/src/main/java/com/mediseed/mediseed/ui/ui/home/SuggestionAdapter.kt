@@ -1,12 +1,11 @@
-package com.mediseed.mediseed.ui.presentation.home
+package com.mediseed.mediseed.ui.ui.home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.SuggestionRecyclerviewItemBinding
-import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
 
 class SuggestionAdapter (
     private val onItemClick: (PharmacyItem.PharmacyInfo) -> Unit = {}

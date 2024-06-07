@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.home.model
+package com.mediseed.mediseed.ui.ui.home.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

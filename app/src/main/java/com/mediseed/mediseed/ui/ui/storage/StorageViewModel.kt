@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.storage
+package com.mediseed.mediseed.ui.ui.storage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

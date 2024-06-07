@@ -1,28 +1,20 @@
-package com.mediseed.mediseed.ui.presentation.sprout
+package com.mediseed.mediseed.ui.ui.sprout
 
-import android.Manifest
 import android.animation.Animator
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
-import com.mediseed.mediseed.ui.presentation.main.MainActivity
+import com.mediseed.mediseed.ui.ui.main.MainActivity
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.share.SharedViewModel
 

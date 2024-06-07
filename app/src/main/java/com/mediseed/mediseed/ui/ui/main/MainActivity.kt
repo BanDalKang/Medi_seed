@@ -1,34 +1,26 @@
-package com.mediseed.mediseed.ui.presentation.main
+package com.mediseed.mediseed.ui.ui.main
 
-import android.R.id.content
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mediseed.mediseed.ui.presentation.home.HomeFragment
-import com.mediseed.mediseed.ui.presentation.home.SuggestionAdapter
-import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.SuggestionAdapter
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {

@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.bottomSheet
+package com.mediseed.mediseed.ui.ui.bottomSheet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

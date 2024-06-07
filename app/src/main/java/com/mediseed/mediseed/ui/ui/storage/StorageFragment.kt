@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.storage
+package com.mediseed.mediseed.ui.ui.storage
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mediseed.mediseed.R
-import com.mediseed.mediseed.ui.presentation.main.MainActivity
+import com.mediseed.mediseed.ui.ui.main.MainActivity
 
 class StorageFragment : Fragment() {
 

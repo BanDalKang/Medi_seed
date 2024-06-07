@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.home
+package com.mediseed.mediseed.ui.ui.home
 
 import android.os.Bundle
 import android.Manifest
@@ -11,7 +11,6 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -27,13 +26,12 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentHomeBinding
-import com.mediseed.mediseed.ui.presentation.bottomSheet.BottomSheetFragment
-import com.mediseed.mediseed.ui.presentation.home.model.HomeViewModel
-import com.mediseed.mediseed.ui.presentation.home.model.HomeViewModelFactory
-import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
-import com.mediseed.mediseed.ui.presentation.home.model.PharmacyUiState
-import com.mediseed.mediseed.ui.presentation.main.MainActivity
-import com.mediseed.mediseed.ui.presentation.sprout.SproutFragment
+import com.mediseed.mediseed.ui.ui.bottomSheet.BottomSheetFragment
+import com.mediseed.mediseed.ui.ui.home.model.HomeViewModel
+import com.mediseed.mediseed.ui.ui.home.model.HomeViewModelFactory
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyUiState
+import com.mediseed.mediseed.ui.ui.main.MainActivity
 import com.mediseed.mediseed.ui.share.SharedViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
