@@ -1,6 +1,7 @@
 package com.mediseed.mediseed.ui.presentation.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,8 @@ class SuggestionAdapter (
         fun bind(itemPosition: PharmacyItem.PharmacyInfo) = with(binding) {
             pharmacyName.text = itemPosition.CollectionLocationName
             pharmacyLocation.text= itemPosition.StreetNameAddress
+            pharmacyClassification.text = itemPosition.CollectionLocationClassificationName
+            pharmacyDistance.text = itemPosition.distance?.toInt().toString()
         }
 
     }
@@ -42,10 +45,11 @@ class SuggestionAdapter (
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun undateItem(suggestionList: List<PharmacyItem.PharmacyInfo>) {
+    fun updateItem(suggestionList: List<PharmacyItem.PharmacyInfo>) {
         this.suggestionItemList.clear()
         this.suggestionItemList.addAll(suggestionList)
         notifyDataSetChanged()
+
     }
 
 

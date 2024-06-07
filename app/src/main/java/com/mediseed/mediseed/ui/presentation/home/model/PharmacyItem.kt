@@ -1,7 +1,6 @@
 package com.mediseed.mediseed.ui.presentation.home.model
 
 import android.os.Parcelable
-import com.mediseed.mediseed.ui.share.MarkerItem
 import kotlinx.parcelize.Parcelize
 
 interface PharmacyItem {
@@ -10,11 +9,12 @@ interface PharmacyItem {
     data class PharmacyInfo(
         val latitude: String?,
         val longitude: String?,
-        override val CollectionLocationName: String?,
-        override val CollectionLocationClassificationName: String?,
-        override val PhoneNumber: String?,
-        override val DataDate: String?,
-        override val StreetNameAddress: String?,
-    ) : PharmacyItem, MarkerItem
+        val distance: Float?,
+        val CollectionLocationName: String?,
+        val CollectionLocationClassificationName: String?,
+        val PhoneNumber: String?,
+        val DataDate: String?,
+        val StreetNameAddress: String?,
+    ) : PharmacyItem, Parcelable
 
 }

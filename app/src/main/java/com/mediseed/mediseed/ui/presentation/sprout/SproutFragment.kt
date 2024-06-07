@@ -17,31 +17,30 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
 import com.mediseed.mediseed.ui.presentation.main.MainActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
-import com.mediseed.mediseed.databinding.FragmentHomeBinding
+import com.mediseed.mediseed.ui.share.SharedViewModel
 
 class SproutFragment : Fragment() {
 
     private var _binding: FragmentSproutBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var sproutViewModel: SproutViewModel
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationOfInterest: Location // 특정 목록의 위치
-
-    companion object {
-        private const val REQUEST_LOCATION_PERMISSION = 1001
-        fun newInstance() = SproutFragment()
-    }
+    private val sharedViewMdoel: SharedViewModel by activityViewModels()
 
     private val mainActivity by lazy {
         activity as? MainActivity
     }
+
+    companion object {
+        fun newInstance() = SproutFragment()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,16 +51,9 @@ class SproutFragment : Fragment() {
     }
 
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        locationOfInterest = Location("").apply {
-            latitude = 37.555945 // 서울역 위도
-            longitude = 126.9723167 // 서울역 경도
-        }
         sproutViewModel = ViewModelProvider(this).get(SproutViewModel::class.java)
         setupObservers()
         setupListeners()
@@ -75,13 +67,11 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-                checkLocationPermissionAndClick()
-//                sproutViewModel.updateProgress(20) //테스트 코드
+                activateFeed()
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()
                 shareApp()
-//                sproutViewModel.updateProgress(10) //테스트 코드
             }
             nameImageButton.setOnClickListener {
                 showNameEditDialog()
@@ -94,7 +84,7 @@ class SproutFragment : Fragment() {
             level.observe(viewLifecycleOwner) { level ->
                 binding.levelTextView.text = "$level"
                 updateSproutImage(level)
-                //playLevelUpAnimation()
+                playLevelUpAnimation()
             }
             tree.observe(viewLifecycleOwner) { tree ->
                 binding.treeTextView.text = "$tree"
@@ -114,13 +104,21 @@ class SproutFragment : Fragment() {
             }
             showPillButtonClickLimitToast.observe(viewLifecycleOwner) { show ->
                 if (show == true) {
-                    Toast.makeText(requireContext(), getString(R.string.sprout_pill_button_toast), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.sprout_pill_button_toast),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     showPillButtonClickLimitToast.value = false
                 }
             }
             showShareButtonClickLimitToast.observe(viewLifecycleOwner) { show ->
                 if (show == true) {
-                    Toast.makeText(requireContext(), getString(R.string.sprout_share_button_toast), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.sprout_share_button_toast),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     showShareButtonClickLimitToast.value = false
                 }
             }
@@ -128,7 +126,8 @@ class SproutFragment : Fragment() {
     }
 
     private fun showNameEditDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_layout, null)
+        val dialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_layout, null)
         val input = dialogView.findViewById<EditText>(R.id.dialogInput)
         val confirmButton = dialogView.findViewById<Button>(R.id.dialogConfirmButton)
         val cancelButton = dialogView.findViewById<Button>(R.id.dialogCancelButton)
@@ -163,6 +162,22 @@ class SproutFragment : Fragment() {
         binding.sproutImageView.setImageResource(imageResource)
     }
 
+    private fun getData(): Boolean? {
+        return sharedViewMdoel.nearDistance.value
+    }
+    private fun activateFeed() {
+        if (getData() == true) {
+            sproutViewModel.handlePillButtonClick()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.sprout_distance_toast),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+
     private fun shareApp() {
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -173,91 +188,35 @@ class SproutFragment : Fragment() {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.sprout_share_title)))
     }
 
-    private fun checkLocationPermissionAndClick() {
-        // 위치 권한 확인
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            getLocationAndCheckDistance()
-        } else {
-            // 위치 권한이 없는 경우 요청
-            requestLocationPermission()
-        }
-    }
 
-    private fun getLocationAndCheckDistance() {
-        // 거리 확인
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    // 현재 위치와 특정 목록의 위치 사이의 거리 계산
-                    val distanceInMeters = location.distanceTo(locationOfInterest)
-                    if (distanceInMeters <= 100) {
-                        sproutViewModel.handlePillButtonClick() // 정상 코드
-//                        sproutViewModel.updateProgress(20) // 테스트 코드
-                    } else {
-                        // 거리가 100m 이상인 경우 안내 메시지 표시
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.sprout_distance_toast),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    Log.d(
-                        "SproutFragment",
-                        "Current location: (${location.latitude}, ${location.longitude})"
-                    )
-                    Log.d(
-                        "SproutFragment",
-                        "Location of interest: (${locationOfInterest.latitude}, ${locationOfInterest.longitude})"
-                    )
-                    Log.d(
-                        "SproutFragment",
-                        "Distance to location of interest: $distanceInMeters meters"
-                    )
-                } else {
-                    // 현재 위치를 가져오는 데 실패한 경우
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.sprout_location_toast),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+
+
+
+private fun playLevelUpAnimation() {
+    binding.levelUpAnimationView.apply {
+        visibility = View.VISIBLE
+        setMinAndMaxFrame(0, 70)
+        playAnimation()
+        addAnimatorListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
+                visibility = View.GONE
             }
-        }
+
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+    }
+}
+
+override fun onResume() {
+    super.onResume()
+    mainActivity?.hideBar()
+}
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_LOCATION_PERMISSION
-        )
-    }
-
-//    private fun playLevelUpAnimation() {
-//        binding.levelUpAnimationView.apply {
-//            visibility = View.VISIBLE
-//            setMinAndMaxFrame(0, 70)
-//            playAnimation()
-//            addAnimatorListener(object : Animator.AnimatorListener {
-//                override fun onAnimationStart(animation: Animator) {}
-//                override fun onAnimationEnd(animation: Animator) {
-//                    visibility = View.GONE
-//                }
-//                override fun onAnimationCancel(animation: Animator) {}
-//                override fun onAnimationRepeat(animation: Animator) {}
-//            })
-//        }
-//    }
-        override fun onResume() {
-            super.onResume()
-            mainActivity?.hideBar()
-        }
 }

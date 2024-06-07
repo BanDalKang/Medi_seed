@@ -41,6 +41,7 @@ class HomeViewModel(
             PharmacyItem.PharmacyInfo(
                 it.Latitude,
                 it.longitude,
+                0f,
                 it.CollectionLocationName,
                 it.CollectionLocationClassificationName,
                 it.PhoneNumber,

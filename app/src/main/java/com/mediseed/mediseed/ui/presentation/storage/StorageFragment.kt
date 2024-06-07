@@ -14,6 +14,7 @@ class StorageFragment : Fragment() {
         activity as? MainActivity
     }
 
+
     companion object {
         fun newInstance() = StorageFragment()
     }
@@ -30,5 +31,7 @@ class StorageFragment : Fragment() {
         super.onResume()
         mainActivity?.hideBar()
     }
+
+
 }
 

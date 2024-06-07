@@ -11,6 +11,7 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -18,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +33,8 @@ import com.mediseed.mediseed.ui.presentation.home.model.HomeViewModelFactory
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
 import com.mediseed.mediseed.ui.presentation.home.model.PharmacyUiState
 import com.mediseed.mediseed.ui.presentation.main.MainActivity
+import com.mediseed.mediseed.ui.presentation.sprout.SproutFragment
+import com.mediseed.mediseed.ui.share.SharedViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -51,19 +55,33 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
 
+    private val sharedViewMdoel: SharedViewModel by activityViewModels()
+
     private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()
+
+    private  var userLatitude: Double = 0.0
+
+    private  var userLongitude: Double = 0.0
+
+    private var userAndMarkerDistance = mutableListOf<Float>()
+
+    private var markerList = mutableListOf<Marker>()
+
+    private val mainActivity by lazy {
+        activity as? MainActivity
+    }
 
     private lateinit var naverMap: NaverMap
 
+    // 네이버 api
     private lateinit var fusedLocationSource: FusedLocationSource
 
+    // 구글 api
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var locationOverlay: LocationOverlay
 
-    private val mainActivity by lazy {
-       activity as? MainActivity
-    }
+
 
 
     companion object {
@@ -100,10 +118,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             homeViewModel.uiState.flowWithLifecycle(lifecycle).collectLatest { uiState ->
                 when (uiState) {
                     is PharmacyUiState.PharmacyAddList -> {
-                        pharmacyInfo =
-                            uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
-                        /**데이터가 최신화될 때마다, 마커를 업데이트합니다.*/
-                        if (this@HomeFragment::naverMap.isInitialized) {
+                        pharmacyInfo = uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
+                        /**지도 객체가 생성되었을 때, 데이터가 최신화될 때마다 마커를 생성합니다.*/
+                        if ( this@HomeFragment::naverMap.isInitialized) {
+                            // 현재위치로 카메라 이동
+                            moveToCurrentLocation()
                             registerMarker(pharmacyInfo)
                         }
                     }
@@ -163,7 +182,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             "package",
             requireContext().packageName,
             null
-        ) /// package:com.mediseed.mediseed
+        )
         intent.data = uri
         intent.putExtra(
             ActivityResultContracts.RequestMultiplePermissions.EXTRA_PERMISSIONS,
@@ -194,21 +213,24 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         locationOverlay = naverMap.locationOverlay
-
         // 현재 위치 관련 정보
         naverMap.apply {
             // 현재 위치
             locationSource = fusedLocationSource
-            // 현재 위치로 카메라 이동
-            moveToCurrentLocation()
             // 현재 위치, 나침반 버튼 기능
             uiSettings.apply {
                 isLocationButtonEnabled = true
                 isCompassEnabled = true
             }
-            // 실시간 위치 추적하며 카메라 움직임
+            // 실시간 위치 추적하며 카메라 이동 + 위치 변경시 콜백함수
             locationTrackingMode = LocationTrackingMode.Follow
+            addOnLocationChangeListener { location ->
+                userLatitude = location.latitude
+                userLongitude = location.longitude
+                updateDistance()
+            }
         }
+
         // 사용자 위치 아이콘 커스텀
         locationOverlay.apply {
             isVisible = true
@@ -216,27 +238,30 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             iconWidth = 50
             iconHeight = 50
         }
-        // 마커 생성
-        registerMarker(pharmacyInfo)
     }
 
-    //LastLocation은 구글 api가 더 빠름
     @SuppressLint("MissingPermission")
-    private fun moveToCurrentLocation() {
+    private fun getLocation(callback: (Location?) -> Unit) {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
+                callback(location)
+            }
+    }
+
+    private fun moveToCurrentLocation() {
+       getLocation{ location: Location? ->
                 location?.let {
-                    val latitude = it.latitude
-                    val longitude = it.longitude
-                    moveCamera(latitude,longitude)
+                    userLatitude = it.latitude
+                    userLongitude = it.longitude
+                    moveCamera(userLatitude, userLongitude)
+                    registerMarker(pharmacyInfo)
                 }
             }
     }
 
-    private fun registerMarker(pharmacyInfo: MutableList<PharmacyItem.PharmacyInfo>) {
-        //clearMarkers()
 
-        pharmacyInfo.forEach { info ->
+    private fun registerMarker(pharmacyInfoList: MutableList<PharmacyItem.PharmacyInfo>) {
+        pharmacyInfoList.forEach { info ->
             val markerLatitude = info.latitude?.toDoubleOrNull()
             val markerLongitude = info.longitude?.toDoubleOrNull()
 
@@ -252,50 +277,101 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     captionText = markerName.toString()
                     captionColor = Color.MAGENTA
                     map = naverMap
+                    markerList.add(this)
+                    Log.d("tango", markerList.toString())
+
+
+                    val distance = calculateDistance(userLatitude,userLongitude,markerLatitude,markerLongitude)
+                    userAndMarkerDistance.add(distance)
+                    userAndMarkerDistance.forEachIndexed { index, distance ->
+                        if (pharmacyInfo.size > index) {
+                            pharmacyInfo[index] = pharmacyInfo[index].copy(distance = distance)
+                        }
+                    }
 
                     setOnClickListener {
                         val markerInfo = PharmacyItem.PharmacyInfo(
                             latitude = null,
                             longitude = null,
+                            distance = distance,
                             CollectionLocationName = markerName,
                             CollectionLocationClassificationName = markerClassificationName,
                             PhoneNumber = markerPhoneNumber,
                             StreetNameAddress = markerAddress,
                             DataDate = markerUpdate
                         )
-                        moveCamera(markerLatitude,markerLongitude)
+                        moveCamera(markerLatitude, markerLongitude)
                         showBottomSheet(markerInfo)
                     }
                 }
+
             } else {
                 Log.e("markerError", "Invalid latitude or longitude for marker: $info")
             }
         }
+
     }
 
 
+    private fun calculateDistance(userLat: Double, userLon: Double, markerLat: Double, markerLon: Double): Float {
+        val userLocation = Location("UserLocation").apply {
+            latitude = userLat
+            longitude = userLon
+        }
+
+        val markerLocation = Location("MarkerLocation").apply {
+            latitude = markerLat
+            longitude = markerLon
+        }
+
+        return userLocation.distanceTo(markerLocation)
+    }
+
+    private fun setData(data: Boolean) {
+        sharedViewMdoel.setData(data)
+    }
+
+    private fun updateDistance() {
+        userAndMarkerDistance.clear()
+        pharmacyInfo.forEachIndexed { index, info ->
+            val markerLatitude = info.latitude?.toDoubleOrNull()
+            val markerLongitude = info.longitude?.toDoubleOrNull()
+            if (markerLatitude != null && markerLongitude != null) {
+                val distance = calculateDistance(userLatitude, userLongitude, markerLatitude, markerLongitude)
+                userAndMarkerDistance.add(distance)
+                pharmacyInfo[index] = pharmacyInfo[index].copy(distance = distance)
+                if (distance <= 10) setData(true) else setData(true)
+            }
+
+
+        }
+    }
+
+
+    // 이름순 -> 거리순 정렬 알고리즘
     fun updateSuggestions(query: String) {
         val pharmacyNameList = pharmacyInfo.map { it.CollectionLocationName }
-        val filterList= if (query.isNotEmpty()) {
+        val filterList = if (query.isNotEmpty()) {
             pharmacyNameList.filter { suggestion ->
                 suggestion?.startsWith(query, ignoreCase = true) == true
             }
         } else {
             emptyList<Any>()
-            }
+        }
         val suggestionList = pharmacyInfo.filter { item ->
             filterList.contains(item.CollectionLocationName)
         }
 
-        Log.d("hello",suggestionList.toString())
+        val sortedSuggestionList = suggestionList.sortedBy { it.distance }
 
-        if (suggestionList.isNotEmpty()) {
+        if (sortedSuggestionList.isNotEmpty()) {
             mainActivity?.suggestionRecyclerView?.visibility = View.VISIBLE
         } else {
             mainActivity?.suggestionRecyclerView?.visibility = View.INVISIBLE
         }
 
-        mainActivity?.suggestionAdapter?.undateItem(suggestionList)
+        mainActivity?.suggestionAdapter?.updateItem(sortedSuggestionList)
+
     }
 
     private fun showBottomSheet(markerInfo: PharmacyItem.PharmacyInfo): Boolean {
@@ -311,14 +387,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val markerLatitude = pharmacyName.latitude?.toDoubleOrNull()
             val markerLongitude = pharmacyName.longitude?.toDoubleOrNull()
             if (markerLatitude != null && markerLongitude != null) {
-                moveCamera(markerLatitude,markerLongitude)
+                moveCamera(markerLatitude, markerLongitude)
             }
         }
 
-        }
+    }
 
     fun moveCamera(latitude: Double, longitude: Double) {
-        val currentLocation = CameraUpdate.scrollTo(LatLng(latitude,longitude))
+        val currentLocation = CameraUpdate.scrollTo(LatLng(latitude, longitude))
         naverMap.moveCamera(currentLocation)
 
     }

@@ -1,14 +1,19 @@
 package com.mediseed.mediseed.ui.presentation.main
 
+import android.R.id.content
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
@@ -36,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private val homeFragment = viewPagerAdapter.getHomeFragment()
 
-    val suggestionRecyclerView : RecyclerView by lazy {binding.suggestionRecyclerview}
+    val suggestionRecyclerView: RecyclerView by lazy { binding.suggestionRecyclerview }
 
     val suggestionAdapter: SuggestionAdapter by lazy {
         SuggestionAdapter(
@@ -57,9 +62,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initView()
         registerRecyclerView()
+        focusControl()
 
     }
-
 
     private fun initView() = with(binding) {
         // TabLayout x ViewPager2
@@ -90,6 +95,16 @@ class MainActivity : AppCompatActivity() {
                 // 재선택 시
             }
         })
+
+
+
+        searchBarEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.tlMain.visibility = View.INVISIBLE
+            } else {
+                binding.tlMain.visibility = View.VISIBLE
+            }
+        }
 
         // 텍스트 검증
         searchBarEditText.addTextChangedListener(object : TextWatcher {
@@ -128,14 +143,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    // Hide TabLayout when Focusing EditText
+    private fun focusControl() {
+        binding.searchBarEditText.setOnFocusChangeListener { _, hasFocus ->
+            binding.tlMain.isVisible = !hasFocus
+        }
+    }
+
+    // Show TabLayout and Hide Keyboard when OutFocusing of EditText
+    @Suppress("UNREACHABLE_CODE")
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
+            val currentView = currentFocus
+            if (currentView is EditText) {
+                val editTextBox = Rect()
+                currentView.getGlobalVisibleRect(editTextBox)
+                if (!editTextBox.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    currentView.clearFocus()
+                   val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    manager.hideSoftInputFromWindow(
+                        currentView.windowToken,
+                        InputMethodManager.HIDE_NOT_ALWAYS
+                    )
+                    binding.tlMain.isVisible = true
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+
+
     private fun registerRecyclerView() {
         suggestionRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = suggestionAdapter
         }
-
     }
-
 
     private fun clearText() {
         binding.apply {
@@ -158,6 +203,7 @@ class MainActivity : AppCompatActivity() {
             searchBarEditText.visibility = View.GONE
             searchIcon.visibility = View.GONE
             clearText.visibility = View.GONE
+            suggestionRecyclerview.visibility = View.GONE
         }
     }
 
@@ -165,7 +211,10 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             searchBarEditText.visibility = View.VISIBLE
             searchIcon.visibility = View.VISIBLE
+            suggestionRecyclerview.visibility = View.VISIBLE
         }
     }
 }
+
+
 
