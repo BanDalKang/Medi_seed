@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.mypage
+package com.mediseed.mediseed.ui.ui.mypage
 
 import android.content.Context
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mediseed.mediseed.databinding.FragmentMypageBinding
-import com.mediseed.mediseed.ui.presentation.shared.SharedViewModel
-import com.mediseed.mediseed.ui.presentation.sprout.SproutViewModel
+import com.mediseed.mediseed.ui.ui.shared.SharedViewModel
+import com.mediseed.mediseed.ui.ui.sprout.SproutViewModel
 
 class MyPageFragment : Fragment() {
     companion object {

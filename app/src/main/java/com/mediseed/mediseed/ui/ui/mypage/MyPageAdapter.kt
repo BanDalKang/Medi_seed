@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.mypage
+package com.mediseed.mediseed.ui.ui.mypage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ItemFacilityBinding
-import com.mediseed.mediseed.ui.presentation.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
 
 class MyPageAdapter :
     ListAdapter<PharmacyItem.PharmacyInfo, MyPageAdapter.PharmacyViewHolder>(DiffCallback) {
