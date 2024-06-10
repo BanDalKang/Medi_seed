@@ -1,10 +1,8 @@
 package com.mediseed.mediseed.ui.domain.model
 
-import com.google.gson.annotations.SerializedName
-
-data class PharmacyEntity(
+data class PharmacyDaejeonSeoguEntity(
     val currentCount: Int?,
-    val data: List<DataEntity>,
+    val data: List<DaejeonSeoguDataEntity>,
     val matchCount: Int?,
     val page: Int?,
     val perPage: Int?,

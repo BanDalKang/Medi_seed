@@ -20,6 +20,7 @@ import com.mediseed.mediseed.ui.ui.main.MainActivity
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.mediseed.mediseed.R
+import com.mediseed.mediseed.ui.ui.home.model.ViewModel.SharedViewModel
 import com.mediseed.mediseed.ui.ui.home.model.SharedViewModel
 import com.mediseed.mediseed.ui.ui.sprout.SproutViewModel
 

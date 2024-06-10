@@ -5,7 +5,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.provider.Settings
@@ -27,12 +26,12 @@ import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentHomeBinding
 import com.mediseed.mediseed.ui.ui.bottomSheet.BottomSheetFragment
-import com.mediseed.mediseed.ui.ui.home.model.HomeViewModel
-import com.mediseed.mediseed.ui.ui.home.model.HomeViewModelFactory
-import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
-import com.mediseed.mediseed.ui.ui.home.model.PharmacyUiState
+import com.mediseed.mediseed.ui.ui.home.model.ViewModel.HomeViewModel
+import com.mediseed.mediseed.ui.ui.home.model.ViewModel.HomeViewModelFactory
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.UiState.UiState
 import com.mediseed.mediseed.ui.ui.main.MainActivity
-import com.mediseed.mediseed.ui.ui.home.model.SharedViewModel
+import com.mediseed.mediseed.ui.ui.home.model.ViewModel.SharedViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -111,12 +110,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun registerViewModelEvent() = with(binding) {
-        homeViewModel.getLocation()
+        homeViewModel.getDaejeonSeoguLocation()
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.uiState.flowWithLifecycle(lifecycle).collectLatest { uiState ->
+            homeViewModel.daejeonSeoguUiState.flowWithLifecycle(lifecycle).collectLatest { uiState ->
                 when (uiState) {
-                    is PharmacyUiState.PharmacyAddList -> {
-                        pharmacyInfo = uiState.pharmacyLocation as MutableList<PharmacyItem.PharmacyInfo>
+                    is UiState.PharmacyAddList -> {
+                        pharmacyInfo = uiState.daejeonSeoguLocation as MutableList<PharmacyItem.PharmacyInfo>
                         /**지도 객체가 생성되었을 때, 데이터가 최신화될 때마다 마커를 생성합니다.*/
                         if ( this@HomeFragment::naverMap.isInitialized) {
                             // 현재위치로 카메라 이동
@@ -231,9 +230,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // 사용자 위치 아이콘 커스텀
         locationOverlay.apply {
             isVisible = true
-            icon = OverlayImage.fromResource(R.drawable.marker_pill)
-            iconWidth = 50
-            iconHeight = 50
+            icon = OverlayImage.fromResource(R.drawable.userlocation)
+            iconWidth = 90
+            iconHeight = 90
         }
     }
 
@@ -256,23 +255,25 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
     }
 
-
     private fun registerMarker(pharmacyInfoList: MutableList<PharmacyItem.PharmacyInfo>) {
         pharmacyInfoList.forEach { info ->
             val markerLatitude = info.latitude?.toDoubleOrNull()
             val markerLongitude = info.longitude?.toDoubleOrNull()
 
             if (markerLatitude != null && markerLongitude != null) {
-                val markerName = info.CollectionLocationName
-                val markerClassificationName = info.CollectionLocationClassificationName
-                val markerPhoneNumber = info.PhoneNumber
-                val markerAddress = info.StreetNameAddress
-                val markerUpdate = info.DataDate
+                val markerName = info.collectionLocationName
+                val markerClassificationName = info.collectionLocationClassificationName
+                val markerAddress = info.streetNameAddress
+                val markerUpdate = info.dataDate
 
                 Marker().apply {
                     position = LatLng(markerLatitude, markerLongitude)
                     captionText = markerName.toString()
-                    captionColor = Color.MAGENTA
+                    icon = OverlayImage.fromResource(R.drawable.userlocation)
+                    //icon = MarkerIcons.BLACK
+                    //icon = iconTintColor = Color.RED
+                    width = 90
+                    height = 90
                     map = naverMap
                     markerList.add(this)
 
@@ -290,11 +291,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             latitude = null,
                             longitude = null,
                             distance = distance,
-                            CollectionLocationName = markerName,
-                            CollectionLocationClassificationName = markerClassificationName,
-                            PhoneNumber = markerPhoneNumber,
-                            StreetNameAddress = markerAddress,
-                            DataDate = markerUpdate
+                            collectionLocationName = markerName,
+                            collectionLocationClassificationName = markerClassificationName,
+                            dataDate = markerUpdate,
+                            streetNameAddress = markerAddress
                         )
                         moveCamera(markerLatitude, markerLongitude)
                         showBottomSheet(markerInfo)
@@ -305,7 +305,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 Log.e("markerError", "Invalid latitude or longitude for marker: $info")
             }
         }
-
     }
 
 
@@ -345,7 +344,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     // 이름순 -> 거리순 정렬 알고리즘
     fun updateSuggestions(query: String) {
-        val pharmacyNameList = pharmacyInfo.map { it.CollectionLocationName }
+        val pharmacyNameList = pharmacyInfo.map { it.collectionLocationName }
         val filterList = if (query.isNotEmpty()) {
             pharmacyNameList.filter { suggestion ->
                 suggestion?.startsWith(query, ignoreCase = true) == true
@@ -354,7 +353,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             emptyList<Any>()
         }
         val suggestionList = pharmacyInfo.filter { item ->
-            filterList.contains(item.CollectionLocationName)
+            filterList.contains(item.collectionLocationName)
         }
 
         val sortedSuggestionList = suggestionList.sortedBy { it.distance }
@@ -377,7 +376,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
 
     fun performSearch(query: String) {
-        var foundpharmacyName = pharmacyInfo.filter { it.CollectionLocationName == query }
+        var foundpharmacyName = pharmacyInfo.filter { it.collectionLocationName == query }
         for (pharmacyName in foundpharmacyName) {
             val markerLatitude = pharmacyName.latitude?.toDoubleOrNull()
             val markerLongitude = pharmacyName.longitude?.toDoubleOrNull()
