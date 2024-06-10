@@ -75,7 +75,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             ivHeart.setOnClickListener {
                 val isHeartFilled = toggleHeartIcon()
                 pharmacyInfo.StreetNameAddress?.let { address ->
-                    sharedViewModel.updateHeartCount(address, isHeartFilled) { success ->
+                    val facilityName = pharmacyInfo.CollectionLocationName ?: ""
+                    sharedViewModel.updateHeartCount(address, isHeartFilled, facilityName) { success ->
                         if (success) {
                             if (isHeartFilled) {
                                 sharedViewModel.addLikedItem(pharmacyInfo)

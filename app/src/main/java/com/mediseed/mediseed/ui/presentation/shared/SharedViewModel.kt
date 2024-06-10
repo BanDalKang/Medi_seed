@@ -104,7 +104,7 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
         ref.addValueEventListener(medicineCountListener as ValueEventListener)
     }
 
-    fun updateHeartCount(address: String, increment: Boolean, callback: (Boolean) -> Unit) {
+    fun updateHeartCount(address: String, increment: Boolean, facilityName: String, callback: (Boolean) -> Unit) {
         val ref = database.getReference("location/$address/heartCount")
 
         ref.runTransaction(object : Transaction.Handler {
@@ -122,12 +122,24 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
                 committed: Boolean,
                 dataSnapshot: DataSnapshot?
             ) {
-                callback(committed)
                 if (committed) {
                     _heartCount.value = dataSnapshot?.getValue(Int::class.java)
+                    updateFacilityName(address, facilityName) { nameUpdated ->
+                        callback(nameUpdated)
+                    }
+                } else {
+                    callback(false)
                 }
             }
         })
+    }
+
+    fun updateFacilityName(address: String, facilityName: String, callback: (Boolean) -> Unit) {
+        val ref = database.getReference("location/$address/facilityName")
+
+        ref.setValue(facilityName).addOnCompleteListener { task ->
+            callback(task.isSuccessful)
+        }
     }
 
     fun isPharmacyInfoLiked(pharmacyInfo: PharmacyItem.PharmacyInfo): Boolean {

@@ -84,12 +84,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-<<<<<<< Updated upstream
-
-    //카드뷰
-    implementation("androidx.cardview:cardview:1.0.0")
-
-
-=======
->>>>>>> Stashed changes
 }
