@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.domain.repository
+package com.mediseed.mediseed.ui.repository
 
 import com.mediseed.mediseed.ui.data.model.PharmacyResponce
 

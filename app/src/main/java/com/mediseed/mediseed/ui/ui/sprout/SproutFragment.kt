@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +17,14 @@ import com.mediseed.mediseed.databinding.FragmentSproutBinding
 import com.mediseed.mediseed.ui.ui.main.MainActivity
 import androidx.lifecycle.ViewModelProvider
 import com.mediseed.mediseed.R
-import com.mediseed.mediseed.ui.share.SharedViewModel
+import com.mediseed.mediseed.ui.ui.home.model.SharedViewModel
 
 class SproutFragment : Fragment() {
 
     private var _binding: FragmentSproutBinding? = null
     private val binding get() = _binding!!
     private lateinit var sproutViewModel: SproutViewModel
-    private val sharedViewMdoel: SharedViewModel by activityViewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private val mainActivity by lazy {
         activity as? MainActivity
@@ -155,9 +156,11 @@ class SproutFragment : Fragment() {
     }
 
     private fun getData(): Boolean? {
-        return sharedViewMdoel.nearDistance.value
+        return sharedViewModel.nearDistance.value
+
     }
     private fun activateFeed() {
+
         if (getData() == true) {
             sproutViewModel.handlePillButtonClick()
         } else {

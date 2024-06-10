@@ -1,6 +1,5 @@
-package com.mediseed.mediseed.ui.data.repository
+package com.mediseed.mediseed.ui.repository
 
-import android.util.Log
 import com.mediseed.mediseed.ui.data.model.PharmacyResponce
 import com.mediseed.mediseed.ui.data.remote.PharmacyDataSource
 import com.mediseed.mediseed.ui.domain.exception.NetworkException
@@ -8,7 +7,7 @@ import com.mediseed.mediseed.ui.domain.exception.QuotaExceededException
 import com.mediseed.mediseed.ui.domain.exception.TimeoutException
 import com.mediseed.mediseed.ui.domain.exception.UnknownException
 import com.mediseed.mediseed.ui.domain.exception.UnknownHttpException
-import com.mediseed.mediseed.ui.domain.repository.PharmacyRepository
+import com.mediseed.mediseed.ui.repository.PharmacyRepository
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
