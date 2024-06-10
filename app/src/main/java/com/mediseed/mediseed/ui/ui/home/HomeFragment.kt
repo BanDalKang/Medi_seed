@@ -32,7 +32,7 @@ import com.mediseed.mediseed.ui.ui.home.model.HomeViewModelFactory
 import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
 import com.mediseed.mediseed.ui.ui.home.model.PharmacyUiState
 import com.mediseed.mediseed.ui.ui.main.MainActivity
-import com.mediseed.mediseed.ui.share.SharedViewModel
+import com.mediseed.mediseed.ui.ui.home.model.SharedViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -53,7 +53,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
 
-    private val sharedViewMdoel: SharedViewModel by activityViewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()
 
@@ -275,7 +275,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     captionColor = Color.MAGENTA
                     map = naverMap
                     markerList.add(this)
-                    Log.d("tango", markerList.toString())
 
 
                     val distance = calculateDistance(userLatitude,userLongitude,markerLatitude,markerLongitude)
@@ -325,7 +324,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun setData(data: Boolean) {
-        sharedViewMdoel.setData(data)
+        sharedViewModel.setData(data)
     }
 
     private fun updateDistance() {
@@ -334,13 +333,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val markerLatitude = info.latitude?.toDoubleOrNull()
             val markerLongitude = info.longitude?.toDoubleOrNull()
             if (markerLatitude != null && markerLongitude != null) {
-                val distance = calculateDistance(userLatitude, userLongitude, markerLatitude, markerLongitude)
+                val distance =
+                    calculateDistance(userLatitude, userLongitude, markerLatitude, markerLongitude)
                 userAndMarkerDistance.add(distance)
                 pharmacyInfo[index] = pharmacyInfo[index].copy(distance = distance)
-                if (userAndMarkerDistance.any{it <= 20}) setData(true) else setData(false)
             }
-
-
+            if (userAndMarkerDistance.any { it <= 20 }) setData(true) else setData(false)
         }
     }
 
