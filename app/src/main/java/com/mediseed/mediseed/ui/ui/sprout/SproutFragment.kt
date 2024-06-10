@@ -67,12 +67,10 @@ class SproutFragment : Fragment() {
         with(binding) {
             sproutPillButton.setOnClickListener {
                 activateFeed()
-//                sproutViewModel.updateProgress(40) //테스트 코드
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()
                 shareApp()
-//                sproutViewModel.updateProgress(10) //테스트 코드
             }
             nameImageButton.setOnClickListener {
                 showNameEditDialog()
