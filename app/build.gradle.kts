@@ -62,12 +62,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    // animation
     implementation("com.airbnb.android:lottie:3.7.0")
+    implementation("com.daimajia.androidanimations:library:2.4@aar")
     // Naver Map Sdk
     implementation("com.naver.maps:map-sdk:3.18.0")
     // Google Location Service
     implementation("com.google.android.gms:play-services-location:21.0.1")
-    // Retrofit2
+    // Retrofit2 & Gson
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
