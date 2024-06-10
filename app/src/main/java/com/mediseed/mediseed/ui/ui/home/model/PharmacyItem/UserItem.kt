@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.ui.home.model
+package com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -10,11 +10,11 @@ interface PharmacyItem {
         val latitude: String?,
         val longitude: String?,
         val distance: Float?,
-        val CollectionLocationName: String?,
-        val CollectionLocationClassificationName: String?,
-        val PhoneNumber: String?,
-        val DataDate: String?,
-        val StreetNameAddress: String?,
+        val collectionLocationName: String?,
+        val collectionLocationClassificationName: String?,
+        val dataDate: String?,
+        val streetNameAddress: String?,
     ) : PharmacyItem, Parcelable
+
 
 }

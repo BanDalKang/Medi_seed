@@ -5,6 +5,8 @@
     <string name="main_tab_sprout_title">새싹이</string>
     <string name="main_tab_home_title">홈</string>
     <string name="main_tab_mypage_title">마이페이지</string>
+
+    <!--sproutFragment-->
     <string name="sprout_pill_button">약 주기</string>
     <string name="sprout_share_button">공유하기</string>
     <string name="sprout_bottom_text">약 주기는 수거함 근처에서만 가능합니다.</string>
@@ -17,6 +19,13 @@
     <string name="sprout_distance_toast">수거함이 너무 멀리 있습니다.</string>
     <string name="sprout_location_toast">현재 위치를 가져오지 못했습니다.</string>
     <string name="sprout_pill_location_toast">수거함 위치를 가져오지 못했습니다.</string>
+    <string name="sprout_tree_dialog_bottom_text">축하드려요! 나무가 하나 더 늘었습니다.</string>
+    <string name="sprout_tree_dialog_title_text">나무가 다 자랐어요!</string>
+    <string name="sprout_tree_dialog_button_text">또 키우러 가기</string>
+    <string name="sprout_name_dialog_text">이름 변경</string>
+    <string name="sprout_name_dialog_edit_text">새 이름을 입력하세요</string>
+    <string name="sprout_button_confirm">확인</string>
+    <string name="sprout_button_cancel">취소</string>
 
     <!--HomeFragment-->
     <string name="location_permission_granted">위치권한이 허용되었습니다.</string>

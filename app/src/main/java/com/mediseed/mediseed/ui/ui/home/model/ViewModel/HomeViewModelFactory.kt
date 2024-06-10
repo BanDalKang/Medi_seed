@@ -1,10 +1,10 @@
-package com.mediseed.mediseed.ui.ui.home.model
+package com.mediseed.mediseed.ui.ui.home.model.ViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.mediseed.mediseed.ui.data.network.PharmacyRetrofitClient
-import com.mediseed.mediseed.ui.data.repository.PharmacyRepositoryImpl
+import com.mediseed.mediseed.ui.network.PharmacyRetrofitClient
+import com.mediseed.mediseed.ui.repository.PharmacyRepositoryImpl
 import com.mediseed.mediseed.ui.domain.usecase.PharmacyUseCase
 
 class HomeViewModelFactory : ViewModelProvider.Factory {

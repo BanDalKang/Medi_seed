@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
-                android:text="02 - 1111- 2222"
+                tools:text="02 - 1111- 2222"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
         </LinearLayout>

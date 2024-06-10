@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.SuggestionRecyclerviewItemBinding
-import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem.PharmacyItem
 
 class SuggestionAdapter (
     private val onItemClick: (PharmacyItem.PharmacyInfo) -> Unit = {}
@@ -18,10 +18,10 @@ class SuggestionAdapter (
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(itemPosition: PharmacyItem.PharmacyInfo) = with(binding) {
-            pharmacyName.text = itemPosition.CollectionLocationName
-            pharmacyLocation.text= itemPosition.StreetNameAddress
-            pharmacyClassification.text = itemPosition.CollectionLocationClassificationName
+            pharmacyName.text = itemPosition.collectionLocationName
+            pharmacyLocation.text= itemPosition.streetNameAddress
             pharmacyDistance.text = itemPosition.distance?.toInt().toString()
+            pharmacyClassification.text = itemPosition.collectionLocationClassificationName.toString()
         }
 
     }
