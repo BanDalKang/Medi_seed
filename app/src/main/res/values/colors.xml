@@ -5,10 +5,17 @@
     <color name="green_200">#94F898</color>
     <color name="green_300">#5EEA70</color>
     <color name="green_400">#03804C</color>
+    <color name="blue_300">#5E92EA</color>
+    <color name="yellow_300">#F4F894</color>
     <color name="black">#FF000000</color>
     <color name="black_light">#292C2A</color>
     <color name="grey">#CED4DA</color>
     <color name="grey_dark">#84878C</color>
     <color name="grey_light">#E7EAED</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="bg">#FFF8B6</color>
+    <color name="bg_light_gray">#26B7B7B7</color>
+    <color name="blue">#5CB1FF</color>
+
 </resources>
