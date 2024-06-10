@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.ui.home.model
+package com.mediseed.mediseed.ui.ui.home.model.ViewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

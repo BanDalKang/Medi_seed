@@ -1,7 +1,10 @@
 package com.mediseed.mediseed.ui.repository
 
-import com.mediseed.mediseed.ui.data.model.PharmacyResponce
+import com.mediseed.mediseed.ui.data.model.PharmacyDaejeonSeoguResponse
+import com.mediseed.mediseed.ui.data.model.PharmacyDaejeonYuseongguResponse
+
 
 interface PharmacyRepository {
-    suspend fun getPharmacy(): PharmacyResponce
+    suspend fun getPharmacyDaejeonSeogu(): PharmacyDaejeonSeoguResponse
+    suspend fun getPharmacyDaejeonYuseonggu(): PharmacyDaejeonYuseongguResponse
 }

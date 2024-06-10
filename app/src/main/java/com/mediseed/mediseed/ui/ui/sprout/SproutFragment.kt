@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ import com.mediseed.mediseed.databinding.FragmentSproutBinding
 import com.mediseed.mediseed.ui.ui.main.MainActivity
 import androidx.lifecycle.ViewModelProvider
 import com.mediseed.mediseed.R
-import com.mediseed.mediseed.ui.ui.home.model.SharedViewModel
+import com.mediseed.mediseed.ui.ui.home.model.ViewModel.SharedViewModel
 
 class SproutFragment : Fragment() {
 

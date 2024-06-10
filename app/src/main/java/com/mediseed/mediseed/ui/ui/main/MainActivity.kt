@@ -20,7 +20,7 @@ import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mediseed.mediseed.ui.ui.home.SuggestionAdapter
-import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem.PharmacyItem
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {

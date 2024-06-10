@@ -8,8 +8,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
-import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
 import com.mediseed.mediseed.ui.Const
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem.PharmacyItem
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -43,11 +43,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         arguments?.let {
             turn = it.getInt("turn", 0)
-            binding.tvFacilityType.text = pharmacyInfo.CollectionLocationClassificationName
-            binding.tvFacilityName.text = pharmacyInfo.CollectionLocationName
-            binding.tvAddress.text = pharmacyInfo.StreetNameAddress
-            binding.tvPhone.text = pharmacyInfo.PhoneNumber
-            binding.tvDate.text = pharmacyInfo.DataDate
+            binding.tvFacilityType.text = pharmacyInfo.collectionLocationClassificationName
+            binding.tvFacilityName.text = pharmacyInfo.collectionLocationName
+            binding.tvAddress.text = pharmacyInfo.streetNameAddress
+            binding.tvDate.text = pharmacyInfo.dataDate
         }
 
         // heart count를 관찰
