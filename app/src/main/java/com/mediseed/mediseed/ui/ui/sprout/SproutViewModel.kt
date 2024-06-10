@@ -56,6 +56,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
 
     init {
         lastShareClickDateCheck()
+        lastPillClickDateCheck()
     }
 
     fun handlePillButtonClick() {
