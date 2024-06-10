@@ -132,7 +132,7 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
 
     fun isPharmacyInfoLiked(pharmacyInfo: PharmacyItem.PharmacyInfo): Boolean {
         val likedItems = _likedItems.value ?: emptyList()
-        return likedItems.any { it.StreetNameAddress == pharmacyInfo.StreetNameAddress }
+        return likedItems.any { it.streetNameAddress == pharmacyInfo.streetNameAddress }
     }
 
     override fun onCleared() {

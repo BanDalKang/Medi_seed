@@ -10,6 +10,7 @@ import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
 import com.mediseed.mediseed.ui.Const
 import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem.PharmacyItem
+import com.mediseed.mediseed.ui.ui.shared.SharedViewModel
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -28,8 +29,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     ): View {
         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
         arguments?.getParcelable<PharmacyItem.PharmacyInfo>(Const.PHARMACY)?.let { pharmacyInfo ->
-                this.pharmacyInfo = pharmacyInfo
-            }
+            this.pharmacyInfo = pharmacyInfo
+        }
 
         return binding.root
     }

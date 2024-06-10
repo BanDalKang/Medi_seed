@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ItemFacilityBinding
-import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem.PharmacyItem
 
 class StorageAdapter :
     ListAdapter<PharmacyItem.PharmacyInfo, StorageAdapter.PharmacyViewHolder>(DiffCallback) {
@@ -24,9 +24,9 @@ class StorageAdapter :
     class PharmacyViewHolder(private val binding: ItemFacilityBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PharmacyItem.PharmacyInfo) {
-            binding.tvTitle.text = item.CollectionLocationName
-            binding.tvKind.text = item.CollectionLocationClassificationName
-            binding.tvAddress.text = item.StreetNameAddress
+            binding.tvTitle.text = item.collectionLocationName
+            binding.tvKind.text = item.collectionLocationClassificationName
+            binding.tvAddress.text = item.streetNameAddress
         }
     }
 
@@ -36,7 +36,7 @@ class StorageAdapter :
                 oldItem: PharmacyItem.PharmacyInfo,
                 newItem: PharmacyItem.PharmacyInfo
             ): Boolean {
-                return oldItem.StreetNameAddress == newItem.StreetNameAddress
+                return oldItem.streetNameAddress == newItem.streetNameAddress
             }
 
             override fun areContentsTheSame(
