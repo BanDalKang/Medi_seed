@@ -9,7 +9,7 @@ import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mediseed.mediseed.ui.Const
-import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
+import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem.PharmacyItem
 
 class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
 

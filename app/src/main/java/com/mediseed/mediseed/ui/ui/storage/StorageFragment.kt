@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.ui.mypage
+package com.mediseed.mediseed.ui.ui.storage
 
 import android.content.Context
 import android.os.Bundle
@@ -13,9 +13,9 @@ import com.mediseed.mediseed.databinding.FragmentMypageBinding
 import com.mediseed.mediseed.ui.ui.shared.SharedViewModel
 import com.mediseed.mediseed.ui.ui.sprout.SproutViewModel
 
-class MyPageFragment : Fragment() {
+class StorageFragment : Fragment() {
     companion object {
-        fun newInstance() = MyPageFragment()
+        fun newInstance() = StorageFragment()
     }
 
     private var _binding: FragmentMypageBinding? = null
@@ -35,7 +35,7 @@ class MyPageFragment : Fragment() {
 
     //private lateinit var sproutViewModel: SproutViewModel
 
-    private lateinit var adapter: MyPageAdapter
+    private lateinit var adapter: StorageAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +55,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = MyPageAdapter()
+        adapter = StorageAdapter()
         binding.rvMedicineCollection.layoutManager = LinearLayoutManager(context)
         binding.rvMedicineCollection.adapter = adapter
 

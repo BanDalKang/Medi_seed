@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.ui.mypage
+package com.mediseed.mediseed.ui.ui.storage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ItemFacilityBinding
 import com.mediseed.mediseed.ui.ui.home.model.PharmacyItem
 
-class MyPageAdapter :
-    ListAdapter<PharmacyItem.PharmacyInfo, MyPageAdapter.PharmacyViewHolder>(DiffCallback) {
+class StorageAdapter :
+    ListAdapter<PharmacyItem.PharmacyInfo, StorageAdapter.PharmacyViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PharmacyViewHolder {
         val binding =
