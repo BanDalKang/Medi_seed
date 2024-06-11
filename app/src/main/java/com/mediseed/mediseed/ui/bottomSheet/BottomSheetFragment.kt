@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.mediseed.mediseed.Const
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
+import com.mediseed.mediseed.Const
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.shared.SharedViewModel
 
@@ -55,7 +55,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         with(binding) {
             tvFacilityType.text = pharmacyInfo.collectionLocationClassificationName
             tvFacilityName.text = pharmacyInfo.collectionLocationName
-            tvDistance.text = pharmacyInfo.distance.toString() + " m"
+            tvDistance.text = pharmacyInfo.distance?.toInt().toString() + " m"
             tvAddress.text = pharmacyInfo.streetNameAddress
             tvDate.text = pharmacyInfo.dataDate
 
@@ -110,17 +110,18 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun toggleHeartIcon(): Boolean {
-        val isHeartFilled = binding.ivHeart.tag == "filled"
-        if (isHeartFilled) {
-            binding.ivHeart.setImageResource(R.drawable.ic_heart_empty)
-            binding.ivHeart.tag = "empty"
-        } else {
-            binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
-            binding.ivHeart.tag = "filled"
+        with(binding) {
+            val isHeartFilled = ivHeart.tag == "filled"
+            if (isHeartFilled) {
+                ivHeart.setImageResource(R.drawable.ic_heart_empty)
+                ivHeart.tag = "empty"
+            } else {
+                ivHeart.setImageResource(R.drawable.ic_heart_fill)
+                ivHeart.tag = "filled"
+            }
+            return !isHeartFilled
         }
-        return !isHeartFilled
     }
-
 
     private fun observeViewModel() {
         with(binding) {
