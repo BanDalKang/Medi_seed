@@ -80,8 +80,11 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation(libs.firebase.database.ktx)
     implementation(libs.androidx.activity)
+    //카드뷰
+    implementation("androidx.cardview:cardview:1.0.0")
+    //lottie
+    implementation("com.airbnb.android:lottie:3.7.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
 }
