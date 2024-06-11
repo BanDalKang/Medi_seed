@@ -1,13 +1,11 @@
 package com.mediseed.mediseed.ui.ui
 
 import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mediseed.mediseed.databinding.ActivitySplashBinding
-import com.mediseed.mediseed.ui.ui.main.MainActivity
+import com.mediseed.mediseed.ui.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {
 

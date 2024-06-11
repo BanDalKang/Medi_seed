@@ -30,7 +30,7 @@
             android:value="${MANIFEST_NAVER_MAP_CLIENT_ID}" />
 
         <activity
-            android:name=".ui.ui.main.MainActivity" />
+            android:name=".ui.main.MainActivity" />
     </application>
 
 </manifest>
