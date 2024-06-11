@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.sprout
+package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
 import android.app.AlertDialog
@@ -21,7 +21,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
-import com.mediseed.mediseed.ui.sprout.SproutViewModel
 
 class SproutFragment : Fragment() {
 
@@ -69,7 +68,8 @@ class SproutFragment : Fragment() {
                 activateFeed()
             }
             sproutShareButton.setOnClickListener {
-                sproutViewModel.handleShareButtonClick()
+                //sproutViewModel.handleShareButtonClick()
+                sproutViewModel.updateProgress(10)
                 shareApp()
             }
             nameImageButton.setOnClickListener {
