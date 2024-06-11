@@ -230,8 +230,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // 사용자 위치 아이콘 커스텀
         locationOverlay.apply {
             isVisible = true
-            icon = OverlayImage.fromResource(R.drawable.userlocation)
-            iconWidth = 90
+            icon = OverlayImage.fromResource(R.drawable.usermarker)
+            iconWidth = 80
             iconHeight = 90
         }
     }
@@ -270,7 +270,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 Marker().apply {
                     position = LatLng(markerLatitude, markerLongitude)
                     captionText = markerName.toString()
-                    icon = OverlayImage.fromResource(R.drawable.userlocation)
+                    icon = OverlayImage.fromResource(R.drawable.mapmarker)
                     //icon = MarkerIcons.BLACK
                     //icon = iconTintColor = Color.RED
                     width = 90
@@ -344,16 +344,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    // 이름순 -> 거리순 정렬 알고리즘
+    // 정렬 알고리즘: 첫글자 > 해당글자 포함 > 거리순 정렬 알고리즘
     fun updateSuggestions(query: String) {
         val pharmacyNameList = pharmacyInfo.map { it.collectionLocationName }
         val filterList = if (query.isNotEmpty()) {
-            pharmacyNameList.filter { suggestion ->
+            val startsWithQuery = pharmacyNameList.filter { suggestion ->
                 suggestion?.startsWith(query, ignoreCase = true) == true
             }
+            val containsQuery = pharmacyNameList.filter { suggestion ->
+                suggestion?.contains(query, ignoreCase = true) == true && suggestion !in startsWithQuery
+            }
+            startsWithQuery + containsQuery
         } else {
-            emptyList<Any>()
+            emptyList()
         }
+
         val suggestionList = pharmacyInfo.filter { item ->
             filterList.contains(item.collectionLocationName)
         }
@@ -367,7 +372,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
 
         mainActivity?.suggestionAdapter?.updateItem(sortedSuggestionList)
-
     }
 
     private fun showBottomSheet(markerInfo: PharmacyItem.PharmacyInfo): Boolean {
