@@ -30,5 +30,5 @@ class SplashActivity : AppCompatActivity() {
                 override fun onAnimationRepeat(animation: Animator) {}
             })
         }
-        }
+    }
 }
