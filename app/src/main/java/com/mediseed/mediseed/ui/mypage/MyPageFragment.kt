@@ -48,6 +48,9 @@ class MyPageFragment : Fragment() {
     ): View? {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
 
+        //뷰모델 초기화
+        initializeViewModel()
+
         //전체 약 버리기 갯수
         sproutViewModel.pillClickCount.observe(viewLifecycleOwner, Observer { count ->
             binding.tvDrugCount.text = count.toString()
@@ -57,7 +60,7 @@ class MyPageFragment : Fragment() {
         sproutViewModel.shareClickCount.observe(viewLifecycleOwner, Observer { count ->
             binding.tvSharingCount.text = count.toString()
         })
-        initializeViewModel()
+
 
         setupRecyclerView()
 
