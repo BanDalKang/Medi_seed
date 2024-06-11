@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.sprout
+package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
 import android.app.AlertDialog
@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
-import com.mediseed.mediseed.ui.sprout.SproutViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
 
 class SproutFragment : Fragment() {

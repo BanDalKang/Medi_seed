@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.mypage.MyPageFragment
-import com.mediseed.mediseed.ui.presentation.sprout.SproutFragment
+import com.mediseed.mediseed.ui.sprout.SproutFragment
 import com.mediseed.mediseed.ui.home.HomeFragment
 
 class MainViewPagerAdapter(
