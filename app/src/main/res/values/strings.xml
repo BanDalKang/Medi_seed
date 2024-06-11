@@ -31,4 +31,13 @@
     <string name="sprout_name_dialog_edit_text">새 이름을 입력하세요</string>
     <string name="sprout_button_confirm">확인</string>
     <string name="sprout_button_cancel">취소</string>
+    <!--my page-->
+    <string name="item_kind">약국</string>
+    <string name="mypage_collected">반납한\n폐의약품 횟수</string>
+    <string name="mypage_sharing">지금까지\n공유한 횟수</string>
+    <string name="item_title">새싹 약국</string>
+    <string name="item_address">대전 나무로 초목로 4길 86</string>
+    <string name="mypage_medicine">4</string>
+    <string name="mypage_share_count">2</string>
+
 </resources>

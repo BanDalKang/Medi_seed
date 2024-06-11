@@ -1,7 +1,7 @@
 package com.mediseed.mediseed
 
-import com.mediseed.mediseed.ui.network.PharmacyRetrofitClient
-import com.mediseed.mediseed.ui.repository.PharmacyRepositoryImpl
+import com.mediseed.mediseed.network.PharmacyRetrofitClient
+import com.mediseed.mediseed.repository.PharmacyRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
