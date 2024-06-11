@@ -68,8 +68,7 @@ class SproutFragment : Fragment() {
                 activateFeed()
             }
             sproutShareButton.setOnClickListener {
-                //sproutViewModel.handleShareButtonClick()
-                sproutViewModel.updateProgress(10)
+                sproutViewModel.handleShareButtonClick()
                 shareApp()
             }
             nameImageButton.setOnClickListener {
