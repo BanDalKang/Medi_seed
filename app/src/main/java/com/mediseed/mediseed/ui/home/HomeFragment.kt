@@ -78,9 +78,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var locationOverlay: LocationOverlay
 
-
-
-
     companion object {
         fun newInstance() = HomeFragment()
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -107,7 +104,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         registerViewModelEvent()
         registerMap()
     }
-
 
     private fun registerViewModelEvent() = with(binding) {
         homeViewModel.getDaejeonSeoguLocation()
@@ -278,7 +274,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     map = naverMap
                     markerList.add(this)
 
-
                     val distance = calculateDistance(userLatitude,userLongitude,markerLatitude,markerLongitude)
                     userAndMarkerDistance.add(distance)
                     userAndMarkerDistance.forEachIndexed { index, distance ->
@@ -309,7 +304,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
     private fun calculateDistance(userLat: Double, userLon: Double, markerLat: Double, markerLon: Double): Float {
         val userLocation = Location("UserLocation").apply {
             latitude = userLat
@@ -328,21 +322,34 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         sharedViewModel.setData(data)
     }
 
+    private fun setAddress(address: String) {
+        sharedViewModel.setAddress(address)
+    }
+
     private fun updateDistance() {
         userAndMarkerDistance.clear()
         pharmacyInfo.forEachIndexed { index, info ->
             val markerLatitude = info.latitude?.toDoubleOrNull()
             val markerLongitude = info.longitude?.toDoubleOrNull()
+            val markerAddress = info.streetNameAddress
+
             if (markerLatitude != null && markerLongitude != null) {
                 val distance =
                     calculateDistance(userLatitude, userLongitude, markerLatitude, markerLongitude)
                 userAndMarkerDistance.add(distance)
                 pharmacyInfo[index] = pharmacyInfo[index].copy(distance = distance)
             }
-            if (userAndMarkerDistance.any { it <= 20 }) setData(true) else setData(false)
+
+            if (userAndMarkerDistance.any { it <= 20 }) {
+                setData(true)
+                if (markerAddress != null) {
+                    setAddress(markerAddress)
+                }
+            } else {
+                setData(false)
+            }
         }
     }
-
 
     // 이름순 -> 거리순 정렬 알고리즘
     fun updateSuggestions(query: String) {
@@ -367,7 +374,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
 
         mainActivity?.suggestionAdapter?.updateItem(sortedSuggestionList)
-
     }
 
     private fun showBottomSheet(markerInfo: PharmacyItem.PharmacyInfo): Boolean {
@@ -375,7 +381,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
         return true
     }
-
 
     fun performSearch(query: String) {
         var foundpharmacyName = pharmacyInfo.filter { it.collectionLocationName == query }
@@ -386,7 +391,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 moveCamera(markerLatitude, markerLongitude)
             }
         }
-
     }
 
     fun moveCamera(latitude: Double, longitude: Double) {
