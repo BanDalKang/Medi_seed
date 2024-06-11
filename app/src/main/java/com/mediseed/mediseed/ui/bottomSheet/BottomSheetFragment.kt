@@ -50,7 +50,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         with(binding) {
             tvFacilityType.text = pharmacyInfo.collectionLocationClassificationName
             tvFacilityName.text = pharmacyInfo.collectionLocationName
-            tvDistance.text = pharmacyInfo.distance.toString() + " m"
+            tvDistance.text = pharmacyInfo.distance?.toInt().toString() + " m"
             tvAddress.text = pharmacyInfo.streetNameAddress
             tvDate.text = pharmacyInfo.dataDate
 
