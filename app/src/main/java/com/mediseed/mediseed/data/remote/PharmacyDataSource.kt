@@ -13,7 +13,8 @@ interface PharmacyDataSource {
     @GET("map-geocode/v2/geocode")
     suspend fun getGeoCode(
         @Query("주소") addresse: String ,
-        @Query("X-NCP-APIGW-API-KEY-ID") ClientID: String = BuildConfig.NAVER_MAP_CLIENT_SECRET_ID
+        @Query("X-NCP-APIGW-API-KEY-ID") ClientID: String = BuildConfig.NAVER_MAP_CLIENT_ID
+
     ): GeoCodeResponse
 
     @GET("15077806/v1/uddi:1207b449-cc87-4c0d-93d7-d9dfae695a22")
