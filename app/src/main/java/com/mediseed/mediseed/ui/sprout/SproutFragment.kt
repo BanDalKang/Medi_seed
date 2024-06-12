@@ -29,7 +29,7 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
-    private val sharedViewMdoel: SharedViewModel by activityViewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val mainActivity by lazy {
         activity as? MainActivity
     }
@@ -188,10 +188,11 @@ class SproutFragment : Fragment() {
     }
 
     private fun getData(): Boolean? {
-        return sharedViewMdoel.nearDistance.value
+        return sharedViewModel.nearDistance.value
     }
     private fun activateFeed() {
         if (getData() == true) {
+            sharedViewModel.updateMedicineCount()
             sproutViewModel.handlePillButtonClick()
         } else {
             Toast.makeText(
