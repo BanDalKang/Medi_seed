@@ -24,6 +24,7 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "NAVER_MAP_CLIENT_ID", properties["NAVER_MAP_CLIENT_ID"] as String)
+        buildConfigField("String","NAVER_MAP_CLIENT_SECRET_ID", properties["NAVER_MAP_CLIENT_SECRET_ID"] as String)
         buildConfigField("String","PUBLIC_DATA_PHARMACY_ENCODING",properties["PUBLIC_DATA_PHARMACY_ENCODING"] as String)
         buildConfigField("String","PUBLIC_DATA_PHARMACY_DECODING",properties["PUBLIC_DATA_PHARMACY_DECODING"] as String)
 
