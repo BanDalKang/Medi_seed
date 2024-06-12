@@ -80,11 +80,11 @@ class SproutFragment : Fragment() {
     private fun setupObservers() {
         with(sproutViewModel) {
             level.observe(viewLifecycleOwner) { level ->
-                binding.levelTextView.text = "$level"
+                binding.levelTextView.text = "레벨$level"
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
-                binding.treeTextView.text = "$tree"
+                binding.treeTextView.text = "$tree 그루"
             }
             pillRest.observe(viewLifecycleOwner) { pillRest ->
                 binding.pillRestText.text = "$pillRest 남음"
