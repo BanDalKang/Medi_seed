@@ -67,7 +67,6 @@ class SproutFragment : Fragment() {
         with(binding) {
             sproutPillButton.setOnClickListener {
                 activateFeed()
-                sproutViewModel.updateProgress(20)
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()
