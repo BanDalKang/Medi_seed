@@ -6,7 +6,7 @@
     <string name="main_tab_home_title">홈</string>
     <string name="main_tab_mypage_title">마이페이지</string>
 
-    <!--sproutFragment-->
+    <!--SproutFragment-->
     <string name="sprout_pill_button">약 주기</string>
     <string name="sprout_share_button">공유하기</string>
     <string name="sprout_bottom_text">약 주기는 수거함 근처에서만 가능합니다.</string>
@@ -32,13 +32,13 @@
     <string name="location_permission_required">권한을 허용해야 앱을 이용할 수 있습니다.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!--my page-->
+    <!--StorageFragment-->
     <string name="item_kind">약국</string>
-    <string name="mypage_collected">반납한\n폐의약품 개수</string>
-    <string name="mypage_sharing">지금까지\n공유한 횟수</string>
-    <string name="item_title">새싹 약국</string>
-    <string name="item_address">대전 나무로 초목로 4길 86</string>
-    <string name="mypage_medicine_count">0</string>
-    <string name="mypage_share_count">0</string>
+    <string name="storage_return_medicine">처리한\n폐의약품 개수</string>
+    <string name="storage_sharing">지금까지\n공유한 횟수</string>
+    <string name="facility_name">새싹 약국</string>
+    <string name="facility_address">대전 나무로 초목로 4길 86</string>
+    <string name="storage_medicine_count">0</string>
+    <string name="storage_sharing_count">0</string>
 
 </resources>

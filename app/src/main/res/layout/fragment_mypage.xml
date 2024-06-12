@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/layout_top"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_light_gray"
@@ -19,17 +19,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cv_collected"
+                android:id="@+id/cvMedicineCountBox"
                 android:layout_width="172dp"
                 android:layout_height="93dp"
                 app:cardBackgroundColor="@color/bg"
                 app:cardCornerRadius="7dp"
                 app:cardElevation="1dp"
                 app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toStartOf="@+id/cv_sharing"
+                app:layout_constraintEnd_toStartOf="@+id/cvSharingCountBox"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -38,35 +42,35 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/iv_drug"
+                        android:id="@+id/ivMedicineIcon"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="10dp"
-                        android:src="@drawable/img_drug"
+                        android:src="@drawable/ic_medicine_count"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tv_collected"
+                        android:id="@+id/tvReturnMedicine"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:gravity="start|center"
-                        android:text="@string/mypage_collected"
+                        android:text="@string/storage_return_medicine"
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_drug"
+                        app:layout_constraintStart_toEndOf="@id/ivMedicineIcon"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tv_drug_count"
+                        android:id="@+id/tvMedicineCount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        android:text="@string/mypage_medicine_count"
+                        android:text="@string/storage_medicine_count"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -79,7 +83,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cv_sharing"
+                android:id="@+id/cvSharingCountBox"
                 android:layout_width="172dp"
                 android:layout_height="93dp"
                 android:layout_marginStart="5dp"
@@ -87,8 +91,8 @@
                 app:cardCornerRadius="7dp"
                 app:cardElevation="1dp"
                 app:cardUseCompatPadding="true"
-                app:layout_constraintBottom_toBottomOf="@id/cv_collected"
-                app:layout_constraintStart_toEndOf="@id/cv_collected"
+                app:layout_constraintBottom_toBottomOf="@id/cvMedicineCountBox"
+                app:layout_constraintStart_toEndOf="@id/cvMedicineCountBox"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -96,56 +100,57 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/iv_sharing"
+                        android:id="@+id/ivSharingIcon"
                         android:layout_width="27dp"
                         android:layout_height="27dp"
                         android:layout_marginStart="12dp"
-                        android:src="@drawable/img_share"
+                        android:src="@drawable/ic_share_count"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tv_sharing"
+                        android:id="@+id/tvSharing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:gravity="start|center"
-                        android:text="@string/mypage_sharing"
+                        android:text="@string/storage_sharing"
                         android:textColor="@color/black"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/iv_sharing"
+                        app:layout_constraintStart_toEndOf="@id/ivSharingIcon"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tv_sharing_count"
+                        android:id="@+id/tvSharingCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        android:text="@string/mypage_share_count"
+                        android:text="@string/storage_sharing_count"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_sharing"
+                        app:layout_constraintBottom_toBottomOf="@id/tvSharing"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tv_sharing" />
+                        app:layout_constraintTop_toTopOf="@id/tvSharing" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_medicine_collection"
+        android:id="@+id/rvMedicineList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="75dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_top"
+        app:layout_constraintTop_toBottomOf="@id/clTop"
         tools:listitem="@layout/item_facility" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
