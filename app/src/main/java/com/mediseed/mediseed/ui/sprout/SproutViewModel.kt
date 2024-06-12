@@ -1,12 +1,17 @@
 package com.mediseed.mediseed.ui.sprout
 
+import android.animation.ObjectAnimator
 import android.app.Application
 import android.app.usage.UsageEvents
 import android.content.Context
 import android.content.SharedPreferences
+import android.widget.ProgressBar
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -102,21 +107,32 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun updateProgress(increment: Int) {
-        val newProgress = (_progress.value ?: 0) + increment
-        _showProgressAnimation.value = Event(Unit)
-        if (newProgress >= 100) {
-            _level.value = (_level.value ?: 1) + 1
-            _showLevelUpAnimation.value = Event(Unit)
-            _progress.value = 0
-            if (_level.value ?: 1 > 5) {
-                _tree.value = (_tree.value ?: 0) + 1
-                _showTreeUpDialog.value = Event(Unit)
-                _level.value = 1
+        viewModelScope.launch {
+            val currentProgress = _progress.value ?: 0
+            val newProgress = currentProgress + increment
+
+            _showProgressAnimation.value = Event(Unit)
+
+            for (i in currentProgress until newProgress) {
+                delay(200) // 100 밀리초 딜레이 (필요에 따라 조정)
+                _progress.value = i + 1
             }
-        } else {
-            _progress.value = newProgress
+
+            if (newProgress >= 100) {
+                _level.value = (_level.value ?: 1) + 1
+                _showLevelUpAnimation.value = Event(Unit)
+                _progress.value = 0
+
+                if (_level.value ?: 1 > 5) {
+                    _tree.value = (_tree.value ?: 0) + 1
+                    _showTreeUpDialog.value = Event(Unit)
+                    _level.value = 1
+                }
+            } else {
+                _progress.value = newProgress
+            }
+            savePreferences()
         }
-        savePreferences()
     }
 
     fun updateSproutName(newName: String) {
