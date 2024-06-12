@@ -26,18 +26,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="23dp"
+                android:fontFamily="@font/pretendard_semibold"
                 android:text="@string/facility_name"
                 android:textColor="@color/black"
-                android:textSize="19sp"
-                android:textStyle="bold"
+                android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <FrameLayout
                 android:id="@+id/flTextBox"
-                android:layout_width="60dp"
-                android:layout_height="26dp"
+                android:layout_width="56dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/radius_item"
                 android:elevation="2dp"
@@ -50,11 +50,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:fontFamily="@font/pretendard_medium"
                     android:gravity="center"
                     android:text="@string/item_kind"
                     android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
 
             </FrameLayout>
 
@@ -64,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="27dp"
+                android:fontFamily="@font/pretendard_medium"
                 android:gravity="end"
                 android:text="@string/facility_address"
                 android:textColor="@color/black"
