@@ -104,7 +104,12 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
         ref.addValueEventListener(medicineCountListener as ValueEventListener)
     }
 
-    fun updateHeartCount(address: String, increment: Boolean, facilityName: String, callback: (Boolean) -> Unit) {
+    fun updateHeartCount(
+        address: String,
+        increment: Boolean,
+        facilityName: String,
+        callback: (Boolean) -> Unit
+    ) {
         val ref = database.getReference("location/$address/heartCount")
 
         ref.runTransaction(object : Transaction.Handler {
@@ -156,7 +161,8 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
         }
         medicineCountListener?.let { listener ->
             currentAddress?.let { address ->
-                database.getReference("location/$address/medicineCount").removeEventListener(listener)
+                database.getReference("location/$address/medicineCount")
+                    .removeEventListener(listener)
             }
         }
     }

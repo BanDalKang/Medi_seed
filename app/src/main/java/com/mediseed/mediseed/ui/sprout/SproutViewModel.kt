@@ -25,7 +25,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         const val PROGRESS_KEY = "progress"
         const val SPROUT_NAME_KEY = "sprout_name"
     }
-    private val sharedPreferences: SharedPreferences =
+    val sharedPreferences: SharedPreferences =
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val _level = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(LEVEL_KEY, 1) }
     val level: LiveData<Int> get() = _level
@@ -65,6 +65,10 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     init {
         lastShareClickDateCheck()
         lastPillClickDateCheck()
+    }
+    fun setInitialValues() {
+        _pillClickCount.value = sharedPreferences.getInt(PILL_CLICK_COUNT_KEY, 0)
+        _shareClickCount.value = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0)
     }
 
     fun handlePillButtonClick() {

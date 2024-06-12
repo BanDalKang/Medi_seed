@@ -8,7 +8,7 @@ interface PharmacyItem {
     data class PharmacyInfo(
         val latitude: String?,
         val longitude: String?,
-        val distance: Float?,
+        var distance: Float?,
         val collectionLocationName: String?,
         val collectionLocationClassificationName: String?,
         val dataDate: String?,
