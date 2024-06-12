@@ -39,7 +39,6 @@ class HomeViewModel(
 
     fun getDaejeonYuseongguLocation() = viewModelScope.launch {
         pharmacyUseCase.getPharmacyDaejeonYuseonggu().onSuccess { pharmacyEntity ->
-            //val pharmacyLocation = createPharmacyLocation(pharmacyEntity)
         }
     }
 
