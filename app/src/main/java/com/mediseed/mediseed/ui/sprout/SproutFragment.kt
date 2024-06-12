@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,6 +67,7 @@ class SproutFragment : Fragment() {
         with(binding) {
             sproutPillButton.setOnClickListener {
                 activateFeed()
+                sproutViewModel.updateProgress(20)
             }
             sproutShareButton.setOnClickListener {
                 sproutViewModel.handleShareButtonClick()
