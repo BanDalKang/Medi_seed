@@ -158,6 +158,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
             putString(SPROUT_NAME_KEY, _sproutName.value ?: "새싹이")
             putString(LAST_PILL_CLICK_DATE_KEY, _lastPillClickDate.value ?: "")
             putString(LAST_SHARE_CLICK_DATE_KEY, _lastShareClickDate.value ?: "")
+            putInt(PILL_CLICK_COUNT_KEY, _pillClickCount.value ?: 0)
             putInt(SHARE_CLICK_COUNT_KEY, _shareClickCount.value ?: 0)
             apply()
         }
