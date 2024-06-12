@@ -13,9 +13,17 @@ class MainViewPagerAdapter(
 ) : FragmentStateAdapter(fragmentActivity) {
 
     private val fragments = listOf(
-        MainTabModel(SproutFragment.newInstance(), R.string.main_tab_sprout_title, R.drawable.ic_sprout),
+        MainTabModel(
+            SproutFragment.newInstance(),
+            R.string.main_tab_sprout_title,
+            R.drawable.ic_sprout
+        ),
         MainTabModel(HomeFragment.newInstance(), R.string.main_tab_home_title, R.drawable.ic_home),
-        MainTabModel(MyPageFragment.newInstance(), R.string.main_tab_mypage_title, R.drawable.ic_mypage),
+        MainTabModel(
+            MyPageFragment.newInstance(),
+            R.string.main_tab_mypage_title,
+            R.drawable.ic_mypage
+        ),
     )
 
     override fun getItemCount(): Int = fragments.size

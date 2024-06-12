@@ -2,10 +2,8 @@ package com.mediseed.mediseed.ui.home
 
 import android.os.Bundle
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.provider.Settings
@@ -31,23 +29,23 @@ import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
-import com.mediseed.mediseed.ui.main.MainActivity
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
+import com.mediseed.mediseed.ui.main.MainActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
-import com.naver.maps.map.overlay.PolygonOverlay
-import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.math.pow
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -66,8 +64,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private var userAndMarkerDistance = mutableListOf<Float>()
 
-    private var markerList: MutableMap<String, Marker> = mutableMapOf()
-
     private val mainActivity by lazy {
         activity as? MainActivity
     }
@@ -83,10 +79,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationOverlay: LocationOverlay
 
     // 대전 서구
-    private val dajeonSeoguArea = PolygonOverlay()
+    private var daejeonSeoguMarkerList: MutableMap<MutableList<String>, Marker> = mutableMapOf()
+
+    private var daejeonSeoguAddress: MutableList<String> = mutableListOf()
+
+    private var daejeonSeoguArea = CircleOverlay()
 
     // 대전 유성구
-    private val daejeonYuseongguArea = PolylineOverlay()
+    //private var daejeonYuseongguMarkerList: MutableMap<String, Marker> = mutableMapOf()
+
+    //private var daejeonYuseongguArea = CircleOverlay()
 
     companion object {
         fun newInstance() = HomeFragment()
@@ -230,11 +232,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             addOnLocationChangeListener { location ->
                 userLatitude = location.latitude
                 userLongitude = location.longitude
-                registerViewModelEvent()
+                val userLatLng = LatLng(userLatitude, userLongitude)
+                checkUserArea(userLatLng)
                 updateDistance()
                 registerMarker(pharmacyInfo)
             }
+
         }
+
 
 
         // 사용자 위치 아이콘 커스텀
@@ -246,25 +251,48 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
     private fun createPolygon() {
-        dajeonSeoguArea.apply {
-            coords = listOf(
-                LatLng(36.2795604059773, 127.31102619839743),
-                LatLng(36.33630233365315, 127.33637978564593),
-                LatLng(36.37163660008099, 127.38164029287698),
-                LatLng(36.32766127011976, 127.42383584490474)
-            )
-            dajeonSeoguArea.apply {
-                map = naverMap
-                color =  0x00FFFFFF
-                outlineWidth = 7
-                outlineColor = 0x4C00FF00
-
-            }
-
+        daejeonSeoguArea.apply {
+            center = LatLng(36.3321170228103,127.374576568879)
+            radius = 6000.0
+            color = 0x00FFFFFF
+            outlineWidth = 8
+            outlineColor = 0xCC008000.toInt()
+            map = naverMap
         }
     }
+
+
+    private fun checkUserArea(userLatLng: LatLng) {
+        if (isInsideArea(userLatLng, daejeonSeoguArea.center, daejeonSeoguArea.radius)) {
+            registerViewModelEvent()
+            }
+    }
+
+    private fun isInsideArea(userLatLng: LatLng, centerLatLng: LatLng, radius: Double): Boolean {
+        val userLocation = computeDistanceBetween(userLatLng, centerLatLng) // 원의 중심과 사용자 사이의 거리를 통해 사용자의 위치를 계산합니다.
+        return userLocation <= radius // 사용자의 위치가 반지름 보다 안쪽에 있으면 true 를 반환합니다.
+    }
+
+    private fun computeDistanceBetween(userLatLng: LatLng, centerLatLng: LatLng): Double {
+        val userLat = Math.toRadians(userLatLng.latitude)
+        val userLon = Math.toRadians(userLatLng.longitude)
+        val centerLat = Math.toRadians(centerLatLng.latitude)
+        val centerLon = Math.toRadians(centerLatLng.longitude)
+
+        val earthRadius = 6371 // 지구의 반지름(킬로미터)
+
+        val dLat = centerLat - userLat
+        val dLon = centerLon - userLon
+
+        val a = Math.sin(dLat / 2).pow(2) + Math.cos(userLat) * Math.cos(centerLat) * Math.sin(dLon / 2).pow(2)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        return earthRadius * c * 1000 // 결과를 미터로 변환
+
+    }
+
+
 
 
     // 마커 객체를 생성하고, 기존 마커가 있을 경우, 정보만 업데이트합니다.
@@ -288,20 +316,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 )
 
                 userAndMarkerDistance.add(distance)
-                userAndMarkerDistance.forEachIndexed { index, distance ->
-                    if (pharmacyInfo.size > index) {
-                        pharmacyInfo[index] = pharmacyInfo[index].copy(distance = distance)
-                    }
-                }
+                info.distance = distance
 
-                val existingMarker = markerList[markerAddress]
+                markerAddress?.let { address ->
+                    daejeonSeoguAddress.add(address)
+                }
+                val existingMarker = daejeonSeoguMarkerList[daejeonSeoguAddress]
+
                 if (existingMarker != null) {
                     if (existingMarker.position.latitude != markerLatitude ||
                         existingMarker.position.longitude != markerLongitude
                     ) {
                         existingMarker.position = LatLng(markerLatitude, markerLongitude)
                     }
-                    existingMarker.captionText = markerName
 
                     existingMarker.setOnClickListener(
                         onMarkerClick(
@@ -337,8 +364,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             )
                         )
                     }
-                    markerList[markerAddress] = newMarker // markerMap에 새로운 마커를 추가\
-                    Log.d("tango", markerList.toString())
+                    daejeonSeoguMarkerList[daejeonSeoguAddress] = newMarker // markerMap에 새로운 마커를 추가
                 }
             } else {
                 Log.e("markerError", "Invalid latitude or longitude for marker: $info")
@@ -405,11 +431,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateDistance() {
-        Log.d("distance", userAndMarkerDistance.toString())
-
 
         userAndMarkerDistance.clear()
-
         pharmacyInfo.forEachIndexed { index, info ->
 
             val markerLatitude = info.latitude?.toDoubleOrNull()
@@ -417,7 +440,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val markerAddress = info.streetNameAddress
 
             if (markerLatitude != null && markerLongitude != null) {
-
                 val distance =
                     calculateDistance(
                         userLatitude,
@@ -426,14 +448,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         markerLongitude
                     )
                 userAndMarkerDistance.add(distance)
-                pharmacyInfo[index] = pharmacyInfo[index].copy(distance = distance)
-
+                info.distance = distance
             }
 
-
-
             if (userAndMarkerDistance.any { it <= 15 }) {
-
                 setData(true)
                 if (markerAddress != null) {
                     setAddress(markerAddress)
@@ -443,7 +461,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
-
 
 // 정렬 알고리즘: 첫글자 > 해당글자 포함 > 거리순 정렬 알고리즘 (최대 20개)
 

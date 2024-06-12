@@ -24,9 +24,9 @@ class MyPageAdapter :
     class PharmacyViewHolder(private val binding: ItemFacilityBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PharmacyItem.PharmacyInfo) {
-            binding.tvTitle.text = item.collectionLocationName
-            binding.tvKind.text = item.collectionLocationClassificationName
-            binding.tvAddress.text = item.streetNameAddress
+            binding.tvLocationName.text = item.collectionLocationName
+            binding.tvLocationClassificationName.text = item.collectionLocationClassificationName //장소 종류 : 약국, 보건소 등
+            binding.tvStreetNameAddress.text = item.streetNameAddress
         }
     }
 

@@ -15,9 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.ActivityMainBinding
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mediseed.mediseed.ui.home.SuggestionAdapter
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
