@@ -53,14 +53,13 @@ class MyPageFragment : Fragment() {
 
         //전체 약 버리기 갯수
         sproutViewModel.pillClickCount.observe(viewLifecycleOwner, Observer { count ->
-            binding.tvDrugCount.text = count.toString()
+            binding.tvMedicineCount.text = count.toString()
         })
 
         //전체 공유 횟수
         sproutViewModel.shareClickCount.observe(viewLifecycleOwner, Observer { count ->
             binding.tvSharingCount.text = count.toString()
         })
-
 
         setupRecyclerView()
 
@@ -75,8 +74,8 @@ class MyPageFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = MyPageAdapter()
-        binding.rvMedicineCollection.layoutManager = LinearLayoutManager(context)
-        binding.rvMedicineCollection.adapter = adapter
+        binding.rvMedicineList.layoutManager = LinearLayoutManager(context)
+        binding.rvMedicineList.adapter = adapter
 
         sharedViewModel.likedItems.observe(viewLifecycleOwner) { likedItems ->
             adapter.submitList(likedItems)
