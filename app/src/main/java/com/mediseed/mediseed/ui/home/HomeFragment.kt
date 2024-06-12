@@ -30,8 +30,8 @@ import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
-import com.mediseed.mediseed.ui.main.MainActivity
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
+import com.mediseed.mediseed.ui.main.MainActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
