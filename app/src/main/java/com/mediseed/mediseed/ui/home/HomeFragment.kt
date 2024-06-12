@@ -452,6 +452,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     filterList.contains(item.collectionLocationName)
                 }
 
+
                 val sortedSuggestionList = suggestionList.sortedBy { it.distance }
                 mainActivity?.suggestionRecyclerView?.visibility =
                     if (sortedSuggestionList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
