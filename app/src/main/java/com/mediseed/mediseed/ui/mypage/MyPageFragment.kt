@@ -86,6 +86,7 @@ class MyPageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         mainActivity?.hideBar()
+        initializeViewModel()
     }
 
     override fun onDestroyView() {
