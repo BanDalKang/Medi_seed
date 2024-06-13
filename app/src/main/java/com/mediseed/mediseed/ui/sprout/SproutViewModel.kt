@@ -1,11 +1,8 @@
 package com.mediseed.mediseed.ui.sprout
 
-import android.animation.ObjectAnimator
 import android.app.Application
-import android.app.usage.UsageEvents
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.ProgressBar
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,7 +27,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         const val PROGRESS_KEY = "progress"
         const val SPROUT_NAME_KEY = "sprout_name"
     }
-    val sharedPreferences: SharedPreferences =
+    private val sharedPreferences: SharedPreferences =
         application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val _level = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(LEVEL_KEY, 1) }
     val level: LiveData<Int> get() = _level
@@ -107,33 +104,33 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateProgress(increment: Int) {
+    private fun updateProgress(increment: Int) {
         if (isProgressUpdating) return
 
         viewModelScope.launch {
             isProgressUpdating = true
             val currentProgress = _progress.value ?: 0
-            val newProgress = currentProgress + increment
+            val targetProgress = (currentProgress + increment).coerceAtMost(100) // 100을 넘지 않도록 설정
 
             _showProgressAnimation.value = Event(Unit)
 
-            for (i in currentProgress until newProgress) {
-                delay(150) // 100 밀리초 딜레이 (필요에 따라 조정)
+            for (i in currentProgress until targetProgress) {
+                delay(75) // 150 밀리초 딜레이 (필요에 따라 조정)
                 _progress.value = i + 1
             }
 
-            if (newProgress >= 100) {
+            if (targetProgress >= 100) {
                 _level.value = (_level.value ?: 1) + 1
                 _showLevelUpAnimation.value = Event(Unit)
                 _progress.value = 0
 
-                if (_level.value ?: 1 > 5) {
+                if ((_level.value ?: 1) > 5) {
                     _tree.value = (_tree.value ?: 0) + 1
                     _showTreeUpDialog.value = Event(Unit)
                     _level.value = 1
                 }
             } else {
-                _progress.value = newProgress
+                _progress.value = targetProgress
             }
             savePreferences()
             isProgressUpdating = false

@@ -20,6 +20,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,8 +29,8 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvMedicineCountBox"
-                android:layout_width="172dp"
-                android:layout_height="93dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/bg"
                 app:cardCornerRadius="7dp"
                 app:cardElevation="1dp"
@@ -39,13 +41,14 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="5dp"
+                    android:paddingVertical="17dp">
 
                     <ImageView
                         android:id="@+id/ivMedicineIcon"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="10dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_medicine_count"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +58,7 @@
                         android:id="@+id/tvReturnMedicine"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="4dp"
                         android:fontFamily="@font/pretendard_semibold"
                         android:gravity="start|center"
                         android:text="@string/storage_return_medicine"
@@ -69,13 +72,13 @@
                         android:id="@+id/tvMedicineCount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="12dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="@font/pretendard_bold"
                         android:text="@string/storage_medicine_count"
                         android:textColor="@color/black"
                         android:textSize="19sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/tvReturnMedicine"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -84,9 +87,9 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvSharingCountBox"
-                android:layout_width="172dp"
-                android:layout_height="93dp"
-                android:layout_marginStart="5dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 app:cardBackgroundColor="@color/bg"
                 app:cardCornerRadius="7dp"
                 app:cardElevation="1dp"
@@ -97,13 +100,15 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingVertical="17dp"
+                    android:paddingStart="7dp"
+                    android:paddingEnd="10dp">
 
                     <ImageView
                         android:id="@+id/ivSharingIcon"
                         android:layout_width="27dp"
                         android:layout_height="27dp"
-                        android:layout_marginStart="12dp"
                         android:src="@drawable/ic_share_count"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +118,7 @@
                         android:id="@+id/tvSharing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="5dp"
                         android:fontFamily="@font/pretendard_semibold"
                         android:gravity="start|center"
                         android:text="@string/storage_sharing"
@@ -127,17 +132,18 @@
                         android:id="@+id/tvSharingCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="12dp"
+                        android:layout_marginStart="15dp"
                         android:fontFamily="@font/pretendard_bold"
                         android:text="@string/storage_sharing_count"
                         android:textColor="@color/black"
                         android:textSize="19sp"
                         app:layout_constraintBottom_toBottomOf="@id/tvSharing"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/tvSharing"
                         app:layout_constraintTop_toTopOf="@id/tvSharing" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

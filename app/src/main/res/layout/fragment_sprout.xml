@@ -13,7 +13,7 @@
         android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_tree_small" />
+        app:srcCompat="@drawable/ic_tree" />
 
     <TextView
         android:id="@+id/treeTextView"
@@ -116,7 +116,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
 
         <TextView
             android:id="@+id/levelTextView"
@@ -285,12 +284,11 @@
             android:id="@+id/bottomTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="13dp"
             android:text="@string/sprout_bottom_text"
             android:textColor="@color/grey_dark"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:fontFamily="@font/pretendard_bold"
+            app:fontFamily="@font/pretendard_medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
