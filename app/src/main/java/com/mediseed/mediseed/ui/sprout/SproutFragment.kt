@@ -70,13 +70,11 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-//                activateFeed()
-                sproutViewModel.updateProgress(20)
+                activateFeed()
             }
             sproutShareButton.setOnClickListener {
-//                sproutViewModel.handleShareButtonClick()
-//                shareApp()
-                sproutViewModel.updateProgress(10)
+                sproutViewModel.handleShareButtonClick()
+                shareApp()
             }
             nameImageButton.setOnClickListener {
                 showNameEditDialog()
