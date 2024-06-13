@@ -25,27 +25,10 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:fontFamily="@font/pretendard_bold"
-        app:layout_constraintEnd_toStartOf="@+id/TextView7"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="@+id/treeImageView"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="@+id/treeImageView"
         app:layout_constraintTop_toBottomOf="@+id/treeImageView" />
-
-    <TextView
-        android:id="@+id/TextView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:text="@string/sprout_tree_text"
-        android:textColor="@color/green_400"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:fontFamily="@font/pretendard_bold"
-        app:layout_constraintBottom_toBottomOf="@+id/treeTextView"
-        app:layout_constraintEnd_toEndOf="@+id/treeImageView"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/treeTextView"
-        app:layout_constraintTop_toTopOf="@+id/treeTextView" />
 
     <TextView
         android:id="@+id/nameTextView"
@@ -58,7 +41,7 @@
         app:fontFamily="@font/pretendard_bold"
         app:layout_constraintEnd_toEndOf="@+id/sproutImageView"
         app:layout_constraintStart_toStartOf="@+id/sproutImageView"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/sproutImageView" />
 
     <android.widget.ImageButton
         android:id="@+id/nameImageButton"
@@ -71,7 +54,6 @@
         app:layout_constraintTop_toTopOf="@+id/nameTextView" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/sproutImageView"
@@ -94,7 +76,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/levelBoxLinearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/levelBoxConstraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/treeTextView"
@@ -122,7 +104,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/levelBoxLinearLayout"
+        android:id="@+id/levelBoxConstraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -137,31 +119,18 @@
 
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/levelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="5dp"
-            android:text="@string/sprout_level_text"
+            android:text="1"
             android:textColor="@color/green_400"
             android:textSize="18sp"
             app:fontFamily="@font/pretendard_bold"
             app:layout_constraintBottom_toTopOf="@+id/progressBar"
             app:layout_constraintStart_toStartOf="@+id/progressBar"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <TextView
-            android:id="@+id/levelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textColor="@color/green_400"
-            android:textSize="18sp"
-            app:fontFamily="@font/pretendard_bold"
-            app:layout_constraintBottom_toBottomOf="@+id/textView4"
-            app:layout_constraintStart_toEndOf="@+id/textView4"
-            app:layout_constraintTop_toTopOf="@+id/textView4" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/progressBarPercentTextView"
@@ -198,7 +167,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="12dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintBottom_toTopOf="@+id/bottomTextView"
             app:layout_constraintEnd_toStartOf="@+id/sproutShareButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -211,7 +180,9 @@
                 android:layout_marginTop="5dp"
                 android:text="@string/sprout_pill_button"
                 android:textColor="@color/black_light"
-                android:textSize="17sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="16dp"
+                android:autoSizeMaxTextSize="18dp"
                 android:textStyle="bold"
                 app:fontFamily="@font/pretendard_bold"
                 app:layout_constraintBottom_toTopOf="@+id/pillRestText"
@@ -239,7 +210,6 @@
                 android:id="@+id/pillIcon"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:src="@drawable/ic_pill"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -259,7 +229,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="12dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintBottom_toTopOf="@+id/bottomTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/sproutPillButton"
@@ -272,7 +242,9 @@
                 android:layout_marginTop="5dp"
                 android:text="@string/sprout_share_button"
                 android:textColor="@color/black_light"
-                android:textSize="17sp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="16dp"
+                android:autoSizeMaxTextSize="18dp"
                 android:textStyle="bold"
                 app:fontFamily="@font/pretendard_bold"
                 app:layout_constraintBottom_toTopOf="@+id/shareRestText"
@@ -310,7 +282,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/bottomTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
