@@ -66,6 +66,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     val showLevelUpAnimation: LiveData<Event<Unit>> get() = _showLevelUpAnimation
     private val _showProgressAnimation = MutableLiveData<Event<Unit>>()
     val showProgressAnimation: LiveData<Event<Unit>> get() = _showProgressAnimation
+    private var isProgressUpdating = false
 
     init {
         lastShareClickDateCheck()
@@ -107,14 +108,17 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun updateProgress(increment: Int) {
+        if (isProgressUpdating) return
+
         viewModelScope.launch {
+            isProgressUpdating = true
             val currentProgress = _progress.value ?: 0
             val newProgress = currentProgress + increment
 
             _showProgressAnimation.value = Event(Unit)
 
             for (i in currentProgress until newProgress) {
-                delay(200) // 100 밀리초 딜레이 (필요에 따라 조정)
+                delay(150) // 100 밀리초 딜레이 (필요에 따라 조정)
                 _progress.value = i + 1
             }
 
@@ -132,6 +136,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
                 _progress.value = newProgress
             }
             savePreferences()
+            isProgressUpdating = false
         }
     }
 
