@@ -187,7 +187,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
         locationOverlay = naverMap.locationOverlay
         // 지도 영역 분할
-        createPolygon()
+        createCircle()
         // 현재 위치 관련 정보
         configureNaverMap()
     }
@@ -207,7 +207,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 val userLatLng = LatLng(userLatitude, userLongitude)
                 checkUserArea(userLatLng)
                 updateDistance()
-                registerMarkers(pharmacyInfo)
             }
         }
 
@@ -220,12 +219,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun createPolygon() {
+    private fun createCircle() {
         daejeonSeoguArea.apply {
             center = LatLng(36.3321170228103, 127.374576568879)
             radius = 6000.0
             color = 0x00FFFFFF
-            outlineWidth = 8
+            outlineWidth = 2
             outlineColor = 0xCC008000.toInt()
             map = naverMap
         }
@@ -317,9 +316,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     val newMarker = Marker().apply {
                         position = LatLng(markerLatitude, markerLongitude)
                         captionText = markerName
-                        icon = OverlayImage.fromResource(R.drawable.mapmarker)
-                        width = 90
-                        height = 90
+                        icon = OverlayImage.fromResource(R.drawable.pharmacymarker)
+                        width = 80
+                        height = 100
                         map = naverMap
 
                         setOnClickListener(
