@@ -78,7 +78,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
         val pillClickCount = _pillClickCount.value ?: 0
         _pillRest.value = _pillRest.value ?: 1
-        if (_pillRest.value != 1) {
+        if (_pillRest.value == 1) {
             updateProgress(20)
             _lastPillClickDate.value = currentDate
             _pillRest.value = 0
@@ -93,7 +93,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
         val shareClickCount = _shareClickCount.value ?: 0
         _shareRest.value = _shareRest.value ?: 3
-        if (_shareRest.value!! == 0) {
+        if (_shareRest.value!! > 0) {
             updateProgress(10)
             _lastShareClickDate.value = currentDate
             _shareRest.value = (_shareRest.value ?: 3) - 1
