@@ -1,6 +1,7 @@
 package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -81,11 +83,11 @@ class SproutFragment : Fragment() {
     private fun setupObservers() {
         with(sproutViewModel) {
             level.observe(viewLifecycleOwner) { level ->
-                binding.levelTextView.text = "$level"
+                binding.levelTextView.text = "레벨$level"
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
-                binding.treeTextView.text = "$tree"
+                binding.treeTextView.text = "$tree 그루"
             }
             pillRest.observe(viewLifecycleOwner) { pillRest ->
                 binding.pillRestText.text = "$pillRest 남음"
@@ -257,6 +259,7 @@ class SproutFragment : Fragment() {
             })
         }
     }
+
     override fun onResume() {
         super.onResume()
         mainActivity?.hideBar()
