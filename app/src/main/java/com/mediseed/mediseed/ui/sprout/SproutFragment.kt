@@ -32,7 +32,6 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
-    private lateinit var progressBar: ProgressBar
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val mainActivity by lazy {
         activity as? MainActivity
@@ -59,7 +58,6 @@ class SproutFragment : Fragment() {
 
         levelUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.level_up_animation_text)
         levelUpText = binding.levelUpTextView
-        progressBar = view.findViewById(R.id.progressBar)
     }
 
     override fun onDestroyView() {
