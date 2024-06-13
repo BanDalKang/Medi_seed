@@ -7,8 +7,8 @@
     <string name="main_tab_mypage_title">마이페이지</string>
 
     <!--sproutFragment-->
-    <string name="sprout_pill_button">약품</string>
-    <string name="sprout_share_button">공유</string>
+    <string name="sprout_pill_button">약 버리기</string>
+    <string name="sprout_share_button">공유하기</string>
     <string name="sprout_bottom_text">약품은 수거함 근처에서만 가능합니다.</string>
     <string name="sprout_level_text">레벨</string>
     <string name="sprout_level_up_text">LEVEL UP!</string>
