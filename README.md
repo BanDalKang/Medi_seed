@@ -35,8 +35,7 @@
 
 | 홈 화면 |
 |----------|
-<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/45e8b3da-448d-4da1-b529-d93779764564" alt="home (online-video-cutter com) (2)" style="width:300px;">
-
+|<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/a1b0dabd-3b22-435e-8fd9-0d96adff0922" alt="home (online-video-cutter com) (3)" style="width:300px;">|
 
 
 
