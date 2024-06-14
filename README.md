@@ -20,7 +20,7 @@
 
 | **강현정** | **장혜정** |                                                                  **서해윤**                                                                   | **박민수** |
 | :------: |  :------: |:------------------------------------------------------------------------------------------------------------------------------------------:| :------: |
-| [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/107e9450-3e92-4b6f-ada9-351e044de03c" height=150 width=150> <br/> @BanDalKang](https://github.com/BanDalKang) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/33912621-d0bd-49d7-9cf1-583f5d9c941a" height=150 width=150> <br/> @hyezg](https://github.com/hyezg) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/734615ae-7dcf-4b63-a98e-683f724bf3b9" alt="스크린샷 2024-06-14 160738" style="width:300px;">" height=150 width=150> <br/> @SeoHeaYun](https://github.com/SeoHeaYun) | [<img src="https:" height=150 width=150> <br/> @eddy-PMS](https://github.com/eddy-PMS) |
+| [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/107e9450-3e92-4b6f-ada9-351e044de03c" height=150 width=150> <br/> @BanDalKang](https://github.com/BanDalKang) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/33912621-d0bd-49d7-9cf1-583f5d9c941a" height=150 width=150> <br/> @hyezg](https://github.com/hyezg) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/734615ae-7dcf-4b63-a98e-683f724bf3b9" alt="스크린샷 2024-06-14 160738" height=150 width=150> <br/> @SeoHeaYun](https://github.com/SeoHeaYun) | [<img src="https:" height=150 width=150> <br/> @eddy-PMS](https://github.com/eddy-PMS) |
 
 
 </div>
