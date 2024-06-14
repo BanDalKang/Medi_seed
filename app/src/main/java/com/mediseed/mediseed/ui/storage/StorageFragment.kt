@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.mypage
+package com.mediseed.mediseed.ui.storage
 
 import android.content.Context
 import android.os.Bundle
@@ -10,17 +10,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mediseed.mediseed.databinding.FragmentMypageBinding
+import com.mediseed.mediseed.databinding.FragmentStorageBinding
 import com.mediseed.mediseed.ui.shared.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
 import com.mediseed.mediseed.ui.sprout.SproutViewModel
 
-class MyPageFragment : Fragment() {
+class StorageFragment : Fragment() {
     companion object {
-        fun newInstance() = MyPageFragment()
+        fun newInstance() = StorageFragment()
     }
 
-    private var _binding: FragmentMypageBinding? = null
+    private var _binding: FragmentStorageBinding? = null
     private val binding get() = _binding!!
 
     private val sharedViewModel: SharedViewModel by activityViewModels {
@@ -31,7 +31,7 @@ class MyPageFragment : Fragment() {
             )
         )
     }
-    private lateinit var adapter: MyPageAdapter
+    private lateinit var adapter: StorageAdapter
 
     private val sproutViewModel: SproutViewModel by lazy {
         ViewModelProvider(this).get(SproutViewModel::class.java)
@@ -46,7 +46,7 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMypageBinding.inflate(inflater, container, false)
+        _binding = FragmentStorageBinding.inflate(inflater, container, false)
 
         //뷰모델 초기화
         initializeViewModel()
@@ -73,7 +73,7 @@ class MyPageFragment : Fragment() {
 
 
     private fun setupRecyclerView() {
-        adapter = MyPageAdapter()
+        adapter = StorageAdapter()
         binding.rvMedicineList.layoutManager = LinearLayoutManager(context)
         binding.rvMedicineList.adapter = adapter
 
