@@ -79,7 +79,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         val pillClickCount = _pillClickCount.value ?: 0
         _pillRest.value = _pillRest.value ?: 1
         if (_pillRest.value == 1) {
-            updateProgress(20)
+            updateProgress(100)
             _lastPillClickDate.value = currentDate
             _pillRest.value = 0
             _pillClickCount.value = pillClickCount + 1
@@ -94,7 +94,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         val shareClickCount = _shareClickCount.value ?: 0
         _shareRest.value = _shareRest.value ?: 3
         if (_shareRest.value!! > 0) {
-            updateProgress(10)
+            updateProgress(50)
             _lastShareClickDate.value = currentDate
             _shareRest.value = (_shareRest.value ?: 3) - 1
             _shareClickCount.value = shareClickCount + 1
@@ -104,34 +104,40 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private fun updateProgress(increment: Int) {
+    fun updateProgress(increment: Int) {
         if (isProgressUpdating) return
 
         viewModelScope.launch {
             isProgressUpdating = true
             val currentProgress = _progress.value ?: 0
-            val targetProgress = (currentProgress + increment).coerceAtMost(100) // 100을 넘지 않도록 설정
+            var level = _level.value ?: 1
+            var maxProgress = level * 100
+            var targetProgress = currentProgress + increment
 
             _showProgressAnimation.value = Event(Unit)
 
-            for (i in currentProgress until targetProgress) {
-                delay(75) // 150 밀리초 딜레이 (필요에 따라 조정)
+            for (i in currentProgress until targetProgress.coerceAtMost(maxProgress)) {
+                delay(10)
                 _progress.value = i + 1
             }
-
-            if (targetProgress >= 100) {
-                _level.value = (_level.value ?: 1) + 1
+            // 레벨 업 처리
+            while (targetProgress >= maxProgress) {
+                level += 1
+                _level.value = level
                 _showLevelUpAnimation.value = Event(Unit)
-                _progress.value = 0
+                targetProgress -= maxProgress
+                maxProgress = level * 100
 
-                if ((_level.value ?: 1) > 5) {
+                if (level > 5) {
                     _tree.value = (_tree.value ?: 0) + 1
                     _showTreeUpDialog.value = Event(Unit)
                     _level.value = 1
+                    targetProgress = 0
+                    break
                 }
-            } else {
-                _progress.value = targetProgress
             }
+
+            _progress.value = targetProgress
             savePreferences()
             isProgressUpdating = false
         }

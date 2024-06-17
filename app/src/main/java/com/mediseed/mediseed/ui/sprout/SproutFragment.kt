@@ -11,6 +11,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -29,6 +30,8 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
+    private lateinit var progressBar: ProgressBar
+    private var maxProgress = 0
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val mainActivity by lazy {
         activity as? MainActivity
@@ -55,6 +58,7 @@ class SproutFragment : Fragment() {
 
         levelUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.level_up_animation_text)
         levelUpText = binding.levelUpTextView
+        progressBar = binding.progressBar
     }
 
     override fun onDestroyView() {
@@ -65,11 +69,13 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-                activateFeed()
+//                activateFeed()
+                sproutViewModel.updateProgress(100)
             }
             sproutShareButton.setOnClickListener {
-                sproutViewModel.handleShareButtonClick()
-                shareApp()
+//                sproutViewModel.handleShareButtonClick()
+//                shareApp()
+                sproutViewModel.updateProgress(50)
             }
             nameImageButton.setOnClickListener {
                 showNameEditDialog()
@@ -81,6 +87,7 @@ class SproutFragment : Fragment() {
         with(sproutViewModel) {
             level.observe(viewLifecycleOwner) { level ->
                 binding.levelTextView.text = "레벨$level"
+                updateProgressBarMax(level)
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
@@ -94,7 +101,7 @@ class SproutFragment : Fragment() {
             }
             progress.observe(viewLifecycleOwner) { progress ->
                 binding.progressBar.progress = progress
-                binding.progressBarPercentTextView.text = "$progress%"
+                binding.progressBarPercentTextView.text = "${(progress.toFloat() / maxProgress * 100).toInt()}%"
             }
             sproutName.observe(viewLifecycleOwner) { sproutName ->
                 binding.nameTextView.text = sproutName
@@ -255,6 +262,18 @@ class SproutFragment : Fragment() {
                 override fun onAnimationRepeat(animation: Animator) {}
             })
         }
+    }
+
+    private fun updateProgressBarMax(level: Int) {
+        maxProgress = when (level) {
+            1 -> 100
+            2 -> 200
+            3 -> 300
+            4 -> 400
+            5 -> 500
+            else -> 100
+        }
+        progressBar.max = maxProgress
     }
 
     override fun onResume() {
