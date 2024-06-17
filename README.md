@@ -20,10 +20,9 @@
 
 | **강현정** | **장혜정** |                                                                  **서해윤**                                                                   | **박민수** |
 | :------: |  :------: |:------------------------------------------------------------------------------------------------------------------------------------------:| :------: |
-| [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/107e9450-3e92-4b6f-ada9-351e044de03c" height=150 width=150> <br/> @BanDalKang](https://github.com/BanDalKang) | [<img src="[https://github.com/BanDalKang/Medi_seed/assets/77070839/33912621-d0bd-49d7-9cf1-583f5d9c941a](https://github.com/BanDalKang/Medi_seed/assets/159236003/a18d5c68-1d96-456a-aab1-b8536d664a31)" height=150 width=150> <br/> @hyezg](https://github.com/hyezg) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/734615ae-7dcf-4b63-a98e-683f724bf3b9" alt="스크린샷 2024-06-14 160738" height=150 width=150> <br/> @SeoHeaYun](https://github.com/SeoHeaYun) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/ce7543a0-2767-4fb7-8e2f-a942195b06d8" height=150 width=150> <br/> @eddy-PMS](https://github.com/eddy-PMS) |
+| [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/107e9450-3e92-4b6f-ada9-351e044de03c" height=150 width=150> <br/> @BanDalKang](https://github.com/BanDalKang) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/33912621-d0bd-49d7-9cf1-583f5d9c941a(https://github.com/BanDalKang/Medi_seed/assets/159236003/a18d5c68-1d96-456a-aab1-b8536d664a31)" height=150 width=150> <br/> @hyezg](https://github.com/hyezg) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/734615ae-7dcf-4b63-a98e-683f724bf3b9" alt="스크린샷 2024-06-14 160738" height=150 width=150> <br/> @SeoHeaYun](https://github.com/SeoHeaYun) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/ce7543a0-2767-4fb7-8e2f-a942195b06d8" height=150 width=150> <br/> @eddy-PMS](https://github.com/eddy-PMS) |
 
 
-https://github.com/BanDalKang/Medi_seed/assets/159236003/a18d5c68-1d96-456a-aab1-b8536d664a31
 
 
 </div>
