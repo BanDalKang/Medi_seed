@@ -1,11 +1,8 @@
 package com.mediseed.mediseed.ui.sprout
 
-import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -13,49 +10,27 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SproutViewModel(application: Application) : AndroidViewModel(application) {
-    companion object {
-        const val LAST_PILL_CLICK_DATE_KEY = "last_pill_click_date"
-        const val LAST_SHARE_CLICK_DATE_KEY = "last_share_click_date"
-        const val PILL_CLICK_COUNT_KEY = "pill_click_count"
-        const val SHARE_CLICK_COUNT_KEY = "share_click_count"
-        const val PREFS_NAME = "SproutPreferences"
-        const val LEVEL_KEY = "level"
-        const val TREE_KEY = "tree"
-        const val PILL_REST_KEY = "pill_rest"
-        const val SHARE_REST_KEY = "share_rest"
-        const val PROGRESS_KEY = "progress"
-        const val SPROUT_NAME_KEY = "sprout_name"
-    }
-    private val sharedPreferences: SharedPreferences =
-        application.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    private val _level = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(LEVEL_KEY, 1) }
+class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
+
+    private val _level = MutableLiveData<Int>().apply { value = repository.getLevel() }
     val level: LiveData<Int> get() = _level
-    private val _tree = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(TREE_KEY, 0) }
+    private val _tree = MutableLiveData<Int>().apply { value = repository.getTree() }
     val tree: LiveData<Int> get() = _tree
-    private val _pillRest = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(
-        PILL_REST_KEY, 1) }
+    private val _pillRest = MutableLiveData<Int>().apply { value = repository.getPillRest() }
     val pillRest: LiveData<Int> get() = _pillRest
-    private val _shareRest = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(
-        SHARE_REST_KEY, 3) }
+    private val _shareRest = MutableLiveData<Int>().apply { value = repository.getShareRest() }
     val shareRest: LiveData<Int> get() = _shareRest
-    private val _progress = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(
-        PROGRESS_KEY, 0) }
+    private val _progress = MutableLiveData<Int>().apply { value = repository.getProgress() }
     val progress: LiveData<Int> get() = _progress
-    private val _sproutName = MutableLiveData<String>().apply { value = sharedPreferences.getString(
-        SPROUT_NAME_KEY, "새싹이") }
+    private val _sproutName = MutableLiveData<String>().apply { value = repository.getSproutName() }
     val sproutName: LiveData<String> get() = _sproutName
-    private val _lastShareClickDate = MutableLiveData<String>().apply { value = sharedPreferences.getString(
-        LAST_SHARE_CLICK_DATE_KEY, "") }
+    private val _lastShareClickDate = MutableLiveData<String>().apply { value = repository.getLastShareClickDate() }
     val lastShareClickDate: LiveData<String> get() = _lastShareClickDate
-    private val _lastPillClickDate = MutableLiveData<String>().apply { value = sharedPreferences.getString(
-        LAST_PILL_CLICK_DATE_KEY, "") }
+    private val _lastPillClickDate = MutableLiveData<String>().apply { value = repository.getLastPillClickDate() }
     val lastPillClickDate: LiveData<String> get() = _lastPillClickDate
-    private val _pillClickCount = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(
-        PILL_CLICK_COUNT_KEY, 0) }
+    private val _pillClickCount = MutableLiveData<Int>().apply { value = repository.getPillClickCount() }
     val pillClickCount: LiveData<Int> get() = _pillClickCount
-    private val _shareClickCount = MutableLiveData<Int>().apply { value = sharedPreferences.getInt(
-        SHARE_CLICK_COUNT_KEY, 0) }
+    private val _shareClickCount = MutableLiveData<Int>().apply { value = repository.getShareClickCount() }
     val shareClickCount: LiveData<Int> get() = _shareClickCount
     private val _showTreeUpDialog = MutableLiveData<Event<Unit>>()
     val showTreeUpDialog: LiveData<Event<Unit>> get() = _showTreeUpDialog
@@ -70,8 +45,8 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         lastPillClickDateCheck()
     }
     fun setInitialValues() {
-        _pillClickCount.value = sharedPreferences.getInt(PILL_CLICK_COUNT_KEY, 0)
-        _shareClickCount.value = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0)
+        _pillClickCount.value = repository.getPillClickCount()
+        _shareClickCount.value = repository.getShareClickCount()
     }
 
     fun handlePillButtonClick() {
@@ -79,7 +54,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         val pillClickCount = _pillClickCount.value ?: 0
         _pillRest.value = _pillRest.value ?: 1
         if (_pillRest.value == 1) {
-            updateProgress(20)
+            updateProgress(100)
             _lastPillClickDate.value = currentDate
             _pillRest.value = 0
             _pillClickCount.value = pillClickCount + 1
@@ -94,7 +69,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         val shareClickCount = _shareClickCount.value ?: 0
         _shareRest.value = _shareRest.value ?: 3
         if (_shareRest.value!! > 0) {
-            updateProgress(10)
+            updateProgress(50)
             _lastShareClickDate.value = currentDate
             _shareRest.value = (_shareRest.value ?: 3) - 1
             _shareClickCount.value = shareClickCount + 1
@@ -104,34 +79,40 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private fun updateProgress(increment: Int) {
+    fun updateProgress(increment: Int) {
         if (isProgressUpdating) return
 
         viewModelScope.launch {
             isProgressUpdating = true
             val currentProgress = _progress.value ?: 0
-            val targetProgress = (currentProgress + increment).coerceAtMost(100) // 100을 넘지 않도록 설정
+            var level = _level.value ?: 1
+            var maxProgress = level * 100
+            var targetProgress = currentProgress + increment
 
             _showProgressAnimation.value = Event(Unit)
 
-            for (i in currentProgress until targetProgress) {
-                delay(75) // 150 밀리초 딜레이 (필요에 따라 조정)
+            for (i in currentProgress until targetProgress.coerceAtMost(maxProgress)) {
+                delay(10)
                 _progress.value = i + 1
             }
 
-            if (targetProgress >= 100) {
-                _level.value = (_level.value ?: 1) + 1
+            while (targetProgress >= maxProgress) {
+                level += 1
+                _level.value = level
                 _showLevelUpAnimation.value = Event(Unit)
-                _progress.value = 0
+                targetProgress -= maxProgress
+                maxProgress = level * 100
 
-                if ((_level.value ?: 1) > 5) {
+                if (level > 5) {
                     _tree.value = (_tree.value ?: 0) + 1
                     _showTreeUpDialog.value = Event(Unit)
                     _level.value = 1
+                    targetProgress = 0
+                    break
                 }
-            } else {
-                _progress.value = targetProgress
             }
+
+            _progress.value = targetProgress
             savePreferences()
             isProgressUpdating = false
         }
@@ -167,19 +148,18 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun savePreferences() {
-        with(sharedPreferences.edit()) {
-            putInt(LEVEL_KEY, _level.value ?: 1)
-            putInt(TREE_KEY, _tree.value ?: 0)
-            putInt(PILL_REST_KEY, _pillRest.value ?: 1)
-            putInt(SHARE_REST_KEY, _shareRest.value ?: 3)
-            putInt(PROGRESS_KEY, _progress.value ?: 0)
-            putString(SPROUT_NAME_KEY, _sproutName.value ?: "새싹이")
-            putString(LAST_PILL_CLICK_DATE_KEY, _lastPillClickDate.value ?: "")
-            putString(LAST_SHARE_CLICK_DATE_KEY, _lastShareClickDate.value ?: "")
-            putInt(PILL_CLICK_COUNT_KEY, _pillClickCount.value ?: 0)
-            putInt(SHARE_CLICK_COUNT_KEY, _shareClickCount.value ?: 0)
-            apply()
-        }
+        repository.saveData(
+            _level.value ?: 1,
+            _tree.value ?: 0,
+            _pillRest.value ?: 1,
+            _shareRest.value ?: 3,
+            _progress.value ?: 0,
+            _sproutName.value ?: "새싹이",
+            _lastPillClickDate.value ?: "",
+            _lastShareClickDate.value ?: "",
+            _pillClickCount.value ?: 0,
+            _shareClickCount.value ?: 0
+        )
     }
     val showPillButtonClickLimitToast = MutableLiveData<Boolean>()
     val showShareButtonClickLimitToast = MutableLiveData<Boolean>()
