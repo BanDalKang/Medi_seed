@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/green_50">
@@ -14,7 +13,7 @@
         android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_tree_small" />
+        app:srcCompat="@drawable/ic_tree" />
 
     <TextView
         android:id="@+id/treeTextView"
@@ -26,41 +25,23 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:fontFamily="@font/pretendard_bold"
-        app:layout_constraintEnd_toStartOf="@+id/TextView7"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="@+id/treeImageView"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="@+id/treeImageView"
         app:layout_constraintTop_toBottomOf="@+id/treeImageView" />
 
     <TextView
-        android:id="@+id/TextView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:text="@string/sprout_tree_text"
-        android:textColor="@color/green_400"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:fontFamily="@font/pretendard_bold"
-        app:layout_constraintBottom_toBottomOf="@+id/treeTextView"
-        app:layout_constraintEnd_toEndOf="@+id/treeImageView"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/treeTextView"
-        app:layout_constraintTop_toTopOf="@+id/treeTextView" />
-
-    <TextView
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
         android:text=""
         android:textColor="@color/black_light"
         android:textSize="20sp"
         android:textStyle="bold"
         app:fontFamily="@font/pretendard_bold"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="@+id/sproutImageView"
-        app:layout_constraintStart_toStartOf="@+id/sproutImageView" />
+        app:layout_constraintStart_toStartOf="@+id/sproutImageView"
+        app:layout_constraintTop_toBottomOf="@+id/sproutImageView" />
 
     <android.widget.ImageButton
         android:id="@+id/nameImageButton"
@@ -72,14 +53,13 @@
         app:layout_constraintStart_toEndOf="@+id/nameTextView"
         app:layout_constraintTop_toTopOf="@+id/nameTextView" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="200dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/sproutImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/sproutImageView">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/levelUpAnimationView"
@@ -89,41 +69,47 @@
             app:lottie_autoPlay="false"
             app:lottie_loop="false"
             app:lottie_rawRes="@raw/level_up_animation" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginBottom="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+    <ImageView
+        android:id="@+id/sproutImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/levelBoxConstraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/treeTextView"
+        app:srcCompat="@drawable/img_tree1" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="190dp"
+        app:layout_constraintBottom_toBottomOf="@+id/sproutImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sproutImageView">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/progressUpAnimationView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone"
             app:lottie_autoPlay="false"
             app:lottie_loop="false"
             app:lottie_rawRes="@raw/progress_watering_can" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/sproutImageView"
-        android:layout_width="200dp"
-        android:layout_height="350dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/nameTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/img_tree1" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="350dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/levelBoxConstraintLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="23dp"
         android:background="@drawable/layout_background"
         android:elevation="5dp"
         android:orientation="vertical"
@@ -131,185 +117,189 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:layout_width="350dp"
+        <TextView
+            android:id="@+id/levelTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:text="1"
+            android:textColor="@color/green_400"
+            android:textSize="18sp"
+            app:fontFamily="@font/pretendard_bold"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar"
+            app:layout_constraintStart_toStartOf="@+id/progressBar"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/progressBarPercentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="0"
+            android:textColor="@color/grey_dark"
+            android:textSize="16sp"
+            app:fontFamily="@font/pretendard_regular"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar"
+            app:layout_constraintEnd_toEndOf="@+id/progressBar" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:layout_marginBottom="15dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_bar_exp"
+            app:layout_constraintBottom_toTopOf="@+id/sproutPillButton"
+            app:layout_constraintEnd_toEndOf="@+id/sproutShareButton"
+            app:layout_constraintStart_toStartOf="@+id/sproutPillButton" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sproutPillButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/btn_effect"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottomTextView"
+            app:layout_constraintEnd_toStartOf="@+id/sproutShareButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
+                android:id="@+id/pillText"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="@string/sprout_level_text"
-                android:textColor="@color/green_400"
-                android:textSize="18sp"
-                app:fontFamily="@font/pretendard_bold" />
-
-            <TextView
-                android:id="@+id/levelTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:text="1"
-                android:textColor="@color/green_400"
-                android:textSize="18sp"
-                app:fontFamily="@font/pretendard_bold" />
-
-            <TextView
-                android:id="@+id/progressBarPercentTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="225dp"
-                android:text="0"
-                android:textColor="@color/grey_dark"
-                android:textSize="16sp"
-                app:fontFamily="@font/pretendard_regular" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="310dp"
-                android:layout_height="15dp"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progress_bar_exp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center">
-
-            <LinearLayout
-                android:id="@+id/sproutPillButton"
-                android:layout_width="150dp"
-                android:layout_height="80dp"
-                android:background="@drawable/btn_effect"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView2"
-                app:layout_constraintEnd_toStartOf="@+id/sproutShareButton"
+                android:layout_marginTop="5dp"
+                android:text="@string/sprout_pill_button"
+                android:textColor="@color/black_light"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="16dp"
+                android:autoSizeMaxTextSize="18dp"
+                android:textStyle="bold"
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toTopOf="@+id/pillRestText"
+                app:layout_constraintEnd_toStartOf="@+id/pillIcon"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="80dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/pillText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="@string/sprout_pill_button"
-                        android:textColor="@color/black_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:fontFamily="@font/pretendard_bold" />
-
-                    <TextView
-                        android:id="@+id/pillRestText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/black_light"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:fontFamily="@font/pretendard_bold" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/pillIcon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_pill" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/sproutShareButton"
-                android:layout_width="150dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/btn_effect"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/sproutPillButton">
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="80dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/shareText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:text="@string/sprout_share_button"
-                        android:textColor="@color/black_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:fontFamily="@font/pretendard_bold" />
-
-                    <TextView
-                        android:id="@+id/shareRestText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/black_light"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:fontFamily="@font/pretendard_bold" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/shareIcon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:src="@drawable/ic_share" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
-            android:gravity="center">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:id="@+id/pillRestText"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/sprout_bottom_text"
-                android:textColor="@color/grey_dark"
-                android:textSize="14sp"
+                android:layout_marginBottom="5dp"
+                android:text=""
+                android:textColor="@color/black_light"
+                android:textSize="13sp"
+                app:fontFamily="@font/pretendard_regular"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/pillText"
+                app:layout_constraintTop_toBottomOf="@+id/pillText" />
+
+            <ImageView
+                android:id="@+id/pillIcon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_pill"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/pillText"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sproutShareButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/btn_effect"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottomTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/sproutPillButton"
+            app:layout_constraintTop_toTopOf="@+id/sproutPillButton">
+
+            <TextView
+                android:id="@+id/shareText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/sprout_share_button"
+                android:textColor="@color/black_light"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="16dp"
+                android:autoSizeMaxTextSize="18dp"
                 android:textStyle="bold"
-                app:fontFamily="@font/pretendard_bold" />
-        </LinearLayout>
-    </LinearLayout>
+                app:fontFamily="@font/pretendard_bold"
+                app:layout_constraintBottom_toTopOf="@+id/shareRestText"
+                app:layout_constraintEnd_toStartOf="@+id/shareIcon"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/shareRestText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text=""
+                android:textColor="@color/black_light"
+                android:textSize="13sp"
+                app:fontFamily="@font/pretendard_regular"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/shareText"
+                app:layout_constraintTop_toBottomOf="@+id/shareText" />
+
+            <ImageView
+                android:id="@+id/shareIcon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_share"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/shareText"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/bottomTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:text="@string/sprout_bottom_text"
+            android:textColor="@color/grey_dark"
+            android:textSize="14sp"
+            app:fontFamily="@font/pretendard_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/levelUpTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LEVEL UP!"
+        android:text="@string/sprout_level_up_text"
         android:textColor="@color/green_400"
         android:textSize="25sp"
         android:visibility="invisible"

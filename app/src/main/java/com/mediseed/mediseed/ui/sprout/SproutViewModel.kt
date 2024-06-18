@@ -1,12 +1,14 @@
 package com.mediseed.mediseed.ui.sprout
 
 import android.app.Application
-import android.app.usage.UsageEvents
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -61,10 +63,15 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
     val showLevelUpAnimation: LiveData<Event<Unit>> get() = _showLevelUpAnimation
     private val _showProgressAnimation = MutableLiveData<Event<Unit>>()
     val showProgressAnimation: LiveData<Event<Unit>> get() = _showProgressAnimation
+    private var isProgressUpdating = false
 
     init {
         lastShareClickDateCheck()
         lastPillClickDateCheck()
+    }
+    fun setInitialValues() {
+        _pillClickCount.value = sharedPreferences.getInt(PILL_CLICK_COUNT_KEY, 0)
+        _shareClickCount.value = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0)
     }
 
     fun handlePillButtonClick() {
@@ -97,22 +104,37 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateProgress(increment: Int) {
-        val newProgress = (_progress.value ?: 0) + increment
-        _showProgressAnimation.value = Event(Unit)
-        if (newProgress >= 100) {
-            _level.value = (_level.value ?: 1) + 1
-            _showLevelUpAnimation.value = Event(Unit)
-            _progress.value = 0
-            if (_level.value ?: 1 > 5) {
-                _tree.value = (_tree.value ?: 0) + 1
-                _showTreeUpDialog.value = Event(Unit)
-                _level.value = 1
+    private fun updateProgress(increment: Int) {
+        if (isProgressUpdating) return
+
+        viewModelScope.launch {
+            isProgressUpdating = true
+            val currentProgress = _progress.value ?: 0
+            val targetProgress = (currentProgress + increment).coerceAtMost(100) // 100을 넘지 않도록 설정
+
+            _showProgressAnimation.value = Event(Unit)
+
+            for (i in currentProgress until targetProgress) {
+                delay(75) // 150 밀리초 딜레이 (필요에 따라 조정)
+                _progress.value = i + 1
             }
-        } else {
-            _progress.value = newProgress
+
+            if (targetProgress >= 100) {
+                _level.value = (_level.value ?: 1) + 1
+                _showLevelUpAnimation.value = Event(Unit)
+                _progress.value = 0
+
+                if ((_level.value ?: 1) > 5) {
+                    _tree.value = (_tree.value ?: 0) + 1
+                    _showTreeUpDialog.value = Event(Unit)
+                    _level.value = 1
+                }
+            } else {
+                _progress.value = targetProgress
+            }
+            savePreferences()
+            isProgressUpdating = false
         }
-        savePreferences()
     }
 
     fun updateSproutName(newName: String) {
@@ -154,6 +176,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
             putString(SPROUT_NAME_KEY, _sproutName.value ?: "새싹이")
             putString(LAST_PILL_CLICK_DATE_KEY, _lastPillClickDate.value ?: "")
             putString(LAST_SHARE_CLICK_DATE_KEY, _lastShareClickDate.value ?: "")
+            putInt(PILL_CLICK_COUNT_KEY, _pillClickCount.value ?: 0)
             putInt(SHARE_CLICK_COUNT_KEY, _shareClickCount.value ?: 0)
             apply()
         }

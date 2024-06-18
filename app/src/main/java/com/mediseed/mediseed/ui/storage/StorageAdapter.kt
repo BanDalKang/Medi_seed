@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.mypage
+package com.mediseed.mediseed.ui.storage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ItemFacilityBinding
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 
-class MyPageAdapter :
-    ListAdapter<PharmacyItem.PharmacyInfo, MyPageAdapter.PharmacyViewHolder>(DiffCallback) {
+class StorageAdapter :
+    ListAdapter<PharmacyItem.PharmacyInfo, StorageAdapter.PharmacyViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PharmacyViewHolder {
         val binding =
@@ -24,9 +24,9 @@ class MyPageAdapter :
     class PharmacyViewHolder(private val binding: ItemFacilityBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PharmacyItem.PharmacyInfo) {
-            binding.tvTitle.text = item.collectionLocationName
-            binding.tvKind.text = item.collectionLocationClassificationName
-            binding.tvAddress.text = item.streetNameAddress
+            binding.tvLocationName.text = item.collectionLocationName
+            binding.tvLocationClassificationName.text = item.collectionLocationClassificationName //장소 종류 : 약국, 보건소 등
+            binding.tvStreetNameAddress.text = item.streetNameAddress
         }
     }
 

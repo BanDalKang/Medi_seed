@@ -17,7 +17,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private val _daejeonSeoguUiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.ResultEmpty)
-
+  //  private val _daejeonYuseongguUiState: MutableStateFlow<UiState>
     val daejeonSeoguUiState: StateFlow<UiState> get() = _daejeonSeoguUiState.asStateFlow()
 
 
@@ -37,11 +37,10 @@ class HomeViewModel(
         }
     }
 
-//    fun getDaejeonYuseongguLocation() = viewModelScope.launch {
-//        pharmacyUseCase.getPharmacyDaejeonYuseonggu().onSuccess { pharmacyEntity ->
-//            val pharmacyLocation = createPharmacyLocation(pharmacyEntity)
-//        }
-//    }
+    fun getDaejeonYuseongguLocation() = viewModelScope.launch {
+        pharmacyUseCase.getPharmacyDaejeonYuseonggu().onSuccess { pharmacyEntity ->
+        }
+    }
 
     private fun createPharmacyLocation(entity: PharmacyDaejeonSeoguEntity): List<PharmacyItem.PharmacyInfo> {
         return entity.data.map {

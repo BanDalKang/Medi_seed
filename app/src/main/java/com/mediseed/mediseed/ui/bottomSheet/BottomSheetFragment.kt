@@ -21,7 +21,12 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
     private val sharedViewModel: SharedViewModel by activityViewModels {
-        SharedViewModel.Factory(requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE))
+        SharedViewModel.Factory(
+            requireContext().getSharedPreferences(
+                "prefs",
+                Context.MODE_PRIVATE
+            )
+        )
     }
 
     override fun onCreateView(
@@ -30,8 +35,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     ): View {
         _binding = FragmentBottomSheetBinding.inflate(inflater, container, false)
         arguments?.getParcelable<PharmacyItem.PharmacyInfo>(Const.PHARMACY)?.let { pharmacyInfo ->
-                this.pharmacyInfo = pharmacyInfo
-            }
+            this.pharmacyInfo = pharmacyInfo
+        }
 
         return binding.root
     }
@@ -50,7 +55,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         with(binding) {
             tvFacilityType.text = pharmacyInfo.collectionLocationClassificationName
             tvFacilityName.text = pharmacyInfo.collectionLocationName
-            tvDistance.text = pharmacyInfo.distance.toString() + " m"
+            tvDistance.text = pharmacyInfo.distance?.toInt().toString() + " m"
             tvAddress.text = pharmacyInfo.streetNameAddress
             tvDate.text = pharmacyInfo.dataDate
 
@@ -76,7 +81,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                 val isHeartFilled = toggleHeartIcon()
                 pharmacyInfo.streetNameAddress?.let { address ->
                     val facilityName = pharmacyInfo.collectionLocationName ?: ""
-                    sharedViewModel.updateHeartCount(address, isHeartFilled, facilityName) { success ->
+                    sharedViewModel.updateHeartCount(
+                        address,
+                        isHeartFilled,
+                        facilityName
+                    ) { success ->
                         if (success) {
                             if (isHeartFilled) {
                                 sharedViewModel.addLikedItem(pharmacyInfo)

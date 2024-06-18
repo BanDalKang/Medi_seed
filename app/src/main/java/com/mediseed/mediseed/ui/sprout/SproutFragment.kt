@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.presentation.sprout
+package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
 import android.app.AlertDialog
@@ -16,12 +16,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
-import com.mediseed.mediseed.ui.main.MainActivity
 import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
-import com.mediseed.mediseed.ui.sprout.SproutViewModel
+import com.mediseed.mediseed.ui.main.MainActivity
 
 class SproutFragment : Fragment() {
 
@@ -30,7 +29,7 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
-    private val sharedViewMdoel: SharedViewModel by activityViewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val mainActivity by lazy {
         activity as? MainActivity
     }
@@ -81,11 +80,11 @@ class SproutFragment : Fragment() {
     private fun setupObservers() {
         with(sproutViewModel) {
             level.observe(viewLifecycleOwner) { level ->
-                binding.levelTextView.text = "$level"
+                binding.levelTextView.text = "레벨$level"
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
-                binding.treeTextView.text = "$tree"
+                binding.treeTextView.text = "$tree 그루"
             }
             pillRest.observe(viewLifecycleOwner) { pillRest ->
                 binding.pillRestText.text = "$pillRest 남음"
@@ -189,10 +188,11 @@ class SproutFragment : Fragment() {
     }
 
     private fun getData(): Boolean? {
-        return sharedViewMdoel.nearDistance.value
+        return sharedViewModel.nearDistance.value
     }
     private fun activateFeed() {
         if (getData() == true) {
+            sharedViewModel.updateMedicineCount()
             sproutViewModel.handlePillButtonClick()
         } else {
             Toast.makeText(
@@ -256,6 +256,7 @@ class SproutFragment : Fragment() {
             })
         }
     }
+
     override fun onResume() {
         super.onResume()
         mainActivity?.hideBar()
