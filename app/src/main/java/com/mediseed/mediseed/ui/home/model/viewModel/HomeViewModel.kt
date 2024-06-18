@@ -6,6 +6,7 @@ import com.mediseed.mediseed.domain.model.PharmacyDaejeonSeoguEntity
 import com.mediseed.mediseed.domain.usecase.PharmacyUseCase
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
+import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

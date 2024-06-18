@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,8 +68,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationOverlay: LocationOverlay
 
     // 대전 서구
-    private var daejeonSeoguMarkerList: MutableMap<MutableList<String>, Marker> = mutableMapOf()
-    private var daejeonSeoguAddress: MutableList<String> = mutableListOf()
+    private var daejeonSeoguMarkerList = mutableListOf<Marker>()
     private var daejeonSeoguArea = CircleOverlay()
 
     // 대전 유성구(업데이트 예정)
@@ -115,7 +113,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             // fragment 생성 > map 객체 생성 > 데이터 생성 > marker 생성
                             registerMarkers(pharmacyInfo)
                         }
-
                         else -> {}
                     }
                 }
@@ -244,7 +241,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             userLatLng,
             centerLatLng
         ) // 원의 중심과 사용자 사이의 거리를 통해 사용자의 위치를 계산합니다.
-        return userLocation <= radius // 사용자의 위치가 반지름 보다 안쪽에 있으면 true 를 반환합니다.
+        return userLocation <= radius // 사용자의 위치가 반지름 보다 안쪽에 있으면 true를 반환합니다.
     }
 
     private fun computeDistanceBetween(userLatLng: LatLng, centerLatLng: LatLng): Double {
@@ -267,14 +264,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-    // 마커 객체를 생성하고, 기존 마커가 있을 경우, 정보만 업데이트합니다. 또한 마커를 클러스터화합니다.
+
     private fun registerMarkers(pharmacyInfoList: List<PharmacyItem.PharmacyInfo>) {
+
         pharmacyInfoList.forEach { info ->
             val markerLatitude = info.latitude?.toDoubleOrNull()
             val markerLongitude = info.longitude?.toDoubleOrNull()
 
             if (markerLatitude != null && markerLongitude != null) {
-                val markerName = info.collectionLocationName ?: return@forEach
+                val markerName = info.collectionLocationName
                 val distance = calculateDistance(
                     userLatitude,
                     userLongitude,
@@ -284,28 +282,26 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
                 info.distance = distance
 
-                    val marker = Marker().apply {
-                        position = LatLng(markerLatitude, markerLongitude)
-                        captionText = markerName
-                        icon = OverlayImage.fromResource(R.drawable.pharmacymarker)
-                        width = 80
-                        height = 100
-                        map = naverMap
+                val marker = Marker().apply {
+                    position = LatLng(markerLatitude, markerLongitude)
+                    captionText = markerName.toString()
+                    icon = OverlayImage.fromResource(R.drawable.pharmacymarker)
+                    width = 80
+                    height = 100
+                    map = naverMap
 
-                        setOnClickListener(
-                            onMarkerClick(
-                                markerLatitude,
-                                markerLongitude,
-                                info
-                            )
+                    setOnClickListener(
+                        onMarkerClick(
+                            markerLatitude,
+                            markerLongitude,
+                            info
                         )
-                    }
-                    daejeonSeoguMarkerList[daejeonSeoguAddress] = marker // markerMap에 새로운 마커를 추가
+                    )
                 }
+                daejeonSeoguMarkerList.add(marker)
             }
-        Log.d("tango",daejeonSeoguMarkerList.toString())
+        }
     }
-
 
     private fun onMarkerClick(
         markerLatitude: Double?,
