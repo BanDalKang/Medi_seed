@@ -28,7 +28,7 @@ class SproutFragment : Fragment() {
 
     private var _binding: FragmentSproutBinding? = null
     private val binding get() = _binding!!
-    internal lateinit var sproutViewModel: SproutViewModel
+    private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
     private lateinit var progressBar: ProgressBar
@@ -54,7 +54,10 @@ class SproutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sproutViewModel = ViewModelProvider(this).get(SproutViewModel::class.java)
+        val repository = SproutRepository(requireContext())
+        val viewModelFactory = SproutViewModelFactory(repository)
+        sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
+
         setupObservers()
         setupListeners()
 
