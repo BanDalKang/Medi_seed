@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -51,7 +53,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding get() = _binding!!
 
-    private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
+    private val homeViewModel: HomeViewModel by activityViewModels{ HomeViewModelFactory() }
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()
@@ -100,6 +102,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         registerMap()
     }
+    private fun initSearchAlgorithm() {
+        homeViewModel.apply {
+            setPharmacyInfo(pharmacyInfo)
+            filteredSuggestions.observe(viewLifecycleOwner, Observer{ suggestionList ->
+                updateWithSuggetstions(suggestionList)
+            })
+        }
+    }
+
+    private fun updateWithSuggetstions(sortedSuggestionList: List<PharmacyItem.PharmacyInfo>?) {
+        mainActivity?.suggestionRecyclerView?.visibility =
+            if (sortedSuggestionList?.isNotEmpty() == true) View.VISIBLE else View.INVISIBLE
+        if (sortedSuggestionList != null) {
+            mainActivity?.suggestionAdapter?.updateItem(sortedSuggestionList)
+        }
+
+    }
 
     private fun registerViewModelEvent() = with(binding) {
         homeViewModel.getDaejeonSeoguLocation()
@@ -112,6 +131,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                                 uiState.daejeonSeoguLocation as MutableList<PharmacyItem.PharmacyInfo>
                             // fragment 생성 > map 객체 생성 > 데이터 생성 > marker 생성
                             registerMarkers(pharmacyInfo)
+                            initSearchAlgorithm()
                         }
                         else -> {}
                     }
@@ -231,37 +251,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun checkUserArea(userLatLng: LatLng) {
-        if (isInsideArea(userLatLng, daejeonSeoguArea.center, daejeonSeoguArea.radius)) {
+        val isInside = homeViewModel.isInsideArea(userLatLng, daejeonSeoguArea.center, daejeonSeoguArea.radius)
+        if (isInside) {
             registerViewModelEvent()
         }
-    }
-
-    private fun isInsideArea(userLatLng: LatLng, centerLatLng: LatLng, radius: Double): Boolean {
-        val userLocation = computeDistanceBetween(
-            userLatLng,
-            centerLatLng
-        ) // 원의 중심과 사용자 사이의 거리를 통해 사용자의 위치를 계산합니다.
-        return userLocation <= radius // 사용자의 위치가 반지름 보다 안쪽에 있으면 true를 반환합니다.
-    }
-
-    private fun computeDistanceBetween(userLatLng: LatLng, centerLatLng: LatLng): Double {
-        val userLat = Math.toRadians(userLatLng.latitude)
-        val userLon = Math.toRadians(userLatLng.longitude)
-        val centerLat = Math.toRadians(centerLatLng.latitude)
-        val centerLon = Math.toRadians(centerLatLng.longitude)
-
-        val earthRadius = 6371 // 지구의 반지름(킬로미터)
-
-        val dLat = centerLat - userLat
-        val dLon = centerLon - userLon
-
-        val a =
-            Math.sin(dLat / 2).pow(2) + Math.cos(userLat) * Math.cos(centerLat) * Math.sin(dLon / 2)
-                .pow(2)
-        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-        return earthRadius * c * 1000 // 결과를 미터로 변환
-
     }
 
 
@@ -308,7 +301,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         markerLongitude: Double?,
         pharmacyInfoList: PharmacyItem.PharmacyInfo
     ): Overlay.OnClickListener {
-        return Overlay.OnClickListener { overlay ->
+        return Overlay.OnClickListener {
             if (markerLatitude != null && markerLongitude != null) {
                 moveCamera(markerLatitude, markerLongitude)
             }
@@ -343,9 +336,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateDistance() {
-
-        pharmacyInfo.forEachIndexed { index, info ->
-
+        pharmacyInfo.forEach { info ->
             val markerLatitude = info.latitude?.toDoubleOrNull()
             val markerLongitude = info.longitude?.toDoubleOrNull()
             if (markerLatitude != null && markerLongitude != null) {
@@ -373,40 +364,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         return pharmacyInfo.minByOrNull { it.distance ?: Float.MAX_VALUE }
     }
 
-    // 정렬 알고리즘: 첫글자 > 해당글자 포함 > 거리순 정렬 알고리즘 (최대 20개)
-    fun updateSuggestions(query: String) {
-        val pharmacyNameList = pharmacyInfo.map { it.collectionLocationName }
-        val filterList = if (query.isNotEmpty()) {
-            val startsWithQuery = pharmacyNameList.filter { suggestion ->
-                suggestion?.startsWith(query, ignoreCase = true) == true
-            }
-            val containsQuery = pharmacyNameList.filter { suggestion ->
-                suggestion?.contains(
-                    query,
-                    ignoreCase = true
-                ) == true && suggestion !in startsWithQuery
-            }
-            (startsWithQuery + containsQuery).take(20)
-        } else {
-            emptyList()
-        }
-
-        val suggestionList = pharmacyInfo.filter { item ->
-            filterList.contains(item.collectionLocationName)
-        }
-
-
-        val sortedSuggestionList = suggestionList.sortedBy { it.distance }
-        mainActivity?.suggestionRecyclerView?.visibility =
-            if (sortedSuggestionList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
-        mainActivity?.suggestionAdapter?.updateItem(sortedSuggestionList)
-    }
-
-    private fun showBottomSheet(markerInfo: PharmacyItem.PharmacyInfo): Boolean {
-        val bottomSheetFragment = BottomSheetFragment.newInstance(markerInfo)
-        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
-        return true
-    }
 
     fun performSearch(query: String) {
         val foundPharmacies = pharmacyInfo.filter { it.collectionLocationName == query }
@@ -417,6 +374,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 moveCamera(latitude, longitude)
             }
         }
+    }
+
+    private fun showBottomSheet(markerInfo: PharmacyItem.PharmacyInfo): Boolean {
+        val bottomSheetFragment = BottomSheetFragment.newInstance(markerInfo)
+        bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
+        return true
     }
 
     fun moveCamera(latitude: Double, longitude: Double) {

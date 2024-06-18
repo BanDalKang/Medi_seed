@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.ui.mypage
+package com.mediseed.mediseed.ui.storage
 
 import android.content.Context
 import android.os.Bundle
@@ -10,17 +10,19 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mediseed.mediseed.databinding.FragmentMypageBinding
+import com.mediseed.mediseed.databinding.FragmentStorageBinding
 import com.mediseed.mediseed.ui.shared.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
+import com.mediseed.mediseed.ui.sprout.SproutRepository
 import com.mediseed.mediseed.ui.sprout.SproutViewModel
+import com.mediseed.mediseed.ui.sprout.SproutViewModelFactory
 
-class MyPageFragment : Fragment() {
+class StorageFragment : Fragment() {
     companion object {
-        fun newInstance() = MyPageFragment()
+        fun newInstance() = StorageFragment()
     }
 
-    private var _binding: FragmentMypageBinding? = null
+    private var _binding: FragmentStorageBinding? = null
     private val binding get() = _binding!!
 
     private val sharedViewModel: SharedViewModel by activityViewModels {
@@ -31,11 +33,9 @@ class MyPageFragment : Fragment() {
             )
         )
     }
-    private lateinit var adapter: MyPageAdapter
+    private lateinit var adapter: StorageAdapter
 
-    private val sproutViewModel: SproutViewModel by lazy {
-        ViewModelProvider(this).get(SproutViewModel::class.java)
-    }
+    private lateinit var sproutViewModel: SproutViewModel
 
     //바텀 시트 프레그먼트
     private val mainActivity by lazy {
@@ -46,7 +46,8 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMypageBinding.inflate(inflater, container, false)
+        _binding = FragmentStorageBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         //뷰모델 초기화
         initializeViewModel()
@@ -63,17 +64,20 @@ class MyPageFragment : Fragment() {
 
         setupRecyclerView()
 
-        return binding.root
+        return view
     }
 
     private fun initializeViewModel() {
         // ViewModel 초기화를 위해 LiveData 값 설정
+        val repository = SproutRepository(requireContext())
+        val viewModelFactory = SproutViewModelFactory(repository)
+        sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
         sproutViewModel.setInitialValues()
     }
 
 
     private fun setupRecyclerView() {
-        adapter = MyPageAdapter()
+        adapter = StorageAdapter()
         binding.rvMedicineList.layoutManager = LinearLayoutManager(context)
         binding.rvMedicineList.adapter = adapter
 

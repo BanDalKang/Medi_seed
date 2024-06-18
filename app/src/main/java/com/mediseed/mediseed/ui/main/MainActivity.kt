@@ -11,19 +11,25 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mediseed.mediseed.ui.home.SuggestionAdapter
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
+import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
+import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
 
     private val viewPagerAdapter by lazy {
         MainViewPagerAdapter(this)
@@ -56,6 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() = with(binding) {
+        // ViewModel 초기화
         // TabLayout x ViewPager2
         vpMain.adapter = viewPagerAdapter
         vpMain.offscreenPageLimit = 1
@@ -89,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 binding.clearText.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
                 clearText()
                 val query = text.toString()
-                homeFragment?.updateSuggestions(query)
+                homeViewModel.updateSuggestions(query)
             }
 
             override fun afterTextChanged(text: Editable?) {
