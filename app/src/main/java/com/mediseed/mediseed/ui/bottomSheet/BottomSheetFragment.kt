@@ -52,6 +52,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun initView() {
+        setupPharmacyInfo()
+        setupHeartIcon()
+        observeViewModel()
+        fetchCounts()
+    }
+
+    private fun setupPharmacyInfo() {
         with(binding) {
             tvFacilityType.text = pharmacyInfo.collectionLocationClassificationName
             tvFacilityName.text = pharmacyInfo.collectionLocationName
@@ -64,63 +71,35 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             } else {
                 tvPhone.text = pharmacyInfo.phoneNumber
             }
-
-            setupHeartIcon()
-            observeViewModel()
-
-            pharmacyInfo.streetNameAddress?.let {
-                sharedViewModel.fetchHeartCount(it)
-                sharedViewModel.fetchMedicineCount(it)
-            }
         }
     }
 
     private fun setupHeartIcon() {
-        with(binding) {
-            ivHeart.setOnClickListener {
-                val isHeartFilled = toggleHeartIcon()
-                pharmacyInfo.streetNameAddress?.let { address ->
-                    val facilityName = pharmacyInfo.collectionLocationName ?: ""
-                    sharedViewModel.updateHeartCount(
-                        address,
-                        isHeartFilled,
-                        facilityName
-                    ) { success ->
-                        if (success) {
-                            if (isHeartFilled) {
-                                sharedViewModel.addLikedItem(pharmacyInfo)
-                            } else {
-                                sharedViewModel.removeLikedItem(pharmacyInfo)
-                            }
-                        } else {
-                            toggleHeartIcon()
-                        }
-                    }
-                }
-            }
+        updateHeartIcon(sharedViewModel.isPharmacyInfoLiked(pharmacyInfo))
 
-            if (sharedViewModel.isPharmacyInfoLiked(pharmacyInfo)) {
-                ivHeart.setImageResource(R.drawable.ic_heart_fill)
-                ivHeart.tag = "filled"
-            } else {
-                ivHeart.setImageResource(R.drawable.ic_heart_empty)
-                ivHeart.tag = "empty"
+        binding.ivHeart.setOnClickListener {
+            val isHeartFilled = toggleHeartIcon()
+            pharmacyInfo.streetNameAddress?.let { address ->
+                val facilityName = pharmacyInfo.collectionLocationName ?: ""
+                sharedViewModel.updateHeartCount(address, isHeartFilled, facilityName)
             }
         }
     }
 
-    private fun toggleHeartIcon(): Boolean {
-        with(binding) {
-            val isHeartFilled = ivHeart.tag == "filled"
-            if (isHeartFilled) {
-                ivHeart.setImageResource(R.drawable.ic_heart_empty)
-                ivHeart.tag = "empty"
-            } else {
-                ivHeart.setImageResource(R.drawable.ic_heart_fill)
-                ivHeart.tag = "filled"
-            }
-            return !isHeartFilled
+    private fun updateHeartIcon(isLiked: Boolean) {
+        if (isLiked) {
+            binding.ivHeart.setImageResource(R.drawable.ic_heart_fill)
+            binding.ivHeart.tag = "filled"
+        } else {
+            binding.ivHeart.setImageResource(R.drawable.ic_heart_empty)
+            binding.ivHeart.tag = "empty"
         }
+    }
+
+    private fun toggleHeartIcon(): Boolean {
+        val isHeartFilled = binding.ivHeart.tag == "filled"
+        updateHeartIcon(!isHeartFilled)
+        return !isHeartFilled
     }
 
     private fun observeViewModel() {
@@ -132,6 +111,25 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             sharedViewModel.medicineCount.observe(viewLifecycleOwner) { count ->
                 tvMedicineNumber.text = count.toString()
             }
+
+            sharedViewModel.updateHeartResult.observe(viewLifecycleOwner) { success ->
+                if (success) {
+                    if (binding.ivHeart.tag == "filled") {
+                        sharedViewModel.addLikedItem(pharmacyInfo)
+                    } else {
+                        sharedViewModel.removeLikedItem(pharmacyInfo)
+                    }
+                } else {
+                    toggleHeartIcon()
+                }
+            }
+        }
+    }
+
+    private fun fetchCounts() {
+        pharmacyInfo.streetNameAddress?.let {
+            sharedViewModel.fetchHeartCount(it)
+            sharedViewModel.fetchMedicineCount(it)
         }
     }
 
