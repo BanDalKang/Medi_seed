@@ -1,6 +1,7 @@
 package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -29,12 +31,15 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
+    private lateinit var progressBar: ProgressBar
+    private var maxProgress = 0
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val mainActivity by lazy {
         activity as? MainActivity
     }
 
     companion object {
+        private const val SHARE_REQUEST_CODE = 1001
         fun newInstance() = SproutFragment()
     }
 
@@ -49,12 +54,16 @@ class SproutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sproutViewModel = ViewModelProvider(this).get(SproutViewModel::class.java)
+        val repository = SproutRepository(requireContext())
+        val viewModelFactory = SproutViewModelFactory(repository)
+        sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
+
         setupObservers()
         setupListeners()
 
         levelUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.level_up_animation_text)
         levelUpText = binding.levelUpTextView
+        progressBar = binding.progressBar
     }
 
     override fun onDestroyView() {
@@ -68,7 +77,6 @@ class SproutFragment : Fragment() {
                 activateFeed()
             }
             sproutShareButton.setOnClickListener {
-                sproutViewModel.handleShareButtonClick()
                 shareApp()
             }
             nameImageButton.setOnClickListener {
@@ -81,6 +89,7 @@ class SproutFragment : Fragment() {
         with(sproutViewModel) {
             level.observe(viewLifecycleOwner) { level ->
                 binding.levelTextView.text = "레벨$level"
+                updateProgressBarMax(level)
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
@@ -94,7 +103,7 @@ class SproutFragment : Fragment() {
             }
             progress.observe(viewLifecycleOwner) { progress ->
                 binding.progressBar.progress = progress
-                binding.progressBarPercentTextView.text = "$progress%"
+                binding.progressBarPercentTextView.text = "${(progress.toFloat() / maxProgress * 100).toInt()}%"
             }
             sproutName.observe(viewLifecycleOwner) { sproutName ->
                 binding.nameTextView.text = sproutName
@@ -210,7 +219,18 @@ class SproutFragment : Fragment() {
             putExtra(Intent.EXTRA_SUBJECT, "")
             putExtra(Intent.EXTRA_TEXT, getString(R.string.sprout_share_message))
         }
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.sprout_share_title)))
+        startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.sprout_share_title)), SHARE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SHARE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                sproutViewModel.handleShareButtonClick()
+            } else {
+                sproutViewModel.handleShareButtonClick()
+            }
+        }
     }
 
     private fun playLevelUpAnimation() {
@@ -257,6 +277,18 @@ class SproutFragment : Fragment() {
         }
     }
 
+    private fun updateProgressBarMax(level: Int) {
+        maxProgress = when (level) {
+            1 -> 100
+            2 -> 200
+            3 -> 300
+            4 -> 400
+            5 -> 500
+            else -> 100
+        }
+        progressBar.max = maxProgress
+    }
+
     override fun onResume() {
         super.onResume()
         mainActivity?.hideBar()
@@ -267,3 +299,4 @@ class SproutFragment : Fragment() {
         _binding = null
     }
 }
+

@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mediseed.mediseed.databinding.FragmentStorageBinding
 import com.mediseed.mediseed.ui.shared.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
+import com.mediseed.mediseed.ui.sprout.SproutRepository
 import com.mediseed.mediseed.ui.sprout.SproutViewModel
+import com.mediseed.mediseed.ui.sprout.SproutViewModelFactory
 
 class StorageFragment : Fragment() {
     companion object {
@@ -33,9 +35,7 @@ class StorageFragment : Fragment() {
     }
     private lateinit var adapter: StorageAdapter
 
-    private val sproutViewModel: SproutViewModel by lazy {
-        ViewModelProvider(this).get(SproutViewModel::class.java)
-    }
+    private lateinit var sproutViewModel: SproutViewModel
 
     //바텀 시트 프레그먼트
     private val mainActivity by lazy {
@@ -47,6 +47,7 @@ class StorageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentStorageBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         //뷰모델 초기화
         initializeViewModel()
@@ -63,11 +64,14 @@ class StorageFragment : Fragment() {
 
         setupRecyclerView()
 
-        return binding.root
+        return view
     }
 
     private fun initializeViewModel() {
         // ViewModel 초기화를 위해 LiveData 값 설정
+        val repository = SproutRepository(requireContext())
+        val viewModelFactory = SproutViewModelFactory(repository)
+        sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
         sproutViewModel.setInitialValues()
     }
 
