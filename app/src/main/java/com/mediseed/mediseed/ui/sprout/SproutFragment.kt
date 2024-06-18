@@ -1,6 +1,7 @@
 package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -27,7 +28,7 @@ class SproutFragment : Fragment() {
 
     private var _binding: FragmentSproutBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sproutViewModel: SproutViewModel
+    internal lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
     private lateinit var progressBar: ProgressBar
@@ -38,6 +39,7 @@ class SproutFragment : Fragment() {
     }
 
     companion object {
+        private const val SHARE_REQUEST_CODE = 1001
         fun newInstance() = SproutFragment()
     }
 
@@ -69,13 +71,10 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-//                activateFeed()
-                sproutViewModel.updateProgress(100)
+                activateFeed()
             }
             sproutShareButton.setOnClickListener {
-//                sproutViewModel.handleShareButtonClick()
-//                shareApp()
-                sproutViewModel.updateProgress(50)
+                shareApp()
             }
             nameImageButton.setOnClickListener {
                 showNameEditDialog()
@@ -217,7 +216,18 @@ class SproutFragment : Fragment() {
             putExtra(Intent.EXTRA_SUBJECT, "")
             putExtra(Intent.EXTRA_TEXT, getString(R.string.sprout_share_message))
         }
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.sprout_share_title)))
+        startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.sprout_share_title)), SHARE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SHARE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                sproutViewModel.handleShareButtonClick()
+            } else {
+                sproutViewModel.handleShareButtonClick()
+            }
+        }
     }
 
     private fun playLevelUpAnimation() {
@@ -286,3 +296,4 @@ class SproutFragment : Fragment() {
         _binding = null
     }
 }
+

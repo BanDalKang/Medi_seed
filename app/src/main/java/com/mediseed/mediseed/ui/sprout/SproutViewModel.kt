@@ -120,7 +120,7 @@ class SproutViewModel(application: Application) : AndroidViewModel(application) 
                 delay(10)
                 _progress.value = i + 1
             }
-            // 레벨 업 처리
+
             while (targetProgress >= maxProgress) {
                 level += 1
                 _level.value = level
