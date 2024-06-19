@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +24,7 @@ import com.google.android.gms.location.LocationServices
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentHomeBinding
 import com.mediseed.mediseed.ui.bottomSheet.BottomSheetFragment
+import com.mediseed.mediseed.ui.home.model.pharmacyItem.GeoCode
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
@@ -46,7 +45,6 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.math.pow
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -57,6 +55,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()
+
+    private lateinit var streetNameAddress: MutableList<String?>
 
     private var userLatitude: Double = 0.0
 
@@ -70,12 +70,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var locationOverlay: LocationOverlay
 
     // 대전 서구
-    private var daejeonSeoguMarkerList = mutableListOf<Marker>()
-    private var daejeonSeoguArea = CircleOverlay()
+    private var daejeonSeoguCircle = CircleOverlay()
 
-    // 대전 유성구(업데이트 예정)
-    //private var daejeonYuseongguMarkerList: MutableMap<String, Marker> = mutableMapOf()
-    //private var daejeonYuseongguArea = CircleOverlay()
+    // 대전 유성구
+    private var daejeonYuseongguGeoLatLng = mutableListOf<GeoCode.GeoLatLng>()
+    private var daejeonYuseongguCircle = CircleOverlay()
 
     companion object {
         fun newInstance() = HomeFragment()
@@ -120,15 +119,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-    private fun registerViewModelEvent() = with(binding) {
+    private fun DaejeonSeoguViewModelEvent() = with(binding) {
         homeViewModel.getDaejeonSeoguLocation()
         viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.daejeonSeoguUiState.flowWithLifecycle(lifecycle)
+            homeViewModel.uiState.flowWithLifecycle(lifecycle)
                 .collectLatest { uiState ->
                     when (uiState) {
-                        is UiState.PharmacyAddList -> {
-                            pharmacyInfo =
-                                uiState.daejeonSeoguLocation as MutableList<PharmacyItem.PharmacyInfo>
+                        is UiState.AddList -> {
+                            pharmacyInfo = uiState.daejeonSeoguLocation as MutableList<PharmacyItem.PharmacyInfo>
                             // fragment 생성 > map 객체 생성 > 데이터 생성 > marker 생성
                             registerMarkers(pharmacyInfo)
                             initSearchAlgorithm()
@@ -138,6 +136,25 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
         }
     }
+
+    private fun DaejeonYuseongguViewModelEvent() = with(binding) {
+        homeViewModel.getDaejeonYuseongguLocation()
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.uiState.flowWithLifecycle(lifecycle)
+                .collectLatest { uiState ->
+                    when (uiState) {
+                        is UiState.AddList -> {
+                            pharmacyInfo = uiState.daejeonYuseongguLocation as MutableList<PharmacyItem.PharmacyInfo>
+                            registerMarkers(pharmacyInfo)
+                            initSearchAlgorithm()
+                        }
+                        else -> {}
+                    }
+                }
+        }
+    }
+
+
 
     private fun registerMap() {
         if (!hasPermission()) {
@@ -203,7 +220,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
         locationOverlay = naverMap.locationOverlay
         // 지도 영역 분할
-        createCircle()
+        daejeonSeoguArea()
         // 현재 위치 관련 정보
         configureNaverMap()
     }
@@ -239,8 +256,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun createCircle() {
-        daejeonSeoguArea.apply {
+    private fun daejeonSeoguArea() {
+        daejeonSeoguCircle.apply {
             center = LatLng(36.3321170228103, 127.374576568879)
             radius = 6000.0
             color = 0x00FFFFFF
@@ -250,10 +267,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun daejeonYuseongguArea() {
+        daejeonYuseongguCircle.apply {
+           // center = LatLng(36.3321170228103, 127.374576568879)
+            radius = 6000.0
+            color = 0x00FFFFFF
+            outlineWidth = 2
+            outlineColor = 0xCC008000.toInt()
+            map = naverMap
+        }
+    }
+
     private fun checkUserArea(userLatLng: LatLng) {
-        val isInside = homeViewModel.isInsideArea(userLatLng, daejeonSeoguArea.center, daejeonSeoguArea.radius)
-        if (isInside) {
-            registerViewModelEvent()
+        val DaejeonSeoguInside = homeViewModel.isInsideArea(userLatLng, daejeonSeoguCircle.center, daejeonSeoguCircle.radius)
+        if (DaejeonSeoguInside) {
+            DaejeonSeoguViewModelEvent()
         }
     }
 
@@ -275,7 +303,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
                 info.distance = distance
 
-                val marker = Marker().apply {
+                Marker().apply {
                     position = LatLng(markerLatitude, markerLongitude)
                     captionText = markerName.toString()
                     icon = OverlayImage.fromResource(R.drawable.pharmacymarker)
@@ -291,7 +319,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         )
                     )
                 }
-                daejeonSeoguMarkerList.add(marker)
             }
         }
     }
@@ -364,7 +391,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         return pharmacyInfo.minByOrNull { it.distance ?: Float.MAX_VALUE }
     }
 
-
     fun performSearch(query: String) {
         val foundPharmacies = pharmacyInfo.filter { it.collectionLocationName == query }
         foundPharmacies.forEach { pharmacy ->
@@ -390,7 +416,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mainActivity?.showBar()
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        if (this@HomeFragment::naverMap.isInitialized) {
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow}
     }
 
     override fun onPause() {

@@ -1,13 +1,15 @@
 package com.mediseed.mediseed.ui.home.model.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.mediseed.mediseed.domain.model.PharmacyDaejeonSeoguEntity
+import com.mediseed.mediseed.domain.model.DaejeonSeoguEntity
+import com.mediseed.mediseed.domain.model.DaejeonYuseongguEntity
+import com.mediseed.mediseed.domain.model.GeoCodeEntity
+import com.mediseed.mediseed.domain.usecase.GeoCodeUseCase
 import com.mediseed.mediseed.domain.usecase.PharmacyUseCase
+import com.mediseed.mediseed.ui.home.model.pharmacyItem.GeoCode
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
 import com.naver.maps.geometry.LatLng
@@ -19,19 +21,91 @@ import kotlinx.coroutines.launch
 import kotlin.math.pow
 
 class HomeViewModel(
+    private val getGeoCodeUseCase: GeoCodeUseCase,
     private val pharmacyUseCase: PharmacyUseCase
 ) : ViewModel() {
 
-    private val _daejeonSeoguUiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.ResultEmpty)
-    val daejeonSeoguUiState: StateFlow<UiState> get() = _daejeonSeoguUiState.asStateFlow()
+    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.ResultEmpty)
+    val uiState: StateFlow<UiState> get() = _uiState.asStateFlow()
 
     private val _filteredSuggestions: MutableLiveData<List<PharmacyItem.PharmacyInfo>> = MutableLiveData()
     val filteredSuggestions: LiveData<List<PharmacyItem.PharmacyInfo>> get() = _filteredSuggestions
 
     private var pharmacyInfo: List<PharmacyItem.PharmacyInfo> = emptyList()
 
+    /**사용자의 현재 위치를 실시간으로 받고, 반경 300m 안에 있는 약국의 위치를 마커로 표시합니다.*/
+    fun getDaejeonSeoguLocation() = viewModelScope.launch {
+        pharmacyUseCase.getPharmacyDaejeonSeogu().onSuccess { pharmacyEntity ->
+            val pharmacyLocation = createDaejeonSeoguLocation(pharmacyEntity)
+            _uiState.update {
+                if (pharmacyLocation.isEmpty()) {
+                    UiState.ResultEmpty
+                } else {
+                    UiState.AddList(daejeonSeoguLocation = pharmacyLocation)
+                }
+            }
+        }.onFailure {
+        }
+    }
+
+    fun getDaejeonYuseongguLocation() = viewModelScope.launch {
+        pharmacyUseCase.getPharmacyDaejeonYuseonggu().onSuccess { pharmacyEntity ->
+            val pharmacyLocation = createDaejeonYuseongguLocation(pharmacyEntity)
+            _uiState.update {
+                if (pharmacyLocation.isEmpty()) {
+                    UiState.ResultEmpty
+                } else {
+                    UiState.AddList(daejeonYuseongguLocation = pharmacyLocation)
+                }
+            }
+        }.onFailure {
+        }
+    }
+
+    // GeoCode
+    private fun createGeoLatLng(entity: GeoCodeEntity): List<GeoCode.GeoLatLng> {
+        return entity.addresses.map {
+            GeoCode.GeoLatLng(
+                it.y,
+                it.x
+            )
+        }
+    }
+
+    // 대전 서구
+    private fun createDaejeonSeoguLocation(entity: DaejeonSeoguEntity): List<PharmacyItem.PharmacyInfo> {
+        return entity.data.map {
+            PharmacyItem.PharmacyInfo(
+                it.latitude,
+                it.longitude,
+                0f,
+                it.collectionLocationName,
+                it.collectionLocationClassificationName,
+                it.dataDate,
+                it.lotNumberAddress,
+                it.phoneNumber
+            )
+        }
+    }
+
+    // 대전 유성구
+    private fun createDaejeonYuseongguLocation(entity: DaejeonYuseongguEntity): List<PharmacyItem.PharmacyInfo> {
+        return entity.data.map {
+            PharmacyItem.PharmacyInfo(
+                "",
+                "",
+                0f,
+                "",
+                "",
+                "",
+                it.streetNameAddress,
+                ""
+            )
+        }
+    }
+
     //  거리 계산 알고리즘
-     fun isInsideArea(userLatLng: LatLng, centerLatLng: LatLng, radius: Double): Boolean {
+    fun isInsideArea(userLatLng: LatLng, centerLatLng: LatLng, radius: Double): Boolean {
         val userLocation = computeDistanceBetween(userLatLng, centerLatLng) // 원의 중심과 사용자 사이의 거리를 통해 사용자의 위치를 계산합니다.
         return userLocation <= radius // 사용자의 위치가 반지름 보다 안쪽에 있으면 true를 반환합니다.
     }
@@ -84,42 +158,4 @@ class HomeViewModel(
         _filteredSuggestions.value = sortedSuggestionList
     }
 
-
-
-
-    /**사용자의 현재 위치를 실시간으로 받고, 반경 300m 안에 있는 약국의 위치를 마커로 표시합니다.*/
-    fun getDaejeonSeoguLocation() = viewModelScope.launch {
-        pharmacyUseCase.getPharmacyDaejeonSeogu().onSuccess { pharmacyEntity ->
-            val pharmacyLocation = createPharmacyLocation(pharmacyEntity)
-            _daejeonSeoguUiState.update {
-                if (pharmacyLocation.isEmpty()) {
-                    UiState.ResultEmpty
-                } else {
-                    UiState.PharmacyAddList(pharmacyLocation)
-                }
-            }
-        }.onFailure {
-        }
-    }
-
-    fun getDaejeonYuseongguLocation() = viewModelScope.launch {
-        pharmacyUseCase.getPharmacyDaejeonYuseonggu().onSuccess { pharmacyEntity ->
-        }
-    }
-
-    private fun createPharmacyLocation(entity: PharmacyDaejeonSeoguEntity): List<PharmacyItem.PharmacyInfo> {
-        return entity.data.map {
-            PharmacyItem.PharmacyInfo(
-                it.latitude,
-                it.longitude,
-                0f,
-                it.collectionLocationName,
-                it.collectionLocationClassificationName,
-                it.dataDate,
-                it.lotNumberAddress,
-                it.phoneNumber
-            )
-        }
-
-    }
 }

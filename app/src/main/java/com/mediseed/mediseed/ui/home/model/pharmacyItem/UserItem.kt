@@ -16,3 +16,10 @@ interface PharmacyItem {
         val phoneNumber: String?,
     ) : PharmacyItem, Parcelable
 }
+
+interface GeoCode {
+    data class GeoLatLng(
+        val latitude: String?,
+        val longitude: String?
+    )
+}
