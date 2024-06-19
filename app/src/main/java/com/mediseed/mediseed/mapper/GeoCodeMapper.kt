@@ -9,7 +9,6 @@ import com.mediseed.mediseed.domain.model.AddresseEntity
 import com.mediseed.mediseed.domain.model.GeoCodeEntity
 import com.mediseed.mediseed.domain.model.MetaEntity
 
-
 fun GeoCodeResponse.toEntity(): GeoCodeEntity {
     return GeoCodeEntity(
         addresses = addresses.map(Addresse::toEntity),

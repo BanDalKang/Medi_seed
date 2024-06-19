@@ -116,7 +116,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         if (sortedSuggestionList != null) {
             mainActivity?.suggestionAdapter?.updateItem(sortedSuggestionList)
         }
-
     }
 
     private fun DaejeonSeoguViewModelEvent() = with(binding) {
@@ -153,8 +152,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
         }
     }
-
-
 
     private fun registerMap() {
         if (!hasPermission()) {

@@ -25,8 +25,6 @@ class PharmacyRepositoryImpl(
     override suspend fun getDaejeonYuseonggu(): DaejeonYuseongguResponse {
         return safeApiCall { pharmacyDataSource.getDaejeonYuseonggu() }
     }
-
-
 }
 
 class GeoCodeRepositoryImpl(
@@ -35,8 +33,6 @@ class GeoCodeRepositoryImpl(
     override suspend fun getGeoCode(address: String?): GeoCodeResponse {
        return safeApiCall { geoCodeDataSource.getGeoCode(address) }
     }
-
-
 }
 
 private suspend fun <T> safeApiCall(apiCall: suspend () -> T): T {
@@ -56,6 +52,3 @@ private suspend fun <T> safeApiCall(apiCall: suspend () -> T): T {
         throw UnknownException(e.message)
     }
 }
-
-
-
