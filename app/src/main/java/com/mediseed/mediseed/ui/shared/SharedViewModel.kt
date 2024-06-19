@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mediseed.mediseed.Const
+import com.mediseed.mediseed.utils.Const
+import com.mediseed.mediseed.ui.bottomSheet.SingleLiveEvent
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
+import com.mediseed.mediseed.utils.Event
 
 class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
 
@@ -27,8 +29,12 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
     private val _updateHeartResult = MutableLiveData<Boolean>()
     val updateHeartResult: LiveData<Boolean> get() = _updateHeartResult
 
+    private val _fetchError = SingleLiveEvent<Boolean>()
+    val fetchError: LiveData<Event<Boolean>> get() = _fetchError
+
     init {
         loadLikedItems()
+        resetFetchError()
     }
 
     private fun loadLikedItems() {
@@ -71,10 +77,11 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val count = dataSnapshot.getValue(Int::class.java) ?: 0
                 _heartCount.value = count
+                _fetchError.call(false)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // 에러 처리
+                _fetchError.call(true)
             }
         })
     }
@@ -85,12 +92,17 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val count = dataSnapshot.getValue(Int::class.java) ?: 0
                 _medicineCount.value = count
+                _fetchError.call(false)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // 에러 처리
+                _fetchError.call(true)
             }
         })
+    }
+
+    fun resetFetchError() {
+        _fetchError.call(false)
     }
 
     fun updateHeartCount(address: String, increment: Boolean, facilityName: String) {

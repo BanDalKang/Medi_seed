@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
-import com.mediseed.mediseed.Const
+import com.mediseed.mediseed.utils.Const
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.shared.SharedViewModel
 
@@ -121,6 +122,15 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     }
                 } else {
                     toggleHeartIcon()
+                }
+            }
+
+            sharedViewModel.fetchError.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let { isError ->
+                    if (isError) {
+                        Toast.makeText(requireContext(), getString(R.string.fetch_error), Toast.LENGTH_SHORT).show()
+                        sharedViewModel.resetFetchError()
+                    }
                 }
             }
         }
