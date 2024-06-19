@@ -11,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.R
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -92,10 +93,20 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearText.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
-                clearText()
-                val query = text.toString()
-                homeViewModel.updateSuggestions(query)
+                if (text.isNullOrEmpty()) {
+                    binding.apply {
+                        clearText.visibility = View.GONE
+                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_background)
+                    }
+                } else {
+                    binding.apply {
+                        clearText.visibility = View.VISIBLE
+                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_changed_background)
+                    }
+                    clearText()
+                    val query = text.toString()
+                    homeViewModel.updateSuggestions(query)
+                }
             }
 
             override fun afterTextChanged(text: Editable?) {
