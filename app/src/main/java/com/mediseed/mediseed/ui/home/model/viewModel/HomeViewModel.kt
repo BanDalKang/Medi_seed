@@ -33,7 +33,6 @@ class HomeViewModel(
 
     private var pharmacyInfo: List<PharmacyItem.PharmacyInfo> = emptyList()
 
-    /**사용자의 현재 위치를 실시간으로 받고, 반경 300m 안에 있는 약국의 위치를 마커로 표시합니다.*/
     fun getDaejeonSeoguLocation() = viewModelScope.launch {
         pharmacyUseCase.getPharmacyDaejeonSeogu().onSuccess { pharmacyEntity ->
             val pharmacyLocation = createDaejeonSeoguLocation(pharmacyEntity)
@@ -62,7 +61,6 @@ class HomeViewModel(
         }
     }
 
-    // GeoCode
     private fun createGeoLatLng(entity: GeoCodeEntity): List<GeoCode.GeoLatLng> {
         return entity.addresses.map {
             GeoCode.GeoLatLng(
@@ -72,7 +70,6 @@ class HomeViewModel(
         }
     }
 
-    // 대전 서구
     private fun createDaejeonSeoguLocation(entity: DaejeonSeoguEntity): List<PharmacyItem.PharmacyInfo> {
         return entity.data.map {
             PharmacyItem.PharmacyInfo(
@@ -88,7 +85,6 @@ class HomeViewModel(
         }
     }
 
-    // 대전 유성구
     private fun createDaejeonYuseongguLocation(entity: DaejeonYuseongguEntity): List<PharmacyItem.PharmacyInfo> {
         return entity.data.map {
             PharmacyItem.PharmacyInfo(
@@ -104,10 +100,9 @@ class HomeViewModel(
         }
     }
 
-    //  거리 계산 알고리즘
     fun isInsideArea(userLatLng: LatLng, centerLatLng: LatLng, radius: Double): Boolean {
-        val userLocation = computeDistanceBetween(userLatLng, centerLatLng) // 원의 중심과 사용자 사이의 거리를 통해 사용자의 위치를 계산합니다.
-        return userLocation <= radius // 사용자의 위치가 반지름 보다 안쪽에 있으면 true를 반환합니다.
+        val userLocation = computeDistanceBetween(userLatLng, centerLatLng)
+        return userLocation <= radius
     }
 
     private fun computeDistanceBetween(userLatLng: LatLng, centerLatLng: LatLng): Double {
@@ -116,7 +111,7 @@ class HomeViewModel(
         val centerLat = Math.toRadians(centerLatLng.latitude)
         val centerLon = Math.toRadians(centerLatLng.longitude)
 
-        val earthRadius = 6371 // 지구의 반지름(킬로미터)
+        val earthRadius = 6371
 
         val dLat = centerLat - userLat
         val dLon = centerLon - userLon
@@ -125,14 +120,13 @@ class HomeViewModel(
             .pow(2)
         val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
-        return earthRadius * c * 1000 // 결과를 미터로 변환
+        return earthRadius * c * 1000
     }
 
-
-    // 정렬 알고리즘: 첫글자 > 해당글자 포함 > 거리순 정렬 알고리즘 (최대 20개)
     fun setPharmacyInfo(infoList: List<PharmacyItem.PharmacyInfo>) {
         pharmacyInfo = infoList
     }
+
     fun updateSuggestions(query: String) {
         val pharmacyNameList = pharmacyInfo.map { it.collectionLocationName }
         val filterList = if (query.isNotEmpty()) {
@@ -157,5 +151,4 @@ class HomeViewModel(
 
         _filteredSuggestions.value = sortedSuggestionList
     }
-
 }

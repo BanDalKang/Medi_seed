@@ -55,11 +55,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()
-
     private lateinit var streetNameAddress: MutableList<String?>
-
     private var userLatitude: Double = 0.0
-
     private var userLongitude: Double = 0.0
 
     private val mainActivity by lazy { activity as? MainActivity }
@@ -69,10 +66,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationOverlay: LocationOverlay
 
-    // 대전 서구
     private var daejeonSeoguCircle = CircleOverlay()
-
-    // 대전 유성구
     private var daejeonYuseongguGeoLatLng = mutableListOf<GeoCode.GeoLatLng>()
     private var daejeonYuseongguCircle = CircleOverlay()
 
@@ -101,6 +95,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         registerMap()
     }
+
     private fun initSearchAlgorithm() {
         homeViewModel.apply {
             setPharmacyInfo(pharmacyInfo)
@@ -126,7 +121,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     when (uiState) {
                         is UiState.AddList -> {
                             pharmacyInfo = uiState.daejeonSeoguLocation as MutableList<PharmacyItem.PharmacyInfo>
-                            // fragment 생성 > map 객체 생성 > 데이터 생성 > marker 생성
                             registerMarkers(pharmacyInfo)
                             initSearchAlgorithm()
                         }
@@ -216,9 +210,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         locationOverlay = naverMap.locationOverlay
-        // 지도 영역 분할
         daejeonSeoguArea()
-        // 현재 위치 관련 정보
         configureNaverMap()
     }
 
@@ -226,11 +218,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         var isUserLocationUpdate = true
         naverMap.apply {
             locationSource = fusedLocationSource
-            // 현재 위치 버튼, 나침반 버튼
+
             uiSettings.apply {
                 isLocationButtonEnabled = true
                 isCompassEnabled = true
             }
+
             locationTrackingMode = LocationTrackingMode.Follow
             addOnLocationChangeListener { location ->
                 userLatitude = location.latitude
@@ -244,7 +237,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        // 사용자 위치 아이콘 커스텀
         locationOverlay.apply {
             isVisible = true
             icon = OverlayImage.fromResource(R.drawable.usermarker)
@@ -266,7 +258,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private fun daejeonYuseongguArea() {
         daejeonYuseongguCircle.apply {
-           // center = LatLng(36.3321170228103, 127.374576568879)
             radius = 6000.0
             color = 0x00FFFFFF
             outlineWidth = 2
@@ -282,9 +273,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
     private fun registerMarkers(pharmacyInfoList: List<PharmacyItem.PharmacyInfo>) {
-
         pharmacyInfoList.forEach { info ->
             val markerLatitude = info.latitude?.toDoubleOrNull()
             val markerLongitude = info.longitude?.toDoubleOrNull()
@@ -419,7 +408,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
-        naverMap.locationTrackingMode = LocationTrackingMode.None
+        if (this@HomeFragment::naverMap.isInitialized)
+            naverMap.locationTrackingMode = LocationTrackingMode.None
     }
 
     override fun onDestroyView() {
@@ -427,5 +417,3 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         _binding = null
     }
 }
-
-
