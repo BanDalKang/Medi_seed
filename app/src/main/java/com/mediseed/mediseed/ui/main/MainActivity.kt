@@ -11,19 +11,26 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.R
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mediseed.mediseed.ui.home.SuggestionAdapter
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
+import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
+import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
 
     private val viewPagerAdapter by lazy {
         MainViewPagerAdapter(this)
@@ -59,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         // TabLayout x ViewPager2
         vpMain.adapter = viewPagerAdapter
         vpMain.offscreenPageLimit = 1
-        vpMain.currentItem = 1 // 초기 페이지를 홈 프래그먼트로 설정
+        vpMain.currentItem = 0 // 초기 페이지를 홈 프래그먼트로 설정
         vpMain.isUserInputEnabled = false // Swipe unabled
 
         TabLayoutMediator(tlMain, vpMain) { tab, position ->
@@ -86,10 +93,20 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearText.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
-                clearText()
-                val query = text.toString()
-                homeFragment?.updateSuggestions(query)
+                if (text.isNullOrEmpty()) {
+                    binding.apply {
+                        clearText.visibility = View.GONE
+                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_background)
+                    }
+                } else {
+                    binding.apply {
+                        clearText.visibility = View.VISIBLE
+                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_changed_background)
+                    }
+                    clearText()
+                    val query = text.toString()
+                    homeViewModel.updateSuggestions(query)
+                }
             }
 
             override fun afterTextChanged(text: Editable?) {
