@@ -1,6 +1,7 @@
 package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -74,7 +75,8 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-                activateFeed()
+//                activateFeed()
+                sproutViewModel.updateProgress(100)
             }
             sproutShareButton.setOnClickListener {
                 shareApp()
@@ -90,6 +92,8 @@ class SproutFragment : Fragment() {
             level.observe(viewLifecycleOwner) { level ->
                 binding.levelTextView.text = "레벨$level"
                 updateProgressBarMax(level)
+                setupBlinkingAnimation(binding.sproutImageView)
+//                setupRotationAnimation(binding.sproutImageView)
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
@@ -286,6 +290,23 @@ class SproutFragment : Fragment() {
             else -> 100
         }
         progressBar.max = maxProgress
+    }
+
+    private fun setupBlinkingAnimation(view: View) {
+        val animator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f)
+        animator.duration = 200
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+
+        animator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
+                view.alpha = 1f
+            }
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+        animator.start()
     }
 
     override fun onResume() {

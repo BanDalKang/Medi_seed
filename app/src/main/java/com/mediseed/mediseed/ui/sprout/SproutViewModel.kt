@@ -92,7 +92,7 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
         }
     }
 
-    private fun updateProgress(increment: Int) {
+    fun updateProgress(increment: Int) {
         if (isProgressUpdating) return
 
         viewModelScope.launch {
