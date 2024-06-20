@@ -35,11 +35,14 @@
 
     <!--StorageFragment-->
     <string name="item_kind">약국</string>
-    <string name="storage_return_medicine">처리한\n폐의약품 개수</string>
-    <string name="storage_sharing">지금까지\n공유한 횟수</string>
+    <string name="storage_return_medicine">내가 처리한 폐의약품은</string>
+    <string name="storage_sharing">지금까지 공유한 횟수는</string>
     <string name="facility_name">새싹 약국</string>
     <string name="facility_address">대전 나무로 초목로 4길 86</string>
     <string name="storage_medicine_count">0</string>
     <string name="storage_sharing_count">0</string>
+    <string name="storage_activity">내 활동 &amp; 보관함</string>
+    <string name="storage_medicine_piece">개에요</string>
+    <string name="storage_sharing_times">번이에요</string>
 
 </resources>
