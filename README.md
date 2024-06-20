@@ -1,5 +1,6 @@
 # 💊 폐의약품 수거함 위치 서비스 앱 MediSeed
-이미지 넣기+ 주요 기능 설명
+![그래픽_최종](https://github.com/BanDalKang/Medi_seed/assets/77070839/ff9913e4-56da-4ec4-a232-44d0ab1526ea)
+
 - 전체 개발 기간 : 2024-05-27 ~ 2024-07-05
 - 배포 URL :
 - 시연영상 URL: https://www.youtube.com/watch?v=AlccWqGRH8I
@@ -22,8 +23,6 @@
 | :------: |  :------: |:------:| :------: |
 | [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/107e9450-3e92-4b6f-ada9-351e044de03c" height=150 width=150> <br/> @BanDalKang](https://github.com/BanDalKang) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/a18d5c68-1d96-456a-aab1-b8536d664a31" height=150 width=150> <br/> @hyezg](https://github.com/hyezg) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/734615ae-7dcf-4b63-a98e-683f724bf3b9" alt="스크린샷 2024-06-14 160738" height=150 width=150> <br/> @SeoHeaYun](https://github.com/SeoHeaYun) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/ce7543a0-2767-4fb7-8e2f-a942195b06d8" height=150 width=150> <br/> @eddy-PMS](https://github.com/eddy-PMS) |
 
-
-
 </div>
 
 <br>
@@ -39,8 +38,6 @@
 |----------|
 |<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/a1b0dabd-3b22-435e-8fd9-0d96adff0922" alt="home (online-video-cutter com) (3)" style="width:300px;">|
 
-
-
 <br>
 
 ### 🗃️ [보관함 화면]
@@ -50,8 +47,6 @@
 | 보관함 화면 |
 |----------|
 |<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/2469095b-8134-4c49-b4e8-abffe23e8aa6" width="300px">|
-
-
 
 <br>
 
@@ -72,4 +67,5 @@
 ## 와이어프레임
 
 <div align="center">
-이미지
+  <img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/471cd5c5-a0c1-41d7-87e9-3d14b855b10c" width="50%">
+</div>
