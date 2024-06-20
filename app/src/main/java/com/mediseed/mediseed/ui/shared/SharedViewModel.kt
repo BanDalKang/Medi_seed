@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mediseed.mediseed.Const
+import com.mediseed.mediseed.utils.Const
+import com.mediseed.mediseed.ui.bottomSheet.SingleLiveEvent
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
+import com.mediseed.mediseed.utils.Event
 
 class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
 
@@ -24,12 +26,15 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
     private val _medicineCount = MutableLiveData<Int>()
     val medicineCount: LiveData<Int> get() = _medicineCount
 
-    private var heartCountListener: ValueEventListener? = null
-    private var medicineCountListener: ValueEventListener? = null
-    private var currentAddress: String? = null
+    private val _updateHeartResult = MutableLiveData<Boolean>()
+    val updateHeartResult: LiveData<Boolean> get() = _updateHeartResult
+
+    private val _fetchError = SingleLiveEvent<Boolean>()
+    val fetchError: LiveData<Event<Boolean>> get() = _fetchError
 
     init {
         loadLikedItems()
+        resetFetchError()
     }
 
     private fun loadLikedItems() {
@@ -68,50 +73,40 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
 
     fun fetchHeartCount(address: String) {
         val ref = database.getReference("location/$address/heartCount")
-        currentAddress = address
-
-        heartCountListener?.let { ref.removeEventListener(it) }
-
-        heartCountListener = object : ValueEventListener {
+        ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val count = dataSnapshot.getValue(Int::class.java) ?: 0
                 _heartCount.value = count
+                _fetchError.call(false)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // 에러 처리
+                _fetchError.call(true)
             }
-        }
-        ref.addValueEventListener(heartCountListener as ValueEventListener)
+        })
     }
 
     fun fetchMedicineCount(address: String) {
         val ref = database.getReference("location/$address/medicineCount")
-        currentAddress = address
-
-        medicineCountListener?.let { ref.removeEventListener(it) }
-
-        medicineCountListener = object : ValueEventListener {
+        ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val count = dataSnapshot.getValue(Int::class.java) ?: 0
                 _medicineCount.value = count
+                _fetchError.call(false)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // 에러 처리
+                _fetchError.call(true)
             }
-        }
-        ref.addValueEventListener(medicineCountListener as ValueEventListener)
+        })
     }
 
-    fun updateHeartCount(
-        address: String,
-        increment: Boolean,
-        facilityName: String,
-        callback: (Boolean) -> Unit
-    ) {
-        val ref = database.getReference("location/$address/heartCount")
+    fun resetFetchError() {
+        _fetchError.call(false)
+    }
 
+    fun updateHeartCount(address: String, increment: Boolean, facilityName: String) {
+        val ref = database.getReference("location/$address/heartCount")
         ref.runTransaction(object : Transaction.Handler {
             override fun doTransaction(mutableData: MutableData): Transaction.Result {
                 var currentHeartCount = mutableData.getValue(Int::class.java)
@@ -129,19 +124,18 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
             ) {
                 if (committed) {
                     _heartCount.value = dataSnapshot?.getValue(Int::class.java)
-                    updateFacilityName(address, facilityName) { nameUpdated ->
-                        callback(nameUpdated)
+                    updateFacilityName(address, facilityName) { success ->
+                        _updateHeartResult.value = success
                     }
                 } else {
-                    callback(false)
+                    _updateHeartResult.value = false
                 }
             }
         })
     }
 
-    fun updateFacilityName(address: String, facilityName: String, callback: (Boolean) -> Unit) {
+    private fun updateFacilityName(address: String, facilityName: String, callback: (Boolean) -> Unit) {
         val ref = database.getReference("location/$address/facilityName")
-
         ref.setValue(facilityName).addOnCompleteListener { task ->
             callback(task.isSuccessful)
         }
@@ -152,24 +146,12 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
         return likedItems.any { it.streetNameAddress == pharmacyInfo.streetNameAddress }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        heartCountListener?.let { listener ->
-            currentAddress?.let { address ->
-                database.getReference("location/$address/heartCount").removeEventListener(listener)
-            }
-        }
-        medicineCountListener?.let { listener ->
-            currentAddress?.let { address ->
-                database.getReference("location/$address/medicineCount")
-                    .removeEventListener(listener)
-            }
-        }
-    }
-
     class Factory(private val pref: SharedPreferences) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return modelClass.getConstructor(SharedPreferences::class.java).newInstance(pref)
+            if (modelClass.isAssignableFrom(SharedViewModel::class.java)) {
+                return SharedViewModel(pref) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel")
         }
     }
 }

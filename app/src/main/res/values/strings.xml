@@ -45,4 +45,7 @@
     <string name="storage_medicine_piece">개에요</string>
     <string name="storage_sharing_times">번이에요</string>
 
+    <!--BottomSheetFragment-->
+    <string name="fetch_error">일시적으로 데이터를 가져올 수 없습니다.</string>
+
 </resources>
