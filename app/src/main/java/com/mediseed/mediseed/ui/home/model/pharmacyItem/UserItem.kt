@@ -14,5 +14,12 @@ interface PharmacyItem {
         val dataDate: String?,
         val streetNameAddress: String?,
         val phoneNumber: String?,
-        ) : PharmacyItem, Parcelable
+    ) : PharmacyItem, Parcelable
+}
+
+interface GeoCode {
+    data class GeoLatLng(
+        val latitude: String?,
+        val longitude: String?
+    )
 }
