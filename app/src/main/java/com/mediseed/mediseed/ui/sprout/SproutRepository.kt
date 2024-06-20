@@ -20,7 +20,7 @@ class SproutRepository(context: Context) {
     }
 
     private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     // 데이터 가져오기 메서드
     fun getLevel() = sharedPreferences.getInt(LEVEL_KEY, 1)

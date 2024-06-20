@@ -1,23 +1,33 @@
 package com.mediseed.mediseed.domain.usecase
 
-import com.mediseed.mediseed.data.model.DaejeonSeoguData
-import com.mediseed.mediseed.domain.model.DaejeonSeoguDataEntity
-import com.mediseed.mediseed.domain.model.PharmacyDaejeonSeoguEntity
-import com.mediseed.mediseed.domain.model.PharmacyDaejeonYuseongguEntity
+import com.mediseed.mediseed.domain.model.DaejeonSeoguEntity
+import com.mediseed.mediseed.domain.model.DaejeonYuseongguEntity
+import com.mediseed.mediseed.domain.model.GeoCodeEntity
 import com.mediseed.mediseed.mapper.toEntity
+import com.mediseed.mediseed.repository.GeoCodeRepository
 import com.mediseed.mediseed.repository.PharmacyRepository
 
 class PharmacyUseCase (
     private val pharmacyRepository: PharmacyRepository
 ) {
-    suspend fun getPharmacyDaejeonSeogu(): Result<PharmacyDaejeonSeoguEntity> {
+    suspend fun getPharmacyDaejeonSeogu(): Result<DaejeonSeoguEntity> {
         return runCatching {
-            pharmacyRepository.getPharmacyDaejeonSeogu().toEntity()
+            pharmacyRepository.getDaejeonSeogu().toEntity()
         }
     }
-    suspend fun getPharmacyDaejeonYuseonggu(): Result<PharmacyDaejeonYuseongguEntity> {
+    suspend fun getPharmacyDaejeonYuseonggu(): Result<DaejeonYuseongguEntity> {
         return runCatching {
-            pharmacyRepository.getPharmacyDaejeonYuseonggu().toEntity()
+            pharmacyRepository.getDaejeonYuseonggu().toEntity()
+        }
+    }
+}
+
+class GeoCodeUseCase (
+    private val geoCodeRepository: GeoCodeRepository
+) {
+    suspend operator fun invoke(address: String?): Result<GeoCodeEntity> {
+        return runCatching {
+            geoCodeRepository.getGeoCode(address).toEntity()
         }
     }
 }

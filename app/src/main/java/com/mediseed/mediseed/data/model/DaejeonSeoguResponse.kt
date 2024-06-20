@@ -3,11 +3,11 @@ package com.mediseed.mediseed.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PharmacyDaejeonYuseongguResponse(
+data class DaejeonSeoguResponse(
     @SerializedName("currentCount")
     val currentCount: Int?,
     @SerializedName("data")
-    val data: List<DaejeonYuseongguData>,
+    val data: List<DaejeonSeoguData>,
     @SerializedName("matchCount")
     val matchCount: Int?,
     @SerializedName("page")

@@ -7,46 +7,46 @@ data class GeoCodeResponse(
     @SerializedName("addresses")
     val addresses: List<Addresse>,
     @SerializedName("errorMessage")
-    val errorMessage: String,
+    val errorMessage: String?,
     @SerializedName("meta")
     val meta: Meta,
     @SerializedName("status")
-    val status: String
+    val status: String?
 )
 
 data class Addresse(
     @SerializedName("addressElements")
     val addressElements: List<AddressElement>,
     @SerializedName("distance")
-    val distance: Double,
+    val distance: Double?,
     @SerializedName("englishAddress")
-    val englishAddress: String,
+    val englishAddress: String?,
     @SerializedName("jibunAddress")
-    val jibunAddress: String,
+    val jibunAddress: String?,
     @SerializedName("roadAddress")
-    val roadAddress: String,
+    val roadAddress: String?,
     @SerializedName("x")
-    val x: String,
+    val x: String?,
     @SerializedName("y")
-    val y: String
+    val y: String?
 )
 
 data class AddressElement(
     @SerializedName("code")
-    val code: String,
+    val code: String?,
     @SerializedName("longName")
-    val longName: String,
+    val longName: String?,
     @SerializedName("shortName")
-    val shortName: String,
+    val shortName: String?,
     @SerializedName("types")
     val types: List<String>
 )
 
 data class Meta(
     @SerializedName("count")
-    val count: Int,
+    val count: Int?,
     @SerializedName("page")
-    val page: Int,
+    val page: Int?,
     @SerializedName("totalCount")
-    val totalCount: Int
+    val totalCount: Int?
 )
