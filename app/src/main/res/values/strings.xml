@@ -41,7 +41,7 @@
     <string name="facility_address">대전 나무로 초목로 4길 86</string>
     <string name="storage_medicine_count">0</string>
     <string name="storage_sharing_count">0</string>
-    <string name="storage_activity">내 활동 보관함</string>
+    <string name="storage_activity">내 활동 &amp; 보관함</string>
     <string name="storage_medicine_piece">개에요</string>
     <string name="storage_sharing_times">번이에요</string>
 
