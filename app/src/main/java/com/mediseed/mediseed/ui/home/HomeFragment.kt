@@ -408,7 +408,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
-        naverMap.locationTrackingMode = LocationTrackingMode.None
+        if (this@HomeFragment::naverMap.isInitialized)
+            naverMap.locationTrackingMode = LocationTrackingMode.None
     }
 
     override fun onDestroyView() {
