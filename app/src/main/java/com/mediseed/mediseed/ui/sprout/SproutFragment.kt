@@ -298,4 +298,3 @@ class SproutFragment : Fragment() {
         _binding = null
     }
 }
-

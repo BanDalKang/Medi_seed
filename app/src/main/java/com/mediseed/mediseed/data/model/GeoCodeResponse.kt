@@ -1,6 +1,5 @@
 package com.mediseed.mediseed.data.model
 
-
 import com.google.gson.annotations.SerializedName
 
 data class GeoCodeResponse(
