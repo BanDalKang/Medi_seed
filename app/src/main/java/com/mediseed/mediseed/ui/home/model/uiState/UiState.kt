@@ -4,7 +4,6 @@ import com.mediseed.mediseed.ui.home.model.pharmacyItem.GeoCode
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 
 sealed interface UiState {
-
     open class Notice(
         val message: String
     ) : UiState
@@ -21,5 +20,4 @@ sealed interface UiState {
         override val daejeonSeoguLocation: List<PharmacyItem.PharmacyInfo> = emptyList(),
         override val daejeonYuseongguLocation: List<PharmacyItem.PharmacyInfo> = emptyList()
     ) : ResultList
-
 }

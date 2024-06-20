@@ -22,7 +22,6 @@ class SproutRepository(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    // 데이터 가져오기 메서드
     fun getLevel() = sharedPreferences.getInt(LEVEL_KEY, 1)
     fun getTree() = sharedPreferences.getInt(TREE_KEY, 0)
     fun getPillRest() = sharedPreferences.getInt(PILL_REST_KEY, 1)
@@ -34,7 +33,6 @@ class SproutRepository(context: Context) {
     fun getPillClickCount() = sharedPreferences.getInt(PILL_CLICK_COUNT_KEY, 0)
     fun getShareClickCount() = sharedPreferences.getInt(SHARE_CLICK_COUNT_KEY, 0)
 
-    // 데이터 저장 메서드
     fun saveData(
         level: Int,
         tree: Int,

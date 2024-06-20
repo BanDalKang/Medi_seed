@@ -6,4 +6,4 @@ data class DaejeonYuseongguDataEntity(
     val siDoName: String?,
     val locationName: String?,
     val lotNumberAddress: String?
-    )
+)

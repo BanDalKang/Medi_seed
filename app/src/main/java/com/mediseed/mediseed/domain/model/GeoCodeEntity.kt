@@ -1,6 +1,5 @@
 package com.mediseed.mediseed.domain.model
 
-
 data class GeoCodeEntity(
     val addresses: List<AddresseEntity>,
     val errorMessage: String?,
