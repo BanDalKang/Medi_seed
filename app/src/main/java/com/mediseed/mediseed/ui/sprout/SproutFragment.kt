@@ -236,7 +236,6 @@ class SproutFragment : Fragment() {
     private fun playLevelUpAnimation() {
         binding.levelUpAnimationView.apply {
             visibility = View.VISIBLE
-            setMinAndMaxFrame(0, 70)
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {}

@@ -9,7 +9,6 @@
         android:id="@+id/clTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_light_gray"
         android:gravity="center"
         android:paddingTop="25dp"
         android:paddingBottom="25dp"
@@ -17,133 +16,132 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="@string/storage_activity"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clMedicine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="19dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+            <ImageView
+                android:id="@+id/ivMedicineIcon"
+                android:layout_width="22sp"
+                android:layout_height="22sp"
+                android:src="@drawable/ic_medicine_count"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvReturnMedicine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="@string/storage_return_medicine"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivMedicineIcon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvMedicineCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="@string/storage_medicine_count"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvReturnMedicine"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="@string/storage_medicine_piece"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvMedicineCount"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="3dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/clMedicine">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvMedicineCountBox"
+            <ImageView
+                android:id="@+id/ivSharingIcon"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:src="@drawable/ic_share_count"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvSharing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/bg"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="1dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toStartOf="@+id/cvSharingCountBox"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginStart="7dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:gravity="start|center"
+                android:text="@string/storage_sharing"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivSharingIcon"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingHorizontal="5dp"
-                    android:paddingVertical="17dp">
-
-                    <ImageView
-                        android:id="@+id/ivMedicineIcon"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_medicine_count"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvReturnMedicine"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:gravity="start|center"
-                        android:text="@string/storage_return_medicine"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivMedicineIcon"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvMedicineCount"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="@string/storage_medicine_count"
-                        android:textColor="@color/black"
-                        android:textSize="19sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/tvReturnMedicine"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvSharingCountBox"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/tvSharingCount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                app:cardBackgroundColor="@color/bg"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="1dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintBottom_toBottomOf="@id/cvMedicineCountBox"
-                app:layout_constraintStart_toEndOf="@id/cvMedicineCountBox"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="@string/storage_sharing_count"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                app:layout_constraintBottom_toBottomOf="@id/tvSharing"
+                app:layout_constraintStart_toEndOf="@id/tvSharing"
+                app:layout_constraintTop_toTopOf="@id/tvSharing" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingVertical="17dp"
-                    android:paddingStart="7dp"
-                    android:paddingEnd="10dp">
-
-                    <ImageView
-                        android:id="@+id/ivSharingIcon"
-                        android:layout_width="27dp"
-                        android:layout_height="27dp"
-                        android:src="@drawable/ic_share_count"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvSharing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:gravity="start|center"
-                        android:text="@string/storage_sharing"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivSharingIcon"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvSharingCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:fontFamily="@font/pretendard_bold"
-                        android:text="@string/storage_sharing_count"
-                        android:textColor="@color/black"
-                        android:textSize="19sp"
-                        app:layout_constraintBottom_toBottomOf="@id/tvSharing"
-                        app:layout_constraintStart_toEndOf="@id/tvSharing"
-                        app:layout_constraintTop_toTopOf="@id/tvSharing" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:text="@string/storage_sharing_times"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvSharingCount"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -153,6 +151,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="20dp"
+        android:background="@color/bg_light_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
