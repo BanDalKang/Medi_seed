@@ -1,12 +1,12 @@
 package com.mediseed.mediseed.mapper
 
 import com.mediseed.mediseed.data.model.DaejeonSeoguData
-import com.mediseed.mediseed.data.model.PharmacyDaejeonSeoguResponse
+import com.mediseed.mediseed.data.model.DaejeonSeoguResponse
 import com.mediseed.mediseed.domain.model.DaejeonSeoguDataEntity
-import com.mediseed.mediseed.domain.model.PharmacyDaejeonSeoguEntity
+import com.mediseed.mediseed.domain.model.DaejeonSeoguEntity
 
-fun PharmacyDaejeonSeoguResponse.toEntity(): PharmacyDaejeonSeoguEntity {
-    return PharmacyDaejeonSeoguEntity(
+fun DaejeonSeoguResponse.toEntity(): DaejeonSeoguEntity {
+    return DaejeonSeoguEntity(
         currentCount = currentCount,
         data = data.map(DaejeonSeoguData::toEntity),
         matchCount = matchCount,

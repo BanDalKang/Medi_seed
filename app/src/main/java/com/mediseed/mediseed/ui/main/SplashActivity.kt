@@ -17,6 +17,7 @@ class SplashActivity : AppCompatActivity() {
 
         // Lottie 애니메이션 재생 후 메인 액티비티로 이동
         binding.splashAnimationView.apply {
+            speed = 1.5f
             repeatCount = 2
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {

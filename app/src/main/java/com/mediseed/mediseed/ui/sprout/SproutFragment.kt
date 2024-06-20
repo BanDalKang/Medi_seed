@@ -54,7 +54,7 @@ class SproutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = SproutRepository(requireContext())
+        val repository = SproutRepository(requireContext().applicationContext)
         val viewModelFactory = SproutViewModelFactory(repository)
         sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
 
@@ -236,7 +236,6 @@ class SproutFragment : Fragment() {
     private fun playLevelUpAnimation() {
         binding.levelUpAnimationView.apply {
             visibility = View.VISIBLE
-            setMinAndMaxFrame(0, 70)
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {}

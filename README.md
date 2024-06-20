@@ -18,11 +18,17 @@
 
 <div align="center">
 
+<<<<<<< HEAD
+| **강현정** | **장혜정** | **서해윤** | **박민수** |
+| :------: |  :------: | :------: | :------: |
+| [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/107e9450-3e92-4b6f-ada9-351e044de03c" height=150 width=150> <br/> @BanDalKang](https://github.com/BanDalKang) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/33912621-d0bd-49d7-9cf1-583f5d9c941a" height=150 width=150> <br/> @hyezg](https://github.com/hyezg) | [<img src="https:" height=150 width=150> <br/> @SeoHeaYun](https://github.com/SeoHeaYun) | [<img src="https:" height=150 width=150> <br/> @eddy-PMS](https://github.com/eddy-PMS) |
+=======
 | **강현정** | **장혜정** |                                                                  **서해윤**                                                                   | **박민수** |
 | :------: |  :------: |:------------------------------------------------------------------------------------------------------------------------------------------:| :------: |
 | [<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/107e9450-3e92-4b6f-ada9-351e044de03c" height=150 width=150> <br/> @BanDalKang](https://github.com/BanDalKang) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/a18d5c68-1d96-456a-aab1-b8536d664a31" height=150 width=150> <br/> @hyezg](https://github.com/hyezg) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/734615ae-7dcf-4b63-a98e-683f724bf3b9" alt="스크린샷 2024-06-14 160738" height=150 width=150> <br/> @SeoHeaYun](https://github.com/SeoHeaYun) | [<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/ce7543a0-2767-4fb7-8e2f-a942195b06d8" height=150 width=150> <br/> @eddy-PMS](https://github.com/eddy-PMS) |
 
 
+>>>>>>> bbbe022dd2e0f33db67449d0bbad844c065e1a84
 
 </div>
 
@@ -31,6 +37,27 @@
 ## 주요 기능
 
 ### 🏠 [홈 화면]
+<<<<<<< HEAD
+- 화면 설명
+- ...
+
+| 홈 화면 |
+|----------|
+|![splash](https:.gif)|
+
+<br>
+
+### 🗺️ [지도 화면]
+- 네이버 지도 API를 기반으로, 폐의약품 수거함 위치를 마커로 표시합니다.
+- 사용자의 현재 위경도 좌표를 실시간으로 획득하고, 그 위치에 해당하는 지역의 API를 호출합니다.(공공데이터포털 폐의약품 수거함 위치) 
+- 검색창에 검색값을 입력하면, 검색어에 맞는 수거함의 정보를 알고리즘에 따라 나열합니다.(시간순)
+
+| 지도 화면 |
+|----------|
+
+
+
+=======
 - 네이버 지도 API를 기반으로, 폐의약품 수거함 위치를 마커로 표시합니다.
 - 사용자의 현재 위경도 좌표를 실시간으로 획득하고, 그 위치에 해당하는 지역의 API를 호출합니다.(공공데이터포털 폐의약품 수거함 위치)
 - 검색창에 검색값을 입력하면, 검색어에 맞는 수거함의 정보를 알고리즘에 따라 나열합니다.(시간순)
@@ -43,6 +70,7 @@
 
 <br>
 
+>>>>>>> bbbe022dd2e0f33db67449d0bbad844c065e1a84
 ### 🗃️ [보관함 화면]
 - 새싹이 화면에서 “약 버리기” 또는 “공유하기” 버튼을 누를 경우, 보관함에서 총 횟수 눌렀는지 확인할 수 있습니다.
 - 홈 화면에서 마커를 클릭하면 수거함 정보를 표시하는 바텀시트가 나타나고, 이때 좋아요 버튼을 누를 경우 보관함에서 확인할 수 있습니다.
@@ -51,9 +79,12 @@
 |----------|
 |<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/2469095b-8134-4c49-b4e8-abffe23e8aa6" width="300px">|
 
+<<<<<<< HEAD
+=======
 
 
 
+>>>>>>> bbbe022dd2e0f33db67449d0bbad844c065e1a84
 <br>
 
 ### 🌳 [새싹이 화면]
@@ -75,6 +106,8 @@
 <div align="center">
 
 이미지
+<<<<<<< HEAD
+=======
 
 
 
@@ -111,3 +144,4 @@
 
 
 
+>>>>>>> bbbe022dd2e0f33db67449d0bbad844c065e1a84
