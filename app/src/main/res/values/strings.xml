@@ -12,6 +12,7 @@
     <string name="sprout_bottom_text">약 버리기는 수거함 근처에서만 가능합니다.</string>
     <string name="sprout_level_text">레벨</string>
     <string name="sprout_level_up_text">LEVEL UP!</string>
+    <string name="sprout_progress_up_text">야호 물이다!</string>
     <string name="sprout_tree_text">그루</string>
     <string name="sprout_pill_button_toast">하루에 한 번만 가능합니다.</string>
     <string name="sprout_share_button_toast">하루에 세 번만 가능합니다.</string>

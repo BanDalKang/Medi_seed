@@ -6,6 +6,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -24,6 +27,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
+import android.view.animation.AlphaAnimation
 
 class SproutFragment : Fragment() {
 
@@ -32,6 +36,7 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
+    private lateinit var progressUpImageView: ImageView
     private lateinit var progressBar: ProgressBar
     private var maxProgress = 0
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -64,6 +69,7 @@ class SproutFragment : Fragment() {
 
         levelUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.level_up_animation_text)
         levelUpText = binding.levelUpTextView
+        progressUpImageView = binding.progressUpImageView
         progressBar = binding.progressBar
     }
 
@@ -76,7 +82,7 @@ class SproutFragment : Fragment() {
         with(binding) {
             sproutPillButton.setOnClickListener {
 //                activateFeed()
-                sproutViewModel.updateProgress(100)
+                sproutViewModel.updateProgress(200)
             }
             sproutShareButton.setOnClickListener {
                 shareApp()
@@ -133,6 +139,9 @@ class SproutFragment : Fragment() {
             }
             showProgressAnimation.observe(viewLifecycleOwner) {
                 progressUpAnimation()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    progressUpImageAnimation()
+                }, 1500)
             }
         }
     }
@@ -263,6 +272,28 @@ class SproutFragment : Fragment() {
             override fun onAnimationRepeat(animation: Animation) {}
         })
         levelUpText.startAnimation(levelUpAnimation)
+    }
+
+    private fun progressUpImageAnimation() {
+        progressUpImageView.visibility = View.VISIBLE
+
+        val fadeIn = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 1000 // 1초 동안 애니메이션
+            fillAfter = true // 애니메이션이 끝난 후 상태를 유지
+        }
+        progressUpImageView.startAnimation(fadeIn)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val fadeOut = AlphaAnimation(1.0f, 0.0f).apply {
+                duration = 1000 // 1초 동안 애니메이션
+                fillAfter = true // 애니메이션이 끝난 후 상태를 유지
+            }
+            progressUpImageView.startAnimation(fadeOut)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                progressUpImageView.visibility = View.GONE
+            }, fadeOut.duration)
+        }, 3000)
     }
 
     private fun progressUpAnimation() {

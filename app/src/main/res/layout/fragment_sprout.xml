@@ -86,6 +86,36 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="@+id/sproutImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/sproutImageView">
+
+        <ImageView
+            android:id="@+id/progressUpImageView"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/img_seech_bubble"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!--        <com.airbnb.lottie.LottieAnimationView-->
+        <!--            android:id="@+id/progressUpHeartAnimationView"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:lottie_autoPlay="false"-->
+        <!--            app:lottie_loop="false"-->
+        <!--            app:lottie_rawRes="@raw/progress_heart_animation" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="180dp"
         android:layout_marginEnd="190dp"
