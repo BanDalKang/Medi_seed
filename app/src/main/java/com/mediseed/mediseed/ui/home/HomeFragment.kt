@@ -416,7 +416,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
-        mainActivity?.searchBarEditText?.text?.clear()
         homeViewModel.updateSuggestions(null)
     }
 
