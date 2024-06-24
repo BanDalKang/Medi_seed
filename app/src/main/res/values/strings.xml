@@ -1,10 +1,12 @@
 <resources>
+
     <string name="app_name">MediSeed</string>
 
     <!--main-->
     <string name="main_tab_sprout_title">새싹이</string>
     <string name="main_tab_home_title">홈</string>
     <string name="main_tab_mypage_title">보관함</string>
+    <string name="main_click_error">해당 위치를 표시할 수 없습니다.</string>
 
     <!--SproutFragment-->
     <string name="sprout_pill_button">약 버리기</string>
