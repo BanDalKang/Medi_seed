@@ -413,13 +413,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mainActivity?.showBar()
-        if (this@HomeFragment::naverMap.isInitialized)
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     override fun onPause() {
         super.onPause()
-        if (this@HomeFragment::naverMap.isInitialized)
         naverMap.locationTrackingMode = LocationTrackingMode.None
     }
 
