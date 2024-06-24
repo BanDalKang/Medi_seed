@@ -19,6 +19,7 @@ class SharedViewModel : ViewModel() {
 
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
 
+
     init {
         _nearDistance = MutableLiveData(false)
     }
@@ -30,6 +31,7 @@ class SharedViewModel : ViewModel() {
     fun setAddress(address: String) {
         _markerAddress.value = address
     }
+
 
     fun updateMedicineCount() {
         val address = _markerAddress.value ?: return
