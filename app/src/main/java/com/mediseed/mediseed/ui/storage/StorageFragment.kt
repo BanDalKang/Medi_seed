@@ -37,7 +37,6 @@ class StorageFragment : Fragment() {
 
     private lateinit var sproutViewModel: SproutViewModel
 
-    //바텀 시트 프레그먼트
     private val mainActivity by lazy {
         activity as? MainActivity
     }
@@ -47,34 +46,31 @@ class StorageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentStorageBinding.inflate(inflater, container, false)
-        val view = binding.root
+        return binding.root
+    }
 
-        //뷰모델 초기화
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         initializeViewModel()
 
-        //전체 약 버리기 갯수
         sproutViewModel.pillClickCount.observe(viewLifecycleOwner, Observer { count ->
             binding.tvMedicineCount.text = count.toString()
         })
 
-        //전체 공유 횟수
         sproutViewModel.shareClickCount.observe(viewLifecycleOwner, Observer { count ->
             binding.tvSharingCount.text = count.toString()
         })
 
         setupRecyclerView()
-
-        return view
     }
 
     private fun initializeViewModel() {
-        // ViewModel 초기화를 위해 LiveData 값 설정
         val repository = SproutRepository(requireContext())
         val viewModelFactory = SproutViewModelFactory(repository)
         sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
         sproutViewModel.setInitialValues()
     }
-
 
     private fun setupRecyclerView() {
         adapter = StorageAdapter()
@@ -96,5 +92,4 @@ class StorageFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

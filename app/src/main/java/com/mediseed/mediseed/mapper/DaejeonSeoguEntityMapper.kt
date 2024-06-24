@@ -34,5 +34,4 @@ fun DaejeonSeoguData.toEntity(): DaejeonSeoguDataEntity {
         haengJeongDongName = haengJeongDongName,
         haengJeongDongCode = haengJeongDongCode
     )
-
 }

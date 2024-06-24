@@ -1,4 +1,4 @@
-package com.mediseed.mediseed
+package com.mediseed.mediseed.utils
 
 class Const {
     companion object {
