@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private val homeFragment = viewPagerAdapter.getHomeFragment()
     private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
     val suggestionRecyclerView: RecyclerView by lazy { binding.suggestionRecyclerview }
+    val searchBarEditText: EditText by lazy { binding.searchBarEditText }
     val suggestionAdapter: SuggestionAdapter by lazy {
         SuggestionAdapter(onItemClick = { item -> suggestionOnClick(item) })
     }
@@ -82,12 +83,13 @@ class MainActivity : AppCompatActivity() {
                 if (text.isNullOrEmpty()) {
                     binding.apply {
                         clearText.visibility = View.GONE
-                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_background)
+                        suggestionRecyclerview.visibility = View.GONE
+                        searchBarEditText.setBackgroundResource(R.drawable.search_view_background)
                     }
                 } else {
                     binding.apply {
                         clearText.visibility = View.VISIBLE
-                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_changed_background)
+                        searchBarEditText.setBackgroundResource(R.drawable.search_view_changed_background)
                     }
                     clearText()
                     val query = text.toString()
@@ -143,7 +145,8 @@ class MainActivity : AppCompatActivity() {
                 currentView.getGlobalVisibleRect(editTextBox)
                 if (!editTextBox.contains(event.rawX.toInt(), event.rawY.toInt())) {
                     currentView.clearFocus()
-                    val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val manager =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     manager.hideSoftInputFromWindow(
                         currentView.windowToken,
                         InputMethodManager.HIDE_NOT_ALWAYS
@@ -155,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
-    private fun clearText() {
+     fun clearText() {
         binding.apply {
             clearText.setOnClickListener {
                 searchBarEditText.text.clear()

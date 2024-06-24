@@ -127,9 +127,9 @@ class HomeViewModel(
         pharmacyInfo = infoList
     }
 
-    fun updateSuggestions(query: String) {
+    fun updateSuggestions(query: String?) {
         val pharmacyNameList = pharmacyInfo.map { it.collectionLocationName }
-        val filterList = if (query.isNotEmpty()) {
+        val filterList = if (!query.isNullOrEmpty()) {
             val startsWithQuery = pharmacyNameList.filter { suggestion ->
                 suggestion?.startsWith(query, ignoreCase = true) == true
             }
