@@ -307,7 +307,7 @@
             android:layout_marginBottom="13dp"
             android:text="@string/sprout_bottom_text"
             android:textColor="@color/grey_dark"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:fontFamily="@font/pretendard_medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
