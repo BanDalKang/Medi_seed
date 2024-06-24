@@ -36,7 +36,8 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
-    private lateinit var progressUpImageView: ImageView
+    private lateinit var pillClickImageView: ImageView
+    private lateinit var shareClickImageView: ImageView
     private lateinit var progressBar: ProgressBar
     private var maxProgress = 0
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -69,7 +70,8 @@ class SproutFragment : Fragment() {
 
         levelUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.level_up_animation_text)
         levelUpText = binding.levelUpTextView
-        progressUpImageView = binding.progressUpImageView
+        pillClickImageView = binding.pillClickImageView
+        shareClickImageView = binding.shareClickImageView
         progressBar = binding.progressBar
     }
 
@@ -81,8 +83,7 @@ class SproutFragment : Fragment() {
     private fun setupListeners() {
         with(binding) {
             sproutPillButton.setOnClickListener {
-//                activateFeed()
-                sproutViewModel.updateProgress(200)
+                activateFeed()
             }
             sproutShareButton.setOnClickListener {
                 shareApp()
@@ -99,7 +100,6 @@ class SproutFragment : Fragment() {
                 binding.levelTextView.text = "레벨$level"
                 updateProgressBarMax(level)
                 setupBlinkingAnimation(binding.sproutImageView)
-//                setupRotationAnimation(binding.sproutImageView)
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
@@ -139,9 +139,16 @@ class SproutFragment : Fragment() {
             }
             showProgressAnimation.observe(viewLifecycleOwner) {
                 progressUpAnimation()
+            }
+            showPillClickAnimation.observe(viewLifecycleOwner) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    progressUpImageAnimation()
-                }, 1500)
+                    pillClickImageAnimation()
+                }, 1000)
+            }
+            showShareClickAnimation.observe(viewLifecycleOwner) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                   shareClickImageAnimation()
+                }, 1000)
             }
         }
     }
@@ -274,24 +281,46 @@ class SproutFragment : Fragment() {
         levelUpText.startAnimation(levelUpAnimation)
     }
 
-    private fun progressUpImageAnimation() {
-        progressUpImageView.visibility = View.VISIBLE
+    private fun pillClickImageAnimation() {
+        pillClickImageView.visibility = View.VISIBLE
 
         val fadeIn = AlphaAnimation(0.0f, 1.0f).apply {
-            duration = 1000 // 1초 동안 애니메이션
-            fillAfter = true // 애니메이션이 끝난 후 상태를 유지
+            duration = 1000
+            fillAfter = true
         }
-        progressUpImageView.startAnimation(fadeIn)
+        pillClickImageView.startAnimation(fadeIn)
 
         Handler(Looper.getMainLooper()).postDelayed({
             val fadeOut = AlphaAnimation(1.0f, 0.0f).apply {
-                duration = 1000 // 1초 동안 애니메이션
-                fillAfter = true // 애니메이션이 끝난 후 상태를 유지
+                duration = 1000
+                fillAfter = true
             }
-            progressUpImageView.startAnimation(fadeOut)
+            pillClickImageView.startAnimation(fadeOut)
 
             Handler(Looper.getMainLooper()).postDelayed({
-                progressUpImageView.visibility = View.GONE
+                pillClickImageView.visibility = View.GONE
+            }, fadeOut.duration)
+        }, 3000)
+    }
+
+    private fun shareClickImageAnimation() {
+        shareClickImageView.visibility = View.VISIBLE
+
+        val fadeIn = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 1000
+            fillAfter = true
+        }
+        shareClickImageView.startAnimation(fadeIn)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val fadeOut = AlphaAnimation(1.0f, 0.0f).apply {
+                duration = 1000
+                fillAfter = true
+            }
+            shareClickImageView.startAnimation(fadeOut)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                shareClickImageView.visibility = View.GONE
             }, fadeOut.duration)
         }, 3000)
     }
