@@ -396,14 +396,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     fun moveCamera(latitude: Double, longitude: Double) {
         val currentLocation = CameraUpdate.scrollTo(LatLng(latitude, longitude))
+        val zoomLocation = CameraUpdate.zoomTo(18.0)
         naverMap.moveCamera(currentLocation)
+        naverMap.moveCamera(zoomLocation)
     }
 
     override fun onResume() {
         super.onResume()
         mainActivity?.showBar()
-        if (this@HomeFragment::naverMap.isInitialized) {
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow}
+        /*if (this@HomeFragment::naverMap.isInitialized) {
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow}*/
     }
 
     override fun onPause() {

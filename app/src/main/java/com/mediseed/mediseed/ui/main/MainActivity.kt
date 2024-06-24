@@ -11,12 +11,14 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.mediseed.mediseed.ui.home.SuggestionAdapter
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
@@ -184,6 +186,17 @@ class MainActivity : AppCompatActivity() {
             searchBarEditText.visibility = View.VISIBLE
             searchIcon.visibility = View.VISIBLE
             suggestionRecyclerview.visibility = View.VISIBLE
+        }
+    }
+
+    fun moveToClickItem(item: PharmacyItem.PharmacyInfo) {
+        val latitude = item.latitude?.toDoubleOrNull()
+        val longitude = item.longitude?.toDoubleOrNull()
+        if (latitude != null && longitude != null) {
+            binding.vpMain.currentItem = 0
+            homeFragment?.moveCamera(latitude, longitude)
+        } else {
+            Toast.makeText(this, getString(R.string.main_click_error), Toast.LENGTH_SHORT).show()
         }
     }
 }
