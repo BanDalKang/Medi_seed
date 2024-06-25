@@ -1,5 +1,6 @@
 package com.mediseed.mediseed.network.di
 
+import androidx.appcompat.app.ActionBar.NavigationMode
 import com.mediseed.mediseed.data.remote.GeoCodeDataSource
 import com.mediseed.mediseed.data.remote.PharmacyDataSource
 import com.mediseed.mediseed.network.AuthorizationInterceptor
@@ -12,22 +13,33 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
+import javax.inject.Qualifier
+import javax.inject.Singleton
 
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object NetworkModule {
+object NetworkModule {
 
     private const val PHARMACY_API_BASE_URL = "https://api.odcloud.kr/api/"
     private const val GEO_CODE_BASE_URL = "https://naveropenapi.apigw.ntruss.com/"
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class PharmacyApi
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GeoCodeApi
+
     @Provides
     fun provideAuthorizationInterceptor(): Interceptor {
         return AuthorizationInterceptor()
     }
 
+    @Provides
     fun provideOkHttpClient(
-        authorizationInterceptor: AuthorizationInterceptor
+        authorizationInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
@@ -38,7 +50,8 @@ internal object NetworkModule {
     }
 
     @Provides
-    @Named("PharmacyApi")
+    @PharmacyApi
+    @Singleton
     fun providePharmacyApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(PHARMACY_API_BASE_URL)
@@ -48,7 +61,8 @@ internal object NetworkModule {
     }
 
     @Provides
-    @Named("GeoCodeApi")
+    @GeoCodeApi
+    @Singleton
     fun provideGeoCodeApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(GEO_CODE_BASE_URL)
@@ -58,12 +72,14 @@ internal object NetworkModule {
     }
 
     @Provides
-    fun providePharmacyApiService(@Named("PharmacyApi") retrofit: Retrofit): PharmacyDataSource {
+    @Singleton
+    fun providePharmacyApiService(@PharmacyApi retrofit: Retrofit): PharmacyDataSource {
         return retrofit.create(PharmacyDataSource::class.java)
     }
 
     @Provides
-    fun provideGeoCodeApiService(@Named("GeoCodeApi") retrofit: Retrofit): GeoCodeDataSource {
+    @Singleton
+    fun provideGeoCodeApiService(@GeoCodeApi retrofit: Retrofit): GeoCodeDataSource {
         return retrofit.create(GeoCodeDataSource::class.java)
     }
 }

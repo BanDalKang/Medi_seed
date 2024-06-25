@@ -9,6 +9,8 @@ import com.mediseed.mediseed.domain.model.DaejeonYuseongguEntity
 import com.mediseed.mediseed.domain.model.GeoCodeEntity
 import com.mediseed.mediseed.domain.usecase.GeoCodeUseCase
 import com.mediseed.mediseed.domain.usecase.PharmacyUseCase
+import com.mediseed.mediseed.network.di.NetworkModule
+import com.mediseed.mediseed.repository.di.BindModule
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.GeoCode
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
@@ -24,8 +26,8 @@ import kotlin.math.pow
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val pharmacyUseCase: PharmacyUseCase,
     private val getGeoCodeUseCase: GeoCodeUseCase,
-    private val pharmacyUseCase: PharmacyUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.ResultEmpty)
