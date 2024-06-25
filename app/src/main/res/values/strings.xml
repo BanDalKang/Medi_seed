@@ -1,14 +1,16 @@
 <resources>
+
     <string name="app_name">MediSeed</string>
 
     <!--main-->
     <string name="main_tab_sprout_title">새싹이</string>
     <string name="main_tab_home_title">홈</string>
     <string name="main_tab_mypage_title">보관함</string>
+    <string name="main_click_error">해당 위치를 표시할 수 없습니다.</string>
 
     <!--SproutFragment-->
     <string name="sprout_pill_button">약 버리기</string>
-    <string name="sprout_share_button">공유하기</string>
+    <string name="sprout_share_button">공유 하기</string>
     <string name="sprout_bottom_text">약 버리기는 수거함 근처에서만 가능합니다.</string>
     <string name="sprout_level_text">레벨</string>
     <string name="sprout_level_up_text">LEVEL UP!</string>
@@ -35,11 +37,17 @@
 
     <!--StorageFragment-->
     <string name="item_kind">약국</string>
-    <string name="storage_return_medicine">처리한\n폐의약품 개수</string>
-    <string name="storage_sharing">지금까지\n공유한 횟수</string>
+    <string name="storage_return_medicine">내가 처리한 폐의약품은</string>
+    <string name="storage_sharing">지금까지 공유한 횟수는</string>
     <string name="facility_name">새싹 약국</string>
     <string name="facility_address">대전 나무로 초목로 4길 86</string>
     <string name="storage_medicine_count">0</string>
     <string name="storage_sharing_count">0</string>
+    <string name="storage_activity">내 활동 &amp; 보관함</string>
+    <string name="storage_medicine_piece">개에요</string>
+    <string name="storage_sharing_times">번이에요</string>
+
+    <!--BottomSheetFragment-->
+    <string name="fetch_error">일시적으로 데이터를 가져올 수 없습니다.</string>
 
 </resources>

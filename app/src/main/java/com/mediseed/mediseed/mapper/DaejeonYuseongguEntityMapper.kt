@@ -25,4 +25,3 @@ fun DaejeonYuseongguData.toEntity(): DaejeonYuseongguDataEntity {
         lotNumberAddress = lotNumberAddress
     )
 }
-

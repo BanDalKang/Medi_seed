@@ -13,9 +13,13 @@ import com.mediseed.mediseed.domain.exception.UnknownHttpException
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-class PharmacyRepositoryImpl(
-    private val pharmacyDataSource: PharmacyDataSource
+@Singleton
+class PharmacyRepositoryImpl @Inject constructor(
+    @Named("PharmacyApi")private val pharmacyDataSource: PharmacyDataSource
 ) : PharmacyRepository {
 
     override suspend fun getDaejeonSeogu(): DaejeonSeoguResponse {
@@ -27,8 +31,8 @@ class PharmacyRepositoryImpl(
     }
 }
 
-class GeoCodeRepositoryImpl(
-    private val geoCodeDataSource: GeoCodeDataSource
+class GeoCodeRepositoryImpl @Inject constructor(
+    @Named("GeoCodeApi")private val geoCodeDataSource: GeoCodeDataSource
 ) : GeoCodeRepository {
     override suspend fun getGeoCode(address: String?): GeoCodeResponse {
        return safeApiCall { geoCodeDataSource.getGeoCode(address) }

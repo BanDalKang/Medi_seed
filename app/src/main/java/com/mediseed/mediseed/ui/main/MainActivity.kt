@@ -11,69 +11,57 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.activity.R
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mediseed.mediseed.R
+import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.mediseed.mediseed.ui.home.SuggestionAdapter
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
-import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val binding: ActivityMainBinding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
-
-    private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
-
-    private val viewPagerAdapter by lazy {
-        MainViewPagerAdapter(this)
-    }
-
+    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val viewPagerAdapter by lazy { MainViewPagerAdapter(this) }
     private val homeFragment = viewPagerAdapter.getHomeFragment()
-
+    private val homeViewModel: HomeViewModel by viewModels()
     val suggestionRecyclerView: RecyclerView by lazy { binding.suggestionRecyclerview }
-
     val suggestionAdapter: SuggestionAdapter by lazy {
-        SuggestionAdapter(
-            onItemClick = { item -> suggestionOnClick(item) }
-        )
-    }
-
-    private fun suggestionOnClick(item: PharmacyItem.PharmacyInfo) {
-        var latitude = item.latitude?.toDoubleOrNull()
-        var longitude = item.longitude?.toDoubleOrNull()
-        if (latitude != null && longitude != null) {
-            homeFragment?.moveCamera(latitude, longitude)
-        }
+        SuggestionAdapter(onItemClick = { item -> suggestionOnClick(item) })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initView()
+    }
+
+    private fun initView() {
+        setupViewPager()
+        setupSearchBar()
         registerRecyclerView()
         focusControl()
     }
 
-    private fun initView() = with(binding) {
-        // TabLayout x ViewPager2
+    private fun setupViewPager() = with(binding) {
         vpMain.adapter = viewPagerAdapter
         vpMain.offscreenPageLimit = 1
-        vpMain.currentItem = 0 // 초기 페이지를 홈 프래그먼트로 설정
-        vpMain.isUserInputEnabled = false // Swipe unabled
+        vpMain.currentItem = 0
+        vpMain.isUserInputEnabled = false
 
         TabLayoutMediator(tlMain, vpMain) { tab, position ->
             tab.setText(viewPagerAdapter.getTitle(position))
             tab.setIcon(viewPagerAdapter.getTabIcon(position))
         }.attach()
+    }
 
+    private fun setupSearchBar() = with(binding) {
         searchBarEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.tlMain.visibility = View.INVISIBLE
@@ -82,7 +70,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 텍스트 검증
         searchBarEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 text: CharSequence?,
@@ -96,12 +83,13 @@ class MainActivity : AppCompatActivity() {
                 if (text.isNullOrEmpty()) {
                     binding.apply {
                         clearText.visibility = View.GONE
-                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_background)
+                        suggestionRecyclerview.visibility = View.GONE
+                        searchBarEditText.setBackgroundResource(R.drawable.search_view_background)
                     }
                 } else {
                     binding.apply {
                         clearText.visibility = View.VISIBLE
-                        searchBarEditText.setBackgroundResource(com.mediseed.mediseed.R.drawable.search_view_changed_background)
+                        searchBarEditText.setBackgroundResource(R.drawable.search_view_changed_background)
                     }
                     clearText()
                     val query = text.toString()
@@ -113,7 +101,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        // 검색 버튼 처리(키보드, 소프트키보드)
         searchBarEditText.setOnEditorActionListener { text, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_DONE ||
                 (keyEvent != null && keyEvent.keyCode == KeyEvent.KEYCODE_ENTER)
@@ -128,15 +115,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Hide TabLayout when Focusing EditText
+    private fun registerRecyclerView() {
+        suggestionRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = suggestionAdapter
+        }
+    }
+
     private fun focusControl() {
         binding.searchBarEditText.setOnFocusChangeListener { _, hasFocus ->
             binding.tlMain.isVisible = !hasFocus
         }
     }
 
-    // Show TabLayout and Hide Keyboard when OutFocusing of EditText
-    @Suppress("UNREACHABLE_CODE")
+    private fun suggestionOnClick(item: PharmacyItem.PharmacyInfo) {
+        var latitude = item.latitude?.toDoubleOrNull()
+        var longitude = item.longitude?.toDoubleOrNull()
+        if (latitude != null && longitude != null) {
+            homeFragment?.moveCamera(latitude, longitude)
+        }
+        binding.suggestionRecyclerview.visibility = View.INVISIBLE
+    }
+
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
         if (event?.action == MotionEvent.ACTION_DOWN) {
             val currentView = currentFocus
@@ -145,7 +145,8 @@ class MainActivity : AppCompatActivity() {
                 currentView.getGlobalVisibleRect(editTextBox)
                 if (!editTextBox.contains(event.rawX.toInt(), event.rawY.toInt())) {
                     currentView.clearFocus()
-                   val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val manager =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     manager.hideSoftInputFromWindow(
                         currentView.windowToken,
                         InputMethodManager.HIDE_NOT_ALWAYS
@@ -157,17 +158,11 @@ class MainActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
-    private fun registerRecyclerView() {
-        suggestionRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = suggestionAdapter
-        }
-    }
-
-    private fun clearText() {
+     fun clearText() {
         binding.apply {
             clearText.setOnClickListener {
                 searchBarEditText.text.clear()
+                suggestionRecyclerview.visibility = View.INVISIBLE
             }
         }
     }
@@ -196,7 +191,15 @@ class MainActivity : AppCompatActivity() {
             suggestionRecyclerview.visibility = View.VISIBLE
         }
     }
+
+    fun moveToClickItem(item: PharmacyItem.PharmacyInfo) {
+        val latitude = item.latitude?.toDoubleOrNull()
+        val longitude = item.longitude?.toDoubleOrNull()
+        if (latitude != null && longitude != null) {
+            binding.vpMain.currentItem = 0
+            homeFragment?.moveCamera(latitude, longitude)
+        } else {
+            Toast.makeText(this, getString(R.string.main_click_error), Toast.LENGTH_SHORT).show()
+        }
+    }
 }
-
-
-

@@ -23,7 +23,6 @@ class SuggestionAdapter (
             pharmacyDistance.text = itemPosition.distance?.toInt().toString()
             pharmacyClassification.text = itemPosition.collectionLocationClassificationName.toString()
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionViewHolder {
@@ -48,8 +47,5 @@ class SuggestionAdapter (
         this.suggestionItemList.clear()
         this.suggestionItemList.addAll(suggestionList)
         notifyDataSetChanged()
-
     }
-
-
 }

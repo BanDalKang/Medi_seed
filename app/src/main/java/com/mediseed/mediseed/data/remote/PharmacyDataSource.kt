@@ -1,4 +1,5 @@
 package com.mediseed.mediseed.data.remote
+
 import com.mediseed.mediseed.BuildConfig
 import com.mediseed.mediseed.data.model.DaejeonSeoguResponse
 import com.mediseed.mediseed.data.model.DaejeonYuseongguResponse
@@ -8,7 +9,6 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface PharmacyDataSource {
-
     @GET("15077806/v1/uddi:1207b449-cc87-4c0d-93d7-d9dfae695a22")
     suspend fun getPharmacyDaejeonSeogu(
         @Query("page") pageIndex: Int = 1,
@@ -28,7 +28,6 @@ interface GeoCodeDataSource {
     @GET("map-geocode/v2/geocode")
     suspend fun getGeoCode(
         @Query("주소") addresse: String?,
-        @Header("X-NCP-APIGW-API-KEY-ID") ClientID: String = BuildConfig.NAVER_MAP_CLIENT_ID,
-        @Header("X-NCP-APIGW-API-KEY") ClientSecret: String = BuildConfig.NAVER_MAP_CLIENT_SECRET_ID
+        //Header는 Interceptor에서 관리됩니다.
     ): GeoCodeResponse
 }

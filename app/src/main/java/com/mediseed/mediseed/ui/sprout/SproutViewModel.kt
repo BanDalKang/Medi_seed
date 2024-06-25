@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mediseed.mediseed.utils.Event
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -14,36 +15,50 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
 
     private val _level = MutableLiveData<Int>().apply { value = repository.getLevel() }
     val level: LiveData<Int> get() = _level
+
     private val _tree = MutableLiveData<Int>().apply { value = repository.getTree() }
     val tree: LiveData<Int> get() = _tree
+
     private val _pillRest = MutableLiveData<Int>().apply { value = repository.getPillRest() }
     val pillRest: LiveData<Int> get() = _pillRest
+
     private val _shareRest = MutableLiveData<Int>().apply { value = repository.getShareRest() }
     val shareRest: LiveData<Int> get() = _shareRest
+
     private val _progress = MutableLiveData<Int>().apply { value = repository.getProgress() }
     val progress: LiveData<Int> get() = _progress
+
     private val _sproutName = MutableLiveData<String>().apply { value = repository.getSproutName() }
     val sproutName: LiveData<String> get() = _sproutName
+
     private val _lastShareClickDate = MutableLiveData<String>().apply { value = repository.getLastShareClickDate() }
     val lastShareClickDate: LiveData<String> get() = _lastShareClickDate
+
     private val _lastPillClickDate = MutableLiveData<String>().apply { value = repository.getLastPillClickDate() }
     val lastPillClickDate: LiveData<String> get() = _lastPillClickDate
+
     private val _pillClickCount = MutableLiveData<Int>().apply { value = repository.getPillClickCount() }
     val pillClickCount: LiveData<Int> get() = _pillClickCount
+
     private val _shareClickCount = MutableLiveData<Int>().apply { value = repository.getShareClickCount() }
     val shareClickCount: LiveData<Int> get() = _shareClickCount
+
     private val _showTreeUpDialog = MutableLiveData<Event<Unit>>()
     val showTreeUpDialog: LiveData<Event<Unit>> get() = _showTreeUpDialog
+
     private val _showLevelUpAnimation = MutableLiveData<Event<Unit>>()
     val showLevelUpAnimation: LiveData<Event<Unit>> get() = _showLevelUpAnimation
+
     private val _showProgressAnimation = MutableLiveData<Event<Unit>>()
     val showProgressAnimation: LiveData<Event<Unit>> get() = _showProgressAnimation
+
     private var isProgressUpdating = false
 
     init {
         lastShareClickDateCheck()
         lastPillClickDateCheck()
     }
+
     fun setInitialValues() {
         _pillClickCount.value = repository.getPillClickCount()
         _shareClickCount.value = repository.getShareClickCount()
@@ -52,7 +67,6 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
     fun handlePillButtonClick() {
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
         val pillClickCount = _pillClickCount.value ?: 0
-        _pillRest.value = _pillRest.value ?: 1
         if (_pillRest.value == 1) {
             updateProgress(100)
             _lastPillClickDate.value = currentDate
@@ -67,8 +81,7 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
     fun handleShareButtonClick() {
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
         val shareClickCount = _shareClickCount.value ?: 0
-        _shareRest.value = _shareRest.value ?: 3
-        if (_shareRest.value!! > 0) {
+        if ((_shareRest.value ?: 3) > 0) {
             updateProgress(50)
             _lastShareClickDate.value = currentDate
             _shareRest.value = (_shareRest.value ?: 3) - 1
@@ -79,7 +92,7 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
         }
     }
 
-    fun updateProgress(increment: Int) {
+    private fun updateProgress(increment: Int) {
         if (isProgressUpdating) return
 
         viewModelScope.launch {
@@ -127,7 +140,6 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
         val lastPillClickDate = _lastPillClickDate.value ?: ""
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
 
-        // 마지막 클릭 날짜와 현재 날짜가 다른 경우 초기화
         if (currentDate != lastPillClickDate) {
             _pillRest.value = 1
             _lastPillClickDate.value = currentDate
@@ -139,7 +151,6 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
         val lastShareClickDate = _lastShareClickDate.value ?: ""
         val currentDate = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
 
-        // 마지막 클릭 날짜와 현재 날짜가 다른 경우 초기화
         if (currentDate != lastShareClickDate) {
             _shareRest.value = 3
             _lastShareClickDate.value = currentDate
@@ -161,20 +172,7 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
             _shareClickCount.value ?: 0
         )
     }
+
     val showPillButtonClickLimitToast = MutableLiveData<Boolean>()
     val showShareButtonClickLimitToast = MutableLiveData<Boolean>()
-}
-
-class Event<out T>(private val content: T) {
-    var hasBeenHandled = false
-        private set
-    fun getContentIfNotHandled(): T? {
-        return if (hasBeenHandled) {
-            null
-        } else {
-            hasBeenHandled = true
-            content
-        }
-    }
-    fun peekContent(): T = content
 }
