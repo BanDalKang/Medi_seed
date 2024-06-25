@@ -24,7 +24,6 @@ import kotlin.math.pow
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getGeoCodeUseCase: GeoCodeUseCase,
     private val pharmacyUseCase: PharmacyUseCase
 ) : ViewModel() {
 

@@ -17,14 +17,12 @@ abstract class BindModule {
 
     @ViewModelScoped
     @Binds
-    @Named("PharmacyApi")
     abstract fun bindPharmacyRepository(
         repository: PharmacyRepositoryImpl
     ) : PharmacyRepository
 
     @ViewModelScoped
     @Binds
-    @Named("GeoCodeApi")
     abstract fun bindGeoCodeRepository(
         repository: GeoCodeRepositoryImpl
     ) : GeoCodeRepository

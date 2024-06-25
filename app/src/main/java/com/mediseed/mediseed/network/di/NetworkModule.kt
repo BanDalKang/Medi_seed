@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
+import javax.inject.Singleton
 
 
 @Module
@@ -26,6 +27,8 @@ internal object NetworkModule {
         return AuthorizationInterceptor()
     }
 
+    @Provides
+    @Singleton
     fun provideOkHttpClient(
         authorizationInterceptor: AuthorizationInterceptor
     ): OkHttpClient {
@@ -38,7 +41,6 @@ internal object NetworkModule {
     }
 
     @Provides
-    @Named("PharmacyApi")
     fun providePharmacyApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(PHARMACY_API_BASE_URL)
@@ -48,7 +50,6 @@ internal object NetworkModule {
     }
 
     @Provides
-    @Named("GeoCodeApi")
     fun provideGeoCodeApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(GEO_CODE_BASE_URL)
@@ -58,12 +59,16 @@ internal object NetworkModule {
     }
 
     @Provides
-    fun providePharmacyApiService(@Named("PharmacyApi") retrofit: Retrofit): PharmacyDataSource {
+    @Named("GeoCodeApi")
+    @Singleton
+    fun providePharmacyApiService(retrofit: Retrofit): PharmacyDataSource {
         return retrofit.create(PharmacyDataSource::class.java)
     }
 
     @Provides
-    fun provideGeoCodeApiService(@Named("GeoCodeApi") retrofit: Retrofit): GeoCodeDataSource {
+    @Named("PharmacyApi")
+    @Singleton
+    fun provideGeoCodeApiService(retrofit: Retrofit): GeoCodeDataSource {
         return retrofit.create(GeoCodeDataSource::class.java)
     }
 }
