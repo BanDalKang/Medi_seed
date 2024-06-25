@@ -51,6 +51,10 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
 
     private val _showProgressAnimation = MutableLiveData<Event<Unit>>()
     val showProgressAnimation: LiveData<Event<Unit>> get() = _showProgressAnimation
+    private val _showPillClickAnimation = MutableLiveData<Event<Unit>>()
+    val showPillClickAnimation: LiveData<Event<Unit>> get() = _showPillClickAnimation
+    private val _showShareClickAnimation = MutableLiveData<Event<Unit>>()
+    val showShareClickAnimation: LiveData<Event<Unit>> get() = _showShareClickAnimation
 
     private var isProgressUpdating = false
 
@@ -72,6 +76,7 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
             _lastPillClickDate.value = currentDate
             _pillRest.value = 0
             _pillClickCount.value = pillClickCount + 1
+            _showPillClickAnimation.value = Event(Unit)
             savePreferences()
         } else {
             showPillButtonClickLimitToast.value = true
@@ -86,6 +91,7 @@ class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
             _lastShareClickDate.value = currentDate
             _shareRest.value = (_shareRest.value ?: 3) - 1
             _shareClickCount.value = shareClickCount + 1
+            _showShareClickAnimation.value = Event(Unit)
             savePreferences()
         } else {
             showShareButtonClickLimitToast.value = true

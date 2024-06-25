@@ -1,10 +1,13 @@
 package com.mediseed.mediseed.ui.sprout
 
 import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +15,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +27,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
+import android.view.animation.AlphaAnimation
 
 class SproutFragment : Fragment() {
 
@@ -31,6 +36,8 @@ class SproutFragment : Fragment() {
     private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
+    private lateinit var pillClickImageView: ImageView
+    private lateinit var shareClickImageView: ImageView
     private lateinit var progressBar: ProgressBar
     private var maxProgress = 0
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -63,6 +70,8 @@ class SproutFragment : Fragment() {
 
         levelUpAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.level_up_animation_text)
         levelUpText = binding.levelUpTextView
+        pillClickImageView = binding.pillClickImageView
+        shareClickImageView = binding.shareClickImageView
         progressBar = binding.progressBar
     }
 
@@ -90,6 +99,7 @@ class SproutFragment : Fragment() {
             level.observe(viewLifecycleOwner) { level ->
                 binding.levelTextView.text = "레벨$level"
                 updateProgressBarMax(level)
+                setupBlinkingAnimation(binding.sproutImageView)
                 updateSproutImage(level)
             }
             tree.observe(viewLifecycleOwner) { tree ->
@@ -129,6 +139,16 @@ class SproutFragment : Fragment() {
             }
             showProgressAnimation.observe(viewLifecycleOwner) {
                 progressUpAnimation()
+            }
+            showPillClickAnimation.observe(viewLifecycleOwner) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    pillClickImageAnimation()
+                }, 1000)
+            }
+            showShareClickAnimation.observe(viewLifecycleOwner) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                   shareClickImageAnimation()
+                }, 1000)
             }
         }
     }
@@ -261,6 +281,50 @@ class SproutFragment : Fragment() {
         levelUpText.startAnimation(levelUpAnimation)
     }
 
+    private fun pillClickImageAnimation() {
+        pillClickImageView.visibility = View.VISIBLE
+
+        val fadeIn = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 1000
+            fillAfter = true
+        }
+        pillClickImageView.startAnimation(fadeIn)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val fadeOut = AlphaAnimation(1.0f, 0.0f).apply {
+                duration = 1000
+                fillAfter = true
+            }
+            pillClickImageView.startAnimation(fadeOut)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                pillClickImageView.visibility = View.GONE
+            }, fadeOut.duration)
+        }, 3000)
+    }
+
+    private fun shareClickImageAnimation() {
+        shareClickImageView.visibility = View.VISIBLE
+
+        val fadeIn = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 1000
+            fillAfter = true
+        }
+        shareClickImageView.startAnimation(fadeIn)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val fadeOut = AlphaAnimation(1.0f, 0.0f).apply {
+                duration = 1000
+                fillAfter = true
+            }
+            shareClickImageView.startAnimation(fadeOut)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                shareClickImageView.visibility = View.GONE
+            }, fadeOut.duration)
+        }, 3000)
+    }
+
     private fun progressUpAnimation() {
         binding.progressUpAnimationView.apply {
             visibility = View.VISIBLE
@@ -286,6 +350,23 @@ class SproutFragment : Fragment() {
             else -> 100
         }
         progressBar.max = maxProgress
+    }
+
+    private fun setupBlinkingAnimation(view: View) {
+        val animator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f)
+        animator.duration = 200
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+
+        animator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
+                view.alpha = 1f
+            }
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+        animator.start()
     }
 
     override fun onResume() {
