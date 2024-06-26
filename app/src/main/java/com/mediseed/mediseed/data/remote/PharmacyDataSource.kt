@@ -28,7 +28,6 @@ interface GeoCodeDataSource {
     @GET("map-geocode/v2/geocode")
     suspend fun getGeoCode(
         @Query("주소") addresse: String?,
-        @Header("X-NCP-APIGW-API-KEY-ID") ClientID: String = BuildConfig.NAVER_MAP_CLIENT_ID,
-        @Header("X-NCP-APIGW-API-KEY") ClientSecret: String = BuildConfig.NAVER_MAP_CLIENT_SECRET_ID
+        //Header는 Interceptor에서 관리됩니다.
     ): GeoCodeResponse
 }

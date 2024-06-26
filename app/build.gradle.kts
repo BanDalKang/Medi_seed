@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 val properties = Properties().apply {
@@ -88,6 +90,9 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     //lottie
     implementation("com.airbnb.android:lottie:3.7.0")
+    //Hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

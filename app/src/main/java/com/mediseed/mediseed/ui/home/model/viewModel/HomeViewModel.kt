@@ -9,20 +9,25 @@ import com.mediseed.mediseed.domain.model.DaejeonYuseongguEntity
 import com.mediseed.mediseed.domain.model.GeoCodeEntity
 import com.mediseed.mediseed.domain.usecase.GeoCodeUseCase
 import com.mediseed.mediseed.domain.usecase.PharmacyUseCase
+import com.mediseed.mediseed.network.di.NetworkModule
+import com.mediseed.mediseed.repository.di.BindModule
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.GeoCode
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
 import com.naver.maps.geometry.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.pow
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val pharmacyUseCase: PharmacyUseCase,
     private val getGeoCodeUseCase: GeoCodeUseCase,
-    private val pharmacyUseCase: PharmacyUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState.ResultEmpty)

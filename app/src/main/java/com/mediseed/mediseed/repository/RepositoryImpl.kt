@@ -10,11 +10,15 @@ import com.mediseed.mediseed.domain.exception.QuotaExceededException
 import com.mediseed.mediseed.domain.exception.TimeoutException
 import com.mediseed.mediseed.domain.exception.UnknownException
 import com.mediseed.mediseed.domain.exception.UnknownHttpException
+import com.mediseed.mediseed.network.di.NetworkModule
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-class PharmacyRepositoryImpl(
+class PharmacyRepositoryImpl @Inject constructor(
     private val pharmacyDataSource: PharmacyDataSource
 ) : PharmacyRepository {
 
@@ -27,8 +31,8 @@ class PharmacyRepositoryImpl(
     }
 }
 
-class GeoCodeRepositoryImpl(
-    private val geoCodeDataSource: GeoCodeDataSource
+class GeoCodeRepositoryImpl @Inject constructor(
+     private val geoCodeDataSource: GeoCodeDataSource
 ) : GeoCodeRepository {
     override suspend fun getGeoCode(address: String?): GeoCodeResponse {
        return safeApiCall { geoCodeDataSource.getGeoCode(address) }
