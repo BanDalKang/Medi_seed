@@ -7,38 +7,41 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mediseed.mediseed.databinding.FragmentStorageBinding
-import com.mediseed.mediseed.ui.shared.SharedViewModel
+import com.mediseed.mediseed.ui.shared.SharedViewModule
 import com.mediseed.mediseed.ui.main.MainActivity
-import com.mediseed.mediseed.ui.sprout.SproutRepository
 import com.mediseed.mediseed.ui.sprout.SproutViewModel
-import com.mediseed.mediseed.ui.sprout.SproutViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class StorageFragment : Fragment() {
+
+    private var _binding: FragmentStorageBinding? = null
+
+    private val binding get() = _binding!!
+
+    private val sproutViewModel: SproutViewModel by viewModels()
+
+    private lateinit var adapter: StorageAdapter
+
+    private val mainActivity by lazy {
+        activity as? MainActivity
+    }
+
     companion object {
         fun newInstance() = StorageFragment()
     }
 
-    private var _binding: FragmentStorageBinding? = null
-    private val binding get() = _binding!!
-
-    private val sharedViewModel: SharedViewModel by activityViewModels {
-        SharedViewModel.Factory(
+    private val sharedViewModel: SharedViewModule by activityViewModels {
+        SharedViewModule.Factory(
             requireContext().getSharedPreferences(
                 "prefs",
                 Context.MODE_PRIVATE
             )
         )
-    }
-    private lateinit var adapter: StorageAdapter
-
-    private lateinit var sproutViewModel: SproutViewModel
-
-    private val mainActivity by lazy {
-        activity as? MainActivity
     }
 
     override fun onCreateView(
@@ -66,9 +69,6 @@ class StorageFragment : Fragment() {
     }
 
     private fun initializeViewModel() {
-        val repository = SproutRepository(requireContext())
-        val viewModelFactory = SproutViewModelFactory(repository)
-        sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
         sproutViewModel.setInitialValues()
     }
 

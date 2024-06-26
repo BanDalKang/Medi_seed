@@ -3,7 +3,7 @@ package com.mediseed.mediseed.ui.sprout
 import android.content.Context
 import android.content.SharedPreferences
 
-class SproutRepository(context: Context) {
+class SproutRepository (context: Context) {
 
     companion object {
         const val LAST_PILL_CLICK_DATE_KEY = "last_pill_click_date"

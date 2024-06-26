@@ -13,7 +13,7 @@ import com.mediseed.mediseed.ui.bottomSheet.SingleLiveEvent
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.utils.Event
 
-class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
+class SharedViewModule(private val pref: SharedPreferences) : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance()
 
@@ -148,8 +148,8 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
 
     class Factory(private val pref: SharedPreferences) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(SharedViewModel::class.java)) {
-                return SharedViewModel(pref) as T
+            if (modelClass.isAssignableFrom(SharedViewModule::class.java)) {
+                return SharedViewModule(pref) as T
             }
             throw IllegalArgumentException("Unknown ViewModel")
         }

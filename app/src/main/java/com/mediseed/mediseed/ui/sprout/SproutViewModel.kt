@@ -5,13 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mediseed.mediseed.utils.Event
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
-class SproutViewModel(private val repository: SproutRepository) : ViewModel() {
+@HiltViewModel
+class SproutViewModel @Inject constructor(private val repository: SproutRepository) : ViewModel() {
 
     private val _level = MutableLiveData<Int>().apply { value = repository.getLevel() }
     val level: LiveData<Int> get() = _level

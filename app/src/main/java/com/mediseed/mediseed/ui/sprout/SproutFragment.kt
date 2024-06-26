@@ -28,12 +28,14 @@ import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
 import android.view.animation.AlphaAnimation
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SproutFragment : Fragment() {
 
     private var _binding: FragmentSproutBinding? = null
     private val binding get() = _binding!!
-    private lateinit var sproutViewModel: SproutViewModel
     private lateinit var levelUpAnimation: Animation
     private lateinit var levelUpText: TextView
     private lateinit var pillClickImageView: ImageView
@@ -41,6 +43,7 @@ class SproutFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private var maxProgress = 0
     private val sharedViewModel: SharedViewModel by activityViewModels()
+    private val sproutViewModel: SproutViewModel by viewModels()
     private val mainActivity by lazy {
         activity as? MainActivity
     }
@@ -60,10 +63,6 @@ class SproutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val repository = SproutRepository(requireContext().applicationContext)
-        val viewModelFactory = SproutViewModelFactory(repository)
-        sproutViewModel = ViewModelProvider(this, viewModelFactory).get(SproutViewModel::class.java)
 
         setupObservers()
         setupListeners()

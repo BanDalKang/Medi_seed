@@ -12,7 +12,7 @@ import com.mediseed.mediseed.R
 import com.mediseed.mediseed.databinding.FragmentBottomSheetBinding
 import com.mediseed.mediseed.utils.Const
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
-import com.mediseed.mediseed.ui.shared.SharedViewModel
+import com.mediseed.mediseed.ui.shared.SharedViewModule
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -21,8 +21,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
-    private val sharedViewModel: SharedViewModel by activityViewModels {
-        SharedViewModel.Factory(
+    private val sharedViewModel: SharedViewModule by activityViewModels {
+        SharedViewModule.Factory(
             requireContext().getSharedPreferences(
                 "prefs",
                 Context.MODE_PRIVATE
