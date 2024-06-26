@@ -26,7 +26,6 @@ import com.mediseed.mediseed.databinding.FragmentHomeBinding
 import com.mediseed.mediseed.ui.bottomSheet.BottomSheetFragment
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.GeoCode
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
-import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
@@ -43,15 +42,17 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding get() = _binding!!
 
-    private val homeViewModel: HomeViewModel by activityViewModels { HomeViewModelFactory() }
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()

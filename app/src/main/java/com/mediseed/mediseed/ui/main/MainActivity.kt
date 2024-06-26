@@ -23,15 +23,15 @@ import com.mediseed.mediseed.databinding.ActivityMainBinding
 import com.mediseed.mediseed.ui.home.SuggestionAdapter
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
-import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val viewPagerAdapter by lazy { MainViewPagerAdapter(this) }
     private val homeFragment = viewPagerAdapter.getHomeFragment()
-    private val homeViewModel: HomeViewModel by viewModels { HomeViewModelFactory() }
+    private val homeViewModel: HomeViewModel by viewModels()
     val suggestionRecyclerView: RecyclerView by lazy { binding.suggestionRecyclerview }
-    val searchBarEditText: EditText by lazy { binding.searchBarEditText }
     val suggestionAdapter: SuggestionAdapter by lazy {
         SuggestionAdapter(onItemClick = { item -> suggestionOnClick(item) })
     }

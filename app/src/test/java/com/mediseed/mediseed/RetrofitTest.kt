@@ -1,6 +1,6 @@
 package com.mediseed.mediseed
 
-import com.mediseed.mediseed.network.RetrofitClient
+import com.mediseed.mediseed.network.di.RetrofitClient
 import com.mediseed.mediseed.repository.GeoCodeRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
