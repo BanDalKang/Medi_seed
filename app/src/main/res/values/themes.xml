@@ -22,6 +22,11 @@
         <item name="android:background">@drawable/shape_bottom_sheet</item>
     </style>
 
+    <style name="CustomAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@drawable/layout_background</item>
+    </style>
+
     <!-- Font. -->
     <style name="TextAppearance.AppCompat.Headline.H1" parent="TextAppearance.AppCompat">
         <item name="fontFamily">@font/pretendard_bold</item>
