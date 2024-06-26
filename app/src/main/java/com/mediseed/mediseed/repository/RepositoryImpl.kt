@@ -10,14 +10,13 @@ import com.mediseed.mediseed.domain.exception.QuotaExceededException
 import com.mediseed.mediseed.domain.exception.TimeoutException
 import com.mediseed.mediseed.domain.exception.UnknownException
 import com.mediseed.mediseed.domain.exception.UnknownHttpException
-import com.mediseed.mediseed.network.di.NetworkModule
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
+@Singleton
 class PharmacyRepositoryImpl @Inject constructor(
     private val pharmacyDataSource: PharmacyDataSource
 ) : PharmacyRepository {
@@ -31,6 +30,7 @@ class PharmacyRepositoryImpl @Inject constructor(
     }
 }
 
+@Singleton
 class GeoCodeRepositoryImpl @Inject constructor(
      private val geoCodeDataSource: GeoCodeDataSource
 ) : GeoCodeRepository {

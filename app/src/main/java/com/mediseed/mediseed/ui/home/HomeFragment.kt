@@ -405,7 +405,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     fun moveCamera(latitude: Double, longitude: Double) {
         val currentLocation = CameraUpdate.scrollTo(LatLng(latitude, longitude))
-        val zoomLocation = CameraUpdate.zoomTo(18.0)
+        val zoomLocation = CameraUpdate.zoomTo(16.5)
         naverMap.moveCamera(currentLocation)
         naverMap.moveCamera(zoomLocation)
     }
