@@ -2,7 +2,6 @@ package com.mediseed.mediseed.ui.sprout.di
 
 import android.content.Context
 import com.mediseed.mediseed.ui.sprout.SproutRepository
-import com.mediseed.mediseed.ui.sprout.SproutViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,4 +18,3 @@ object RepositoryModule {
         return SproutRepository(context)
     }
 }
-
