@@ -5,7 +5,6 @@ import com.mediseed.mediseed.data.model.DaejeonSeoguResponse
 import com.mediseed.mediseed.data.model.DaejeonYuseongguResponse
 import com.mediseed.mediseed.data.model.GeoCodeResponse
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface PharmacyDataSource {
