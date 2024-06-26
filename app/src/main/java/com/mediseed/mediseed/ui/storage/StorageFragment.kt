@@ -73,7 +73,9 @@ class StorageFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = StorageAdapter()
+        adapter = StorageAdapter { item ->
+            mainActivity?.moveToClickItem(item)
+        }
         binding.rvMedicineList.layoutManager = LinearLayoutManager(context)
         binding.rvMedicineList.adapter = adapter
 

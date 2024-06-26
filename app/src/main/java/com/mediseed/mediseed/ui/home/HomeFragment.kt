@@ -26,7 +26,6 @@ import com.mediseed.mediseed.databinding.FragmentHomeBinding
 import com.mediseed.mediseed.ui.bottomSheet.BottomSheetFragment
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.GeoCode
 import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModel
-import com.mediseed.mediseed.ui.home.model.viewModel.HomeViewModelFactory
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.ui.home.model.uiState.UiState
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
@@ -43,15 +42,17 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding get() = _binding!!
 
-    private val homeViewModel: HomeViewModel by activityViewModels{ HomeViewModelFactory() }
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var pharmacyInfo = mutableListOf<PharmacyItem.PharmacyInfo>()
@@ -99,7 +100,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private fun initSearchAlgorithm() {
         homeViewModel.apply {
             setPharmacyInfo(pharmacyInfo)
-            filteredSuggestions.observe(viewLifecycleOwner, Observer{ suggestionList ->
+            filteredSuggestions.observe(viewLifecycleOwner, Observer { suggestionList ->
                 updateWithSuggetstions(suggestionList)
             })
         }
@@ -120,10 +121,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 .collectLatest { uiState ->
                     when (uiState) {
                         is UiState.AddList -> {
-                            pharmacyInfo = uiState.daejeonSeoguLocation as MutableList<PharmacyItem.PharmacyInfo>
+                            pharmacyInfo =
+                                uiState.daejeonSeoguLocation as MutableList<PharmacyItem.PharmacyInfo>
                             registerMarkers(pharmacyInfo)
                             initSearchAlgorithm()
                         }
+
                         else -> {}
                     }
                 }
@@ -137,10 +140,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 .collectLatest { uiState ->
                     when (uiState) {
                         is UiState.AddList -> {
-                            pharmacyInfo = uiState.daejeonYuseongguLocation as MutableList<PharmacyItem.PharmacyInfo>
+                            pharmacyInfo =
+                                uiState.daejeonYuseongguLocation as MutableList<PharmacyItem.PharmacyInfo>
                             registerMarkers(pharmacyInfo)
                             initSearchAlgorithm()
                         }
+
                         else -> {}
                     }
                 }
@@ -223,8 +228,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 isLocationButtonEnabled = true
                 isCompassEnabled = true
             }
-
-            locationTrackingMode = LocationTrackingMode.Follow
+            if (this@HomeFragment::naverMap.isInitialized) {
+            locationTrackingMode = LocationTrackingMode.Follow }
             addOnLocationChangeListener { location ->
                 userLatitude = location.latitude
                 userLongitude = location.longitude
@@ -267,7 +272,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun checkUserArea(userLatLng: LatLng) {
-        val DaejeonSeoguInside = homeViewModel.isInsideArea(userLatLng, daejeonSeoguCircle.center, daejeonSeoguCircle.radius)
+        val DaejeonSeoguInside = homeViewModel.isInsideArea(
+            userLatLng,
+            daejeonSeoguCircle.center,
+            daejeonSeoguCircle.radius
+        )
         if (DaejeonSeoguInside) {
             DaejeonSeoguViewModelEvent()
         }
@@ -396,20 +405,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     fun moveCamera(latitude: Double, longitude: Double) {
         val currentLocation = CameraUpdate.scrollTo(LatLng(latitude, longitude))
+        val zoomLocation = CameraUpdate.zoomTo(18.0)
         naverMap.moveCamera(currentLocation)
+        naverMap.moveCamera(zoomLocation)
     }
 
     override fun onResume() {
         super.onResume()
         mainActivity?.showBar()
-        if (this@HomeFragment::naverMap.isInitialized) {
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow}
     }
 
     override fun onPause() {
         super.onPause()
-        if (this@HomeFragment::naverMap.isInitialized)
-            naverMap.locationTrackingMode = LocationTrackingMode.None
+        homeViewModel.updateSuggestions(null)
     }
 
     override fun onDestroyView() {

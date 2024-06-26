@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 val properties = Properties().apply {
@@ -41,13 +43,16 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -85,6 +90,9 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     //lottie
     implementation("com.airbnb.android:lottie:3.7.0")
+    //Hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

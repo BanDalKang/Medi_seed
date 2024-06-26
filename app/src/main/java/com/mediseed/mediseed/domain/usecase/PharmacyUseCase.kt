@@ -6,8 +6,12 @@ import com.mediseed.mediseed.domain.model.GeoCodeEntity
 import com.mediseed.mediseed.mapper.toEntity
 import com.mediseed.mediseed.repository.GeoCodeRepository
 import com.mediseed.mediseed.repository.PharmacyRepository
+import com.mediseed.mediseed.repository.di.BindModule
+import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Inject
 
-class PharmacyUseCase (
+@ViewModelScoped
+class PharmacyUseCase @Inject constructor(
     private val pharmacyRepository: PharmacyRepository
 ) {
     suspend fun getPharmacyDaejeonSeogu(): Result<DaejeonSeoguEntity> {
@@ -22,7 +26,8 @@ class PharmacyUseCase (
     }
 }
 
-class GeoCodeUseCase (
+@ViewModelScoped
+class GeoCodeUseCase @Inject constructor (
     private val geoCodeRepository: GeoCodeRepository
 ) {
     suspend operator fun invoke(address: String?): Result<GeoCodeEntity> {

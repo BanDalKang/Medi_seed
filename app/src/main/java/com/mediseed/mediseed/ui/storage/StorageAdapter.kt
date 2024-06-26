@@ -8,25 +8,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mediseed.mediseed.databinding.ItemFacilityBinding
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 
-class StorageAdapter :
-    ListAdapter<PharmacyItem.PharmacyInfo, StorageAdapter.PharmacyViewHolder>(DiffCallback) {
+class StorageAdapter(
+    private val onItemClick: (PharmacyItem.PharmacyInfo) -> Unit
+) : ListAdapter<PharmacyItem.PharmacyInfo, StorageAdapter.PharmacyViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PharmacyViewHolder {
         val binding =
             ItemFacilityBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PharmacyViewHolder(binding)
+        return PharmacyViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: PharmacyViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class PharmacyViewHolder(private val binding: ItemFacilityBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class PharmacyViewHolder(
+        private val binding: ItemFacilityBinding,
+        private val onItemClick: (PharmacyItem.PharmacyInfo) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PharmacyItem.PharmacyInfo) {
             binding.tvLocationName.text = item.collectionLocationName
             binding.tvLocationClassificationName.text = item.collectionLocationClassificationName //장소 종류 : 약국, 보건소 등
             binding.tvStreetNameAddress.text = item.streetNameAddress
+            binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
