@@ -1,6 +1,5 @@
 package com.mediseed.mediseed.network.di
 
-import androidx.appcompat.app.ActionBar.NavigationMode
 import com.mediseed.mediseed.data.remote.GeoCodeDataSource
 import com.mediseed.mediseed.data.remote.PharmacyDataSource
 import com.mediseed.mediseed.network.AuthorizationInterceptor
@@ -15,7 +14,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
