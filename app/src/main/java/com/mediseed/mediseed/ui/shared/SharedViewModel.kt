@@ -147,5 +147,4 @@ class SharedViewModel @Inject constructor ( private val pref: SharedPreferences)
         val likedItems = _likedItems.value ?: emptyList()
         return likedItems.any { it.streetNameAddress == pharmacyInfo.streetNameAddress }
     }
-
 }
