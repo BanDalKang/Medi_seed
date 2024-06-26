@@ -2,6 +2,7 @@ package com.mediseed.mediseed.ui.sprout
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.mediseed.mediseed.utils.Const.Companion.PREFS_NAME
 
 class SproutRepository (context: Context) {
 
@@ -10,7 +11,6 @@ class SproutRepository (context: Context) {
         const val LAST_SHARE_CLICK_DATE_KEY = "last_share_click_date"
         const val PILL_CLICK_COUNT_KEY = "pill_click_count"
         const val SHARE_CLICK_COUNT_KEY = "share_click_count"
-        const val PREFS_NAME = "SproutPreferences"
         const val LEVEL_KEY = "level"
         const val TREE_KEY = "tree"
         const val PILL_REST_KEY = "pill_rest"

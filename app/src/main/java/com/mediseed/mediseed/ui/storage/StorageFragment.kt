@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mediseed.mediseed.databinding.FragmentStorageBinding
-import com.mediseed.mediseed.ui.shared.SharedViewModule
+import com.mediseed.mediseed.ui.shared.SharedViewModel
 import com.mediseed.mediseed.ui.main.MainActivity
 import com.mediseed.mediseed.ui.sprout.SproutViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +25,8 @@ class StorageFragment : Fragment() {
 
     private val sproutViewModel: SproutViewModel by viewModels()
 
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
     private lateinit var adapter: StorageAdapter
 
     private val mainActivity by lazy {
@@ -33,15 +35,6 @@ class StorageFragment : Fragment() {
 
     companion object {
         fun newInstance() = StorageFragment()
-    }
-
-    private val sharedViewModel: SharedViewModule by activityViewModels {
-        SharedViewModule.Factory(
-            requireContext().getSharedPreferences(
-                "prefs",
-                Context.MODE_PRIVATE
-            )
-        )
     }
 
     override fun onCreateView(
