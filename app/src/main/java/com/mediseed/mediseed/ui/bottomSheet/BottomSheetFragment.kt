@@ -21,14 +21,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var pharmacyInfo: PharmacyItem.PharmacyInfo
 
-    private val sharedViewModel: SharedViewModel by activityViewModels {
-        SharedViewModel.Factory(
-            requireContext().getSharedPreferences(
-                "prefs",
-                Context.MODE_PRIVATE
-            )
-        )
-    }
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

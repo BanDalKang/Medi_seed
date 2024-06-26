@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -12,8 +11,11 @@ import com.mediseed.mediseed.utils.Const
 import com.mediseed.mediseed.ui.bottomSheet.SingleLiveEvent
 import com.mediseed.mediseed.ui.home.model.pharmacyItem.PharmacyItem
 import com.mediseed.mediseed.utils.Event
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
+@HiltViewModel
+class SharedViewModel @Inject constructor ( private val pref: SharedPreferences) : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance()
 
@@ -146,12 +148,4 @@ class SharedViewModel(private val pref: SharedPreferences) : ViewModel() {
         return likedItems.any { it.streetNameAddress == pharmacyInfo.streetNameAddress }
     }
 
-    class Factory(private val pref: SharedPreferences) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(SharedViewModel::class.java)) {
-                return SharedViewModel(pref) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel")
-        }
-    }
 }
