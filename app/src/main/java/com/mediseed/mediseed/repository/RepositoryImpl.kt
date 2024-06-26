@@ -30,6 +30,7 @@ class PharmacyRepositoryImpl @Inject constructor(
     }
 }
 
+@Singleton
 class GeoCodeRepositoryImpl @Inject constructor(
      private val geoCodeDataSource: GeoCodeDataSource
 ) : GeoCodeRepository {
