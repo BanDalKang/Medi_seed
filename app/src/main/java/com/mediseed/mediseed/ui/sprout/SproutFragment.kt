@@ -22,7 +22,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mediseed.mediseed.databinding.FragmentSproutBinding
-import androidx.lifecycle.ViewModelProvider
 import com.airbnb.lottie.LottieAnimationView
 import com.mediseed.mediseed.R
 import com.mediseed.mediseed.ui.home.model.viewModel.SharedViewModel
@@ -218,6 +217,7 @@ class SproutFragment : Fragment() {
     private fun getData(): Boolean? {
         return sharedViewModel.nearDistance.value
     }
+
     private fun activateFeed() {
         if (getData() == true) {
             sharedViewModel.updateMedicineCount()

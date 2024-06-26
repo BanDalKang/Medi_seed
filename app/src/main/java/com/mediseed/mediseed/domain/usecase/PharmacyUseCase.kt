@@ -6,7 +6,6 @@ import com.mediseed.mediseed.domain.model.GeoCodeEntity
 import com.mediseed.mediseed.mapper.toEntity
 import com.mediseed.mediseed.repository.GeoCodeRepository
 import com.mediseed.mediseed.repository.PharmacyRepository
-import com.mediseed.mediseed.repository.di.BindModule
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
