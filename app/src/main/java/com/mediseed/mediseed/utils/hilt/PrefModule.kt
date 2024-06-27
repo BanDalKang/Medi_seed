@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.utils.Hilt
+package com.mediseed.mediseed.utils.hilt
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -13,11 +13,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object PrefModule {
-
     @Provides
     @Singleton
     fun provideSharedPref(@ApplicationContext context:Context) :SharedPreferences{
         return context.getSharedPreferences(PREF_MODULE,Context.MODE_PRIVATE)
     }
-
 }

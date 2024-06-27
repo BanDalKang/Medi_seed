@@ -19,11 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class StorageFragment : Fragment() {
 
     private var _binding: FragmentStorageBinding? = null
-
     private val binding get() = _binding!!
 
     private val sproutViewModel: SproutViewModel by viewModels()
-
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private lateinit var adapter: StorageAdapter

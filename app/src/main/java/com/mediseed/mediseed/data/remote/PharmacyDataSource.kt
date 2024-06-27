@@ -27,6 +27,5 @@ interface GeoCodeDataSource {
     @GET("map-geocode/v2/geocode")
     suspend fun getGeoCode(
         @Query("주소") addresse: String?,
-        //Header는 Interceptor에서 관리됩니다.
     ): GeoCodeResponse
 }

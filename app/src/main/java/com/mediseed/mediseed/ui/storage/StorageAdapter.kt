@@ -28,7 +28,7 @@ class StorageAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: PharmacyItem.PharmacyInfo) {
             binding.tvLocationName.text = item.collectionLocationName
-            binding.tvLocationClassificationName.text = item.collectionLocationClassificationName //장소 종류 : 약국, 보건소 등
+            binding.tvLocationClassificationName.text = item.collectionLocationClassificationName
             binding.tvStreetNameAddress.text = item.streetNameAddress
             binding.root.setOnClickListener { onItemClick(item) }
         }
