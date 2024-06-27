@@ -9,7 +9,6 @@ class Const {
         const val LIKED_ITEMS = "LIKED_ITEMS"
 
         // SproutViewModel- sharedPreference
-        const val PREFS_NAME = "SproutPreferences"
         const val PHARMACY = "pharmacy"
     }
 }
