@@ -1,4 +1,4 @@
-package com.mediseed.mediseed.utils.Hilt
+package com.mediseed.mediseed.utils.hilt
 
 import android.content.Context
 import android.content.SharedPreferences
