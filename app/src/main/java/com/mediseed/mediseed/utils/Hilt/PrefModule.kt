@@ -13,11 +13,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object PrefModule {
-
     @Provides
     @Singleton
     fun provideSharedPref(@ApplicationContext context:Context) :SharedPreferences{
         return context.getSharedPreferences(PREF_MODULE,Context.MODE_PRIVATE)
     }
-
 }
