@@ -13,7 +13,6 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 abstract class BindModule {
-
     @ViewModelScoped
     @Binds
     abstract fun bindPharmacyRepository(

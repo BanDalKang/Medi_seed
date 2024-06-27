@@ -199,18 +199,18 @@ class SproutViewModel @Inject constructor(private val pref: SharedPreferences) :
         const val SPROUT_NAME_KEY = "sprout_name"
     }
 
-    fun getLevel() = pref.getInt(LEVEL_KEY, 1)
-    fun getTree() = pref.getInt(TREE_KEY, 0)
-    fun getPillRest() = pref.getInt(PILL_REST_KEY, 1)
-    fun getShareRest() = pref.getInt(SHARE_REST_KEY, 3)
-    fun getProgress() = pref.getInt(PROGRESS_KEY, 0)
-    fun getSproutName() = pref.getString(SPROUT_NAME_KEY, "새싹이") ?: "새싹이"
-    fun getLastPillClickDate() = pref.getString(LAST_PILL_CLICK_DATE_KEY, "") ?: ""
-    fun getLastShareClickDate() = pref.getString(LAST_SHARE_CLICK_DATE_KEY, "") ?: ""
-    fun getPillClickCount() = pref.getInt(PILL_CLICK_COUNT_KEY, 0)
-    fun getShareClickCount() = pref.getInt(SHARE_CLICK_COUNT_KEY, 0)
+    private fun getLevel() = pref.getInt(LEVEL_KEY, 1)
+    private fun getTree() = pref.getInt(TREE_KEY, 0)
+    private fun getPillRest() = pref.getInt(PILL_REST_KEY, 1)
+    private fun getShareRest() = pref.getInt(SHARE_REST_KEY, 3)
+    private fun getProgress() = pref.getInt(PROGRESS_KEY, 0)
+    private fun getSproutName() = pref.getString(SPROUT_NAME_KEY, "새싹이") ?: "새싹이"
+    private fun getLastPillClickDate() = pref.getString(LAST_PILL_CLICK_DATE_KEY, "") ?: ""
+    private fun getLastShareClickDate() = pref.getString(LAST_SHARE_CLICK_DATE_KEY, "") ?: ""
+    private fun getPillClickCount() = pref.getInt(PILL_CLICK_COUNT_KEY, 0)
+    private fun getShareClickCount() = pref.getInt(SHARE_CLICK_COUNT_KEY, 0)
 
-    fun saveData(
+    private fun saveData(
         level: Int,
         tree: Int,
         pillRest: Int,

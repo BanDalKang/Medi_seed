@@ -18,7 +18,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     private const val PHARMACY_API_BASE_URL = "https://api.odcloud.kr/api/"
     private const val GEO_CODE_BASE_URL = "https://naveropenapi.apigw.ntruss.com/"
 
