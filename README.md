@@ -89,7 +89,7 @@
 
 | 보관함 화면 |
 |----------|
-|<img src="https://github.com/BanDalKang/Medi_seed/assets/77070839/2469095b-8134-4c49-b4e8-abffe23e8aa6" width="300px">|
+|<img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/6378142a-5aae-4e13-b884-232048a4e0d5" width="300px">|
 
 <br>
 
