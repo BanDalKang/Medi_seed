@@ -49,6 +49,19 @@
 
 <br>
 
+## 아키텍처 구조
+  <img src="https://github.com/BanDalKang/Medi_seed/assets/159236003/e5ba259a-c187-4423-8280-badd97e45462" width="100%">
+
+- Data -> Domaim -> Presentation의 순서로 의존성이 주입되며, 고수준 계층이 됨에 따라 상위 컴포넌트는 하위 컴포넌트를 전혀 알지 못함.
+  
+- Repository Pattern과 MVVM Pattern 그리고 의존성 주입 도구인 Hilt를 활용하여, 궁극적으로 Data Layer를 캡슐화.
+
+- MVVM Pattern에 있어서는 State Flow를 통해, Domain Layer가 의존성이 없는 순수 자바/코틀린 언어로만 구성되도록 구현.
+
+
+<br>
+
+
 ## 와이어프레임
 
 <div>
