@@ -35,9 +35,14 @@
 <br>
 
 ## 기술 스택 
+
 | 분류 | 이름 |
 | --- | --- |
-| Architecture | 
+| Architecture | <img src="https://img.shields.io/badge/Repository Pattern-FDECC8"> <img src="https://img.shields.io/badge/MVVM-FDECC8"> |
+| Jetpack | <img src="https://img.shields.io/badge/LiveData-FCC624"> <img src="https://img.shields.io/badge/LifeCycle-FCC624"> <img src="https://img.shields.io/badge/ViewModel-FCC624"> <img src="https://img.shields.io/badge/ViewBinding-FCC624">|
+| Design Pattern | <img src="https://img.shields.io/badge/DI:Hilt-6DB33F"> <img src="https://img.shields.io/badge/FactoryMethod-6DB33F"> <img src="https://img.shields.io/badge/Singleton-6DB33F"> <img src="https://img.shields.io/badge/Delegate-6DB33F"> <img src="https://img.shields.io/badge/Observer-6DB33F"> | 
+| UI | <img src="https://img.shields.io/badge/Fragment-4169E1">  <img src="https://img.shields.io/badge/RecyclerViewAdapter-4169E1">  <img src="https://img.shields.io/badge/XML-4169E1">  <img src="https://img.shields.io/badge/MaterialDesign-4169E1">  <img src="https://img.shields.io/badge/ViewPager2-4169E1">  <img src="https://img.shields.io/badge/BottomSheet-4169E1">  <img src="https://img.shields.io/badge/Splash-4169E1">|
+| 활용 API 및 통신 | <img src="https://img.shields.io/badge/Retrofit2-E0234E"> <img src="https://img.shields.io/badge/Naver Map-E0234E"> <img src="https://img.shields.io/badge/GeoCode-E0234E"> <img src="https://img.shields.io/badge/공공데이터포털-E0234E">|
 
 
 
