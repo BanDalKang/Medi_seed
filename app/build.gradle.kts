@@ -22,8 +22,8 @@ android {
         applicationId = "com.mediseed.mediseed"
         minSdk = 30
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "NAVER_MAP_CLIENT_ID", properties["NAVER_MAP_CLIENT_ID"] as String)
         buildConfigField("String","NAVER_MAP_CLIENT_SECRET_ID", properties["NAVER_MAP_CLIENT_SECRET_ID"] as String)
