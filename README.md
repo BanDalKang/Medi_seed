@@ -5,7 +5,6 @@
 2024-05-27 ~ 2024-07-05
 
 ### URL
-- 배포 링크 :
 - 시연영상 : https://www.youtube.com/watch?v=AlccWqGRH8I
 
 <br>
